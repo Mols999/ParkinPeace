@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="CENTER" spacing="10" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.LoginController">
+    <Label text="Parking Pace">
+        <font>
+            <Font size="24.0" />
+        </font>
+    </Label>
+    <Label text="Username" />
+    <TextField fx:id="usernameTextField" />
+    <Label text="Password" />
+    <PasswordField fx:id="passwordField" />
+    <HBox alignment="CENTER" spacing="10">
+        <Button text="Login" onAction="#handleLoginButton" />
+        <Button text="Sign up" onAction="#handleSignUpButton" />
+    </HBox>
+</VBox>
