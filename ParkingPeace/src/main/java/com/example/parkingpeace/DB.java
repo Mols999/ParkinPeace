@@ -11,6 +11,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Properties;
 
+// Server name 51.195.118.225
+// Login name sa
+// Password dm2022Sommer
+
 public class DB {
     private static Connection con;
     private static PreparedStatement ps;
@@ -52,7 +56,8 @@ public class DB {
 
     public class DatabaseConnector {
 
-        private static final String CONNECTION_URL = "jdbc:sqlserver://LAPTOP-2NQ6KUQ8;databaseName=dbCanteen;user=sa;password=1234";
+        // Vi skal kun connecte til den database David har købt. Så vi ikke har 1000 som sidste projekt.
+        private static final String CONNECTION_URL = "jdbc:sqlserver://51.195.118.225;databaseName=dbCanteen;user=sa;password=1234";
 
         public static Connection getConnection() {
             Connection connection = null;
