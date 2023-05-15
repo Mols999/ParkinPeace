@@ -26,7 +26,7 @@ public class LoginController {
     @FXML
     public void handleSignUpButton(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/SignUp.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/example/parkingpeace/SignUp.fxml"));
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Sign Up");

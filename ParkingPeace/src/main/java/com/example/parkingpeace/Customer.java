@@ -1,4 +1,4 @@
 package com.example.parkingpeace;
 
-public class Udlejer {
+public class Customer {
 }
