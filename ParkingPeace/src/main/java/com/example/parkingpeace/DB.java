@@ -3,17 +3,8 @@ package com.example.parkingpeace;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
-
-// Server name 51.195.118.225
-// Login name sa
-// Password dm2022Sommer
 
 public class DB {
     private static Connection con;
@@ -32,53 +23,39 @@ public class DB {
     private static boolean pendingData = false;
     private static boolean terminated = false;
 
-    private DB() {
+    public DB() {
+        initialize();
     }
 
-    static {
+    private void initialize() {
         Properties props = new Properties();
         String fileName = "db.properties";
         InputStream input;
         try {
-            input = new FileInputStream(fileName);
+            input = getClass().getClassLoader().getResourceAsStream(fileName);
             props.load(input);
             port = props.getProperty("port", "1433");
-            databaseName = props.getProperty("databaseName");
+            databaseName = props.getProperty("databaseName", "dbParkinPeaceTOPG");
             userName = props.getProperty("userName", "sa");
-            password = props.getProperty("password","1234");
+            password = props.getProperty("password", "dm2022Sommer");
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             System.out.println("Database Ready");
-
         } catch (IOException | ClassNotFoundException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    public class DatabaseConnector {
-
-        // Vi skal kun connecte til den database David har købt. Så vi ikke har 1000 som sidste projekt.
-        private static final String CONNECTION_URL = "jdbc:sqlserver://51.195.118.225;databaseName=dbCanteen;user=sa;password=1234";
-
-        public static Connection getConnection() {
-            Connection connection = null;
-            try {
-                connection = DriverManager.getConnection(CONNECTION_URL);
-            } catch (SQLException e) {
-                System.out.println("Error connecting to the database: " + e.getMessage());
-            }
-            return connection;
-        }
-    }
-
-    private static void connect() {
+    private void connect() {
         try {
-            con = DriverManager.getConnection("jdbc:sqlserver://LAPTOP-2NQ6KUQ8:"+port+";databaseName="+databaseName, userName, password);
+            con = DriverManager.getConnection("jdbc:sqlserver://51.195.118.225:" + port + ";databaseName=" + databaseName, userName, password);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void disconnect() {
+
+
+    private void disconnect() {
         try {
             con.close();
         } catch (SQLException e) {
@@ -86,73 +63,74 @@ public class DB {
         }
     }
 
-    public static void selectSQL(String sql) {
-        if (terminated){
+    public void selectSQL(String sql) {
+        if (terminated) {
             System.exit(0);
         }
         try {
-            if (ps!=null){
+            if (ps != null) {
                 ps.close();
             }
-            if (rs!=null){
+            if (rs != null) {
                 rs.close();
             }
             connect();
             ps = con.prepareStatement(sql);
             rs = ps.executeQuery();
-            pendingData=true;
+            pendingData = true;
             moreData = rs.next();
             ResultSetMetaData rsmd = rs.getMetaData();
             numberOfColumns = rsmd.getColumnCount();
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Error in the sql parameter, please test this in SQLServer first");
             System.err.println(e.getMessage());
         }
     }
 
-    public static String getDisplayData() {
-        if (terminated){
+    public String getDisplayData() {
+        if (terminated) {
             System.exit(0);
         }
-        if (!pendingData){
-            terminated=true;
+        if (!pendingData) {
+            terminated = true;
             throw new RuntimeException("ERROR! No previous select, communication with the database is lost!");
-        } else if (!moreData){
+        } else if (!moreData) {
             disconnect();
-            pendingData=false;
+            pendingData = false;
             return NOMOREDATA;
         } else {
             return getNextValue(true);
         }
     }
 
-    public static int getNumberOfColumns() {
+    public int getNumberOfColumns() {
         return numberOfColumns;
     }
 
-    public static String getData() {
-        if (terminated){
+    public String getData() {
+        if (terminated) {
             System.exit(0);
         }
-        if (!pendingData){
-            terminated=true;
+        if (!pendingData) {
+            terminated = true;
             throw new RuntimeException("ERROR! No previous select, communication with the database is lost!");
-        } else if (!moreData){
+        } else if (!moreData) {
             disconnect();
-            pendingData=false;
+            pendingData = false;
             return NOMOREDATA;
         } else {
             return getNextValue(false).trim();
         }
     }
 
-    private static String getNextValue(boolean view) {
-        StringBuilder value= new StringBuilder();
+    private String getNextValue(boolean view) {
+        StringBuilder value = new StringBuilder();
         try {
             value.append(rs.getString(currentColumnNumber));
-            if (currentColumnNumber >= numberOfColumns){
+            if (currentColumnNumber >= numberOfColumns) {
                 currentColumnNumber = 1;
-                if (view) { value.append("\n");
+                if (view) {
+                    value.append("\n");
                 }
                 moreData = rs.next();
             } else {
@@ -167,25 +145,25 @@ public class DB {
         return value.toString();
     }
 
-    public static boolean insertSQL(String sql) {
-        return executeUpdate(sql);
+    public boolean insertSQL(String sql, Object... values) {
+        return executeUpdate(sql, values);
     }
 
-    public static boolean updateSQL(String sql) {
-        return executeUpdate(sql);
+    public boolean updateSQL(String sql, Object... values) {
+        return executeUpdate(sql, values);
     }
 
-    public static boolean deleteSQL(String sql) {
-        return executeUpdate(sql);
+    public boolean deleteSQL(String sql, Object... values) {
+        return executeUpdate(sql, values);
     }
 
-    private static boolean executeUpdate(String sql) {
+    private boolean executeUpdate(String sql, Object... values) {
         if (terminated) {
             System.exit(0);
         }
         if (pendingData) {
             terminated = true;
-            throw new RuntimeException("ERROR! There were pending data from previous select, communication with the database is lost!");
+            throw new RuntimeException("ERROR! There were pending data from the previous select, communication with the database is lost!");
         }
         try {
             if (ps != null) {
@@ -193,6 +171,9 @@ public class DB {
             }
             connect();
             ps = con.prepareStatement(sql);
+            for (int i = 0; i < values.length; i++) {
+                ps.setObject(i + 1, values[i]);
+            }
             int rows = ps.executeUpdate();
             ps.close();
             if (rows > 0) {
@@ -205,5 +186,4 @@ public class DB {
         }
         return false;
     }
-
 }
