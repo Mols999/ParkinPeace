@@ -47,17 +47,28 @@ public class DB {
 
     private void connect() {
         try {
-            con = DriverManager.getConnection("jdbc:sqlserver://51.195.118.225:" + port + ";databaseName=" + databaseName, userName, password);
+            String url = "jdbc:sqlserver://51.195.118.225:" + port + ";databaseName=" + databaseName + ";encrypt=false;trustServerCertificate=true;sslProtocol=TLSv1.2";
+            con = DriverManager.getConnection(url, userName, password);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
 
 
-
+    public void close() {
+        disconnect();
+    }
     private void disconnect() {
         try {
-            con.close();
+            if (rs != null) {
+                rs.close();
+            }
+            if (ps != null) {
+                ps.close();
+            }
+            if (con != null) {
+                con.close();
+            }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -186,4 +197,42 @@ public class DB {
         }
         return false;
     }
+    public boolean selectSQLWithParams(String sql, String... params) {
+        if (terminated) {
+            System.exit(0);
+        }
+        try {
+            if (ps != null) {
+                ps.close();
+            }
+            if (rs != null) {
+                rs.close();
+            }
+            connect();
+            ps = con.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                ps.setString(i + 1, params[i]);
+            }
+            rs = ps.executeQuery();
+            pendingData = true;
+            moreData = rs.next();
+            if (!moreData) {
+                disconnect();
+                pendingData = false;
+            }
+            ResultSetMetaData rsmd = rs.getMetaData();
+            numberOfColumns = rsmd.getColumnCount();
+            return moreData;
+        } catch (Exception e) {
+            System.err.println("Error in the sql parameter, please test this in SQL Server first");
+            System.err.println(e.getMessage());
+            disconnect();
+            pendingData = false;
+            return false;
+        }
+    }
+
+
+
+
 }

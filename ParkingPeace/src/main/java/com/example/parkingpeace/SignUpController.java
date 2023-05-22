@@ -2,9 +2,15 @@ package com.example.parkingpeace;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class SignUpController {
     @FXML
@@ -71,5 +77,21 @@ public class SignUpController {
 
     @FXML
     public void handleBackButton(ActionEvent event) {
+        try {
+            // Load the Login.fxml file
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            Parent root = loader.load();
+
+            // Get the controller of the Login.fxml file
+            LoginController loginController = loader.getController();
+
+            // Set the current stage to the login scene
+            Stage currentStage = (Stage) usernameField.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.setTitle("Login");
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -5,7 +5,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-
 <Pane prefHeight="400.0" prefWidth="300.0" styleClass="main-pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.LoginController">
     <children>
         <Label layoutX="42.0" layoutY="55.0" prefHeight="35.0" prefWidth="218.0" styleClass="title-label" text="Parking Pace">
@@ -14,14 +13,16 @@
             </font>
         </Label>
         <Label layoutX="41.0" layoutY="122.0" prefWidth="218.0" text="Username" />
-        <TextField fx:id="usernameTextField" layoutX="41.0" layoutY="150.0" prefWidth="218.0" />
+        <TextField fx:id="usernameField" layoutX="41.0" layoutY="150.0" prefWidth="218.0" />
         <Label layoutX="43.0" layoutY="203.0" prefWidth="218.0" text="Password" />
         <PasswordField fx:id="passwordField" layoutX="43.0" layoutY="231.0" prefWidth="218.0" />
+        <Label fx:id="errorLabel" layoutX="41.0" layoutY="270.0" prefWidth="218.0" />
         <HBox alignment="CENTER" layoutX="46.0" layoutY="296.0" spacing="10">
             <children>
                 <Button onAction="#handleLoginButton" text="Login" />
-                <Button onAction="#handleSignUpButton" text="Sign up" />
+                <Button fx:id="goToSignUpButton" text="Sign Up" onAction="#handleGoToSignUpButton" />
             </children>
         </HBox>
     </children>
 </Pane>
+
