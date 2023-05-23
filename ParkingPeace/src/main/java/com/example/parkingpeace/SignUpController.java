@@ -23,14 +23,17 @@ public class SignUpController {
     private TextField ageField;
 
     @FXML
+    private TextField emailField;
+
+    @FXML
     private ComboBox<String> genderComboBox;
 
     @FXML
     private PasswordField passwordField;
 
-    private String role = ""; // added this variable to hold the role
+    private String role = "";
 
-    private DB db; // Reference to the DB class
+    private DB db;
 
     public void initialize() {
         db = new DB();
@@ -51,11 +54,10 @@ public class SignUpController {
         String name = nameField.getText();
         int age = Integer.parseInt(ageField.getText()); // Make sure to handle NumberFormatException
         String username = usernameField.getText();
-        String email = ""; // Get this value from the user input. You need to add an email field in your form.
+        String email = emailField.getText();
         String password = passwordField.getText();
 
         if (role.equals("")) {
-            // Handle case where neither Landlord nor Customer button was clicked
             System.out.println("Please select a role (Landlord or Customer)");
             return;
         }
@@ -78,14 +80,11 @@ public class SignUpController {
     @FXML
     public void handleBackButton(ActionEvent event) {
         try {
-            // Load the Login.fxml file
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
             Parent root = loader.load();
 
-            // Get the controller of the Login.fxml file
             LoginController loginController = loader.getController();
 
-            // Set the current stage to the login scene
             Stage currentStage = (Stage) usernameField.getScene().getWindow();
             currentStage.setScene(new Scene(root));
             currentStage.setTitle("Login");

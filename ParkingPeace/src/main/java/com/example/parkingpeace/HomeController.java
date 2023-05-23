@@ -12,6 +12,7 @@ public class HomeController {
 
     @FXML
     private Button logoutButton;
+
     private Stage stage;
 
     public void setStage(Stage stage) {
