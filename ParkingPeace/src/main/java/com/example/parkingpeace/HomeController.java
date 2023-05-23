@@ -1,10 +1,17 @@
 package com.example.parkingpeace;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 public class HomeController {
 
+    @FXML
+    private Label welcomeLabel;
+
+    @FXML
+    private Button logoutButton;
     private Stage stage;
 
     public void setStage(Stage stage) {

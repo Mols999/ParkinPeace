@@ -14,6 +14,9 @@ import java.io.IOException;
 
 public class LoginController {
 
+    @FXML
+    private HomeController homeController;
+
     private Stage stage;
 
     @FXML
@@ -61,7 +64,7 @@ public class LoginController {
                 // Load home page FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
                 Parent root = loader.load();
-                HomeController homeController = loader.getController();
+                homeController = loader.getController();
                 homeController.setStage(stage);
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -77,7 +80,7 @@ public class LoginController {
                 // Load home page FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
                 Parent root = loader.load();
-                HomeController homeController = loader.getController();
+                homeController = loader.getController();
                 homeController.setStage(stage);
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -93,7 +96,7 @@ public class LoginController {
                 // Load home page FXML
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
                 Parent root = loader.load();
-                HomeController homeController = loader.getController();
+                homeController = loader.getController();
                 homeController.setStage(stage);
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
@@ -105,7 +108,7 @@ public class LoginController {
             // If we reach here, login has failed
             errorLabel.setText("Incorrect login credentials");
             errorLabel.setStyle("-fx-text-fill: red;");
-        } catch (Exception e) {
+        } catch (IOException e) {
             errorLabel.setText("An error occurred. Please try again.");
             errorLabel.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
