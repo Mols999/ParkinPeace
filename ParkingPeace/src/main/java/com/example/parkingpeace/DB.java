@@ -7,21 +7,21 @@ import java.sql.*;
 import java.util.Properties;
 
 public class DB {
-    private static Connection con;
-    private static PreparedStatement ps;
-    private static ResultSet rs;
-    private static String port;
-    private static String databaseName;
-    private static String userName;
-    private static String password;
+    private Connection con;
+    private PreparedStatement ps;
+    private ResultSet rs;
+    private String port;
+    private String databaseName;
+    private String userName;
+    private String password;
 
     public static final String NOMOREDATA = "|ND|";
-    private static int numberOfColumns;
-    private static int currentColumnNumber = 1;
+    private int numberOfColumns;
+    private int currentColumnNumber = 1;
 
-    private static boolean moreData = false;
-    private static boolean pendingData = false;
-    private static boolean terminated = false;
+    private boolean moreData = false;
+    private boolean pendingData = false;
+    private boolean terminated = false;
 
     public DB() {
         initialize();
@@ -54,11 +54,12 @@ public class DB {
         }
     }
 
-
-
     public void close() {
         disconnect();
     }
+
+
+
     private void disconnect() {
         try {
             if (rs != null) {
@@ -198,6 +199,7 @@ public class DB {
         }
         return false;
     }
+
     public boolean selectSQLWithParams(String sql, String... params) {
         if (terminated) {
             System.exit(0);
@@ -231,5 +233,8 @@ public class DB {
             pendingData = false;
             return false;
         }
+    }
+    public boolean hasMoreData() {
+        return moreData;
     }
 }

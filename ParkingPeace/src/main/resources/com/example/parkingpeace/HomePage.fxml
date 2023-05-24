@@ -15,6 +15,7 @@
 <?import javafx.geometry.Pos?>
 <?import com.example.parkingpeace.HomeController?>
 
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.HomeController" prefWidth="960" prefHeight="540">
     <top>
         <HBox alignment="CENTER" spacing="25">
@@ -29,22 +30,29 @@
         </HBox>
     </top>
     <center>
-        <TableView>
+        <TableView fx:id="tableView">
             <columns>
-                <TableColumn>
-                    <!-- Add a cell factory for the image column if needed -->
+                <TableColumn fx:id="photoColumn" prefWidth="150">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="photo" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the 5-star rating column if needed -->
+                <TableColumn fx:id="addressColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="address" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the address column if needed -->
+                <TableColumn fx:id="ratingColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="rating" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the price per night column if needed -->
+                <TableColumn fx:id="priceColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="price" />
+                    </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
     </center>
 </BorderPane>
-

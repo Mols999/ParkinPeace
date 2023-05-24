@@ -15,34 +15,31 @@ import java.io.IOException;
 public class SignUpController {
     @FXML
     private TextField usernameField;
-
     @FXML
     private TextField nameField;
-
     @FXML
     private TextField ageField;
-
     @FXML
     private TextField emailField;
-
     @FXML
     private ComboBox<String> genderComboBox;
-
     @FXML
     private PasswordField passwordField;
-
     private String role = "";
-
     private DB db;
+
+
 
     public void initialize() {
         db = new DB();
     }
 
+
     @FXML
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
+
 
     @FXML
     public void handleCustomerButton(ActionEvent event) {
@@ -62,12 +59,14 @@ public class SignUpController {
             return;
         }
 
+
         String sql = "";
         if (role.equals("Customer")) {
             sql = "INSERT INTO tblCustomer (fldCustomerName, fldCustomerAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         } else if (role.equals("Landlord")) {
             sql = "INSERT INTO tblLandlord (fldLandlordName, fldLandlordAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         }
+
 
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
