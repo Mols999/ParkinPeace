@@ -19,7 +19,7 @@ public class DB {
     private int numberOfColumns;
     private int currentColumnNumber = 1;
 
-    private boolean moreData = false;
+    protected boolean moreData = false;
     private boolean pendingData = false;
     private boolean terminated = false;
 
@@ -234,6 +234,8 @@ public class DB {
             return false;
         }
     }
+
+
     public boolean hasMoreData() {
         return moreData;
     }

@@ -5,8 +5,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,8 +12,12 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Pos?>
 <?import com.example.parkingpeace.HomeController?>
-
 <?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.util.Callback?>
+
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ContextMenu?>
+
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.HomeController" prefWidth="960" prefHeight="540">
     <top>
         <HBox alignment="CENTER" spacing="25">
@@ -25,31 +27,66 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" />
-            <ComboBox promptText="Select" />
-            <!-- Add additional elements to the HBox for the dropdown menu -->
+            <ComboBox promptText="Menu" onMouseClicked="#handleMenuClick" fx:id="menuComboBox">
+                <contextMenu>
+                    <ContextMenu>
+                        <items>
+                            <MenuItem text="Profile" onAction="#handleProfileClick" />
+                            <MenuItem text="Logout" onAction="#handleLogoutClick" />
+                            <MenuItem text="Bookings" onAction="#handleBookingsClick" />
+                            <MenuItem text="Ratings and Comments" onAction="#handleRatingsCommentsClick" />
+                        </items>
+                    </ContextMenu>
+                </contextMenu>
+            </ComboBox>
         </HBox>
     </top>
     <center>
         <TableView fx:id="tableView">
             <columns>
-                <TableColumn fx:id="photoColumn" prefWidth="150">
+                <TableColumn fx:id="photoColumn" prefWidth="150" text="Photo">
                     <cellValueFactory>
                         <PropertyValueFactory property="photo" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="addressColumn">
+                <TableColumn fx:id="addressColumn" text="Address">
                     <cellValueFactory>
                         <PropertyValueFactory property="address" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="ratingColumn">
+                <TableColumn fx:id="zipCodeColumn" text="Zip Code">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="zipCode" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="cityColumn" text="City">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="city" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="ratingColumn" text="Rating">
                     <cellValueFactory>
                         <PropertyValueFactory property="rating" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="priceColumn">
+                <TableColumn fx:id="servicesColumn" text="Services">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="services" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="availabilityColumn" text="Availability">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="availability" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="priceColumn" text="Price">
                     <cellValueFactory>
                         <PropertyValueFactory property="price" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="rentColumn" text="">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="rentButton" />
                     </cellValueFactory>
                 </TableColumn>
             </columns>
