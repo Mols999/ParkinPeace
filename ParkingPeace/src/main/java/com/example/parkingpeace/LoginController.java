@@ -1,8 +1,8 @@
 package com.example.parkingpeace;
 
+import com.example.parkingpeace.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -25,77 +27,103 @@ public class LoginController {
     @FXML
     private Label errorLabel;
 
-
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-
-
     @FXML
     public void handleGoToSignUpButton(ActionEvent event) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.setTitle("Sign Up");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneSwitcher.switchToScene("SignUp.fxml", "Sign Up", stage);
     }
 
     @FXML
     public void handleLoginButton(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
+        ResultSet resultSet = null;
 
         try {
             DB db = new DB();
 
-            String sql = "SELECT fldUsername, fldPassword FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            String sql = "SELECT * FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
+            resultSet = db.selectSQLWithParams(sql, username, password);
+            if (resultSet.next()) {
+                System.out.println("SQL Query: " + sql);
+                System.out.println("Username: " + username);
+                System.out.println("Password: " + password);
                 // Handle customer login
                 System.out.println("Login successful as customer!");
+                int customerId = resultSet.getInt("fldCustomerId");
+                String customerName = resultSet.getString("fldCustomerName");
+                int customerAge = resultSet.getInt("fldCustomerAge");
+                String email = resultSet.getString("fldEmail");
+                double rating = resultSet.getDouble("fldRating");
+                UserSession.getInstance(username, "customer", customerId, customerName, customerAge, email, password, rating);
                 navigateToHomePage();
                 return;
             }
+            resultSet.close(); // Close the result set after use
 
-            sql = "SELECT fldUsername, fldPassword FROM tblLandlord WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            sql = "SELECT * FROM tblLandlord WHERE fldUsername = ? AND fldPassword = ?";
+            resultSet = db.selectSQLWithParams(sql, username, password);
+            if (resultSet.next()) {
                 // Handle landlord login
                 System.out.println("Login successful as landlord!");
+                int landlordId = resultSet.getInt("fldLandlordId");
+                String landlordName = resultSet.getString("fldLandlordName");
+                int landlordAge = resultSet.getInt("fldLandlordAge");
+                String email = resultSet.getString("fldEmail");
+                double rating = resultSet.getDouble("fldRating");
+                UserSession.getInstance(username, "landlord", landlordId, landlordName, landlordAge, email, password, rating);
                 navigateToHomePage();
                 return;
             }
+            resultSet.close(); // Close the result set after use
 
-            sql = "SELECT fldUsername, fldPassword FROM tblAdmin WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            sql = "SELECT * FROM tblAdmin WHERE fldUsername = ? AND fldPassword = ?";
+            resultSet = db.selectSQLWithParams(sql, username, password);
+            if (resultSet.next()) {
                 // Handle admin login
                 System.out.println("Login successful as admin!");
+                int adminId = resultSet.getInt("fldAdminId");
+                String adminName = resultSet.getString("fldAdminName");
+                int adminAge = resultSet.getInt("fldAdminAge");
+                String email = resultSet.getString("fldEmail");
+                double rating = resultSet.getDouble("fldRating");
+                UserSession.getInstance(username, "admin", adminId, adminName, adminAge, email, password, rating);
                 navigateToHomePage();
                 return;
             }
 
             // If we reach here, login has failed
+            System.out.println("Login failed. Incorrect login credentials.");
             errorLabel.setText("Incorrect login credentials");
             errorLabel.setStyle("-fx-text-fill: red;");
         } catch (IOException e) {
-            errorLabel.setText("An error occurred. Please try again.");
+            errorLabel.setText("An error occurred while accessing the database. Please try again.");
             errorLabel.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
+        } catch (SQLException e) {
+            errorLabel.setText("An error occurred while executing the SQL query. Please try again.");
+            errorLabel.setStyle("-fx-text-fill: red;");
+            e.printStackTrace();
+        } finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private void navigateToHomePage() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
-        Parent root = loader.load();
-        HomeController homeController = loader.getController();
-        homeController.setStage(stage);
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Home Page");
-        stage.show();
+        Stage homeStage = (Stage) usernameField.getScene().getWindow();
+
+        SceneSwitcher.switchToScene("HomePage.fxml", "Home Page", homeStage);
+
+        // Close the current login stage
+        stage.close();
     }
 }

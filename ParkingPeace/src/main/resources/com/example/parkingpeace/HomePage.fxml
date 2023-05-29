@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Pos?>
-<?import com.example.parkingpeace.HomeController?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.util.Callback?>
-
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ContextMenu?>
-
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.HomeController" prefWidth="960" prefHeight="540">
     <top>
         <HBox alignment="CENTER" spacing="25">
@@ -27,6 +21,14 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" />
+            <ComboBox fx:id="dropdownMenu" promptText="Select Action" onAction="#handleDropdownMenuAction">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Edit Profile" />
+                        <String fx:value="Another Action" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
         </HBox>
     </top>
     <center>
