@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.parkingpeace.BookingController"
+      alignment="CENTER"
+      spacing="10">
+
+    <Label text="Booking Details" styleClass="title" />
+
+    <Label text="Name:" />
+    <TextField fx:id="nameTextField" promptText="Enter your name" />
+
+    <Label text="Date:" />
+    <TextField fx:id="dateTextField" promptText="Enter booking date" />
+
+    <Button text="Book" onAction="#handleBookButton" />
+</VBox>

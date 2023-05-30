@@ -5,8 +5,6 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,6 +12,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Pos?>
 <?import com.example.parkingpeace.HomeController?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.util.Callback?>
+
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ContextMenu?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.HomeController" prefWidth="960" prefHeight="540">
     <top>
@@ -24,27 +27,57 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" />
-            <ComboBox promptText="Select" />
-            <!-- Add additional elements to the HBox for the dropdown menu -->
         </HBox>
     </top>
     <center>
-        <TableView>
+        <TableView fx:id="tableView">
             <columns>
-                <TableColumn>
-                    <!-- Add a cell factory for the image column if needed -->
+                <TableColumn fx:id="photoColumn" prefWidth="150" text="Photo">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="photo" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the 5-star rating column if needed -->
+                <TableColumn fx:id="addressColumn" text="Address">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="address" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the address column if needed -->
+                <TableColumn fx:id="zipCodeColumn" text="Zip Code">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="zipCode" />
+                    </cellValueFactory>
                 </TableColumn>
-                <TableColumn>
-                    <!-- Add a cell factory for the price per night column if needed -->
+                <TableColumn fx:id="cityColumn" text="City">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="city" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="ratingColumn" text="Rating">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="rating" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="servicesColumn" text="Services">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="services" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="availabilityColumn" text="Availability">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="availability" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="priceColumn" text="Price">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="price" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="rentColumn" text="">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="rentButton" />
+                    </cellValueFactory>
                 </TableColumn>
             </columns>
         </TableView>
     </center>
 </BorderPane>
-

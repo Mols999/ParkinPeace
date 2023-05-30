@@ -9,8 +9,5 @@
         <module name="ParkingPeace" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="ParkingPeace" target="18" />
-    </bytecodeTargetLevel>
   </component>
 </project>
