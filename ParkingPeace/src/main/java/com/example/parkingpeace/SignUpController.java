@@ -2,12 +2,17 @@ package com.example.parkingpeace;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class SignUpController {
+import java.io.IOException;
 
+public class SignUpController {
     @FXML
     private TextField usernameField;
     @FXML
@@ -21,6 +26,8 @@ public class SignUpController {
     private String role = "";
     private DB db;
 
+
+
     public void initialize() {
         db = new DB();
     }
@@ -29,7 +36,6 @@ public class SignUpController {
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
-
     @FXML
     public void handleCustomerButton(ActionEvent event) {
         role = "Customer";
@@ -48,12 +54,14 @@ public class SignUpController {
             return;
         }
 
+
         String sql = "";
         if (role.equals("Customer")) {
             sql = "INSERT INTO tblCustomer (fldCustomerName, fldCustomerAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         } else if (role.equals("Landlord")) {
             sql = "INSERT INTO tblLandlord (fldLandlordName, fldLandlordAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         }
+
 
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
@@ -62,10 +70,20 @@ public class SignUpController {
             System.out.println("There was an error signing up the user.");
         }
     }
-
     @FXML
     public void handleBackButton(ActionEvent event) {
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-        SceneSwitcher.switchToScene("Login.fxml", "Login", stage);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            Parent root = loader.load();
+
+            LoginController loginController = loader.getController();
+
+            Stage currentStage = (Stage) usernameField.getScene().getWindow();
+            currentStage.setScene(new Scene(root));
+            currentStage.setTitle("Login");
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -74,30 +74,6 @@ public class DB {
         }
     }
 
-    public ResultSet selectSQLWithParams(String sql, Object... params) throws SQLException {
-        if (terminated) {
-            System.exit(0);
-        }
-        if (ps != null) {
-            ps.close();
-        }
-        System.out.println("Executing SQL query: " + sql); // Debug statement
-        connect();
-        ps = con.prepareStatement(sql);
-        for (int i = 0; i < params.length; i++) {
-            ps.setObject(i + 1, params[i]);
-        }
-        rs = ps.executeQuery();
-        ResultSetMetaData rsmd = rs.getMetaData(); // Retrieve metadata here
-        numberOfColumns = rsmd.getColumnCount();
-        pendingData = true;
-        moreData = rs.next();
-
-        // Do not close the result set here
-
-        return rs;
-    }
-
 
     public String getDisplayData() {
         if (terminated) {
@@ -169,6 +145,24 @@ public class DB {
         return executeUpdate(sql, values);
     }
 
+    public boolean updateSQLWithParams(String sql, Object... params) {
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
+            }
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
+
+
     private boolean executeUpdate(String sql, Object... values) {
         if (terminated) {
             System.exit(0);
@@ -199,43 +193,24 @@ public class DB {
         return false;
     }
 
-    public boolean updateSQLWithParams(String sql, Object... values) {
-        return executeUpdate(sql, values);
-    }
-
-    public boolean updateSQLWithParams(String sql, String... params) {
-        return executeUpdateWithParams(sql, params);
-    }
-
-    private boolean executeUpdateWithParams(String sql, String... params) {
-        if (terminated) {
-            System.exit(0);
-        }
-        if (pendingData) {
-            terminated = true;
-            throw new RuntimeException("ERROR! There were pending data from the previous select, communication with the database is lost!");
-        }
+    public boolean selectSQLWithParams(String sql, String... params) {
         try {
-            if (ps != null) {
-                ps.close();
-            }
             connect();
             ps = con.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
                 ps.setString(i + 1, params[i]);
             }
-            int rows = ps.executeUpdate();
-            ps.close();
-            if (rows > 0) {
-                return true;
-            }
-        } catch (RuntimeException | SQLException e) {
+            rs = ps.executeQuery();
+            return rs.next();
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
             disconnect();
         }
         return false;
     }
+
+
 
     public boolean hasMoreData() {
         return moreData;

@@ -15,7 +15,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class HomeController {
@@ -146,46 +145,38 @@ public class HomeController {
         });
 
         // Populate the TableView with data
-        try {
-            tableView.setItems(getParkingSpotData());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tableView.setItems(getParkingSpotData());
     }
 
-    private ObservableList<ParkingSpotData> getParkingSpotData() throws SQLException {
+    private ObservableList<ParkingSpotData> getParkingSpotData() {
         ObservableList<ParkingSpotData> data = FXCollections.observableArrayList();
 
         // Establish a database connection using the DB class
         DB db = new DB();
-        String sql = "SELECT ps.fldPhotoFilePath, ps.fldLocation, ps.fldZipCode, ps.fldCity, l.fldRating, ps.fldPrice, ps.fldServices, ps.fldAvailability " +
-                "FROM tblParkingSpot ps " +
-                "INNER JOIN tblLandlord l ON ps.fldLandlordID = l.fldLandlordID";
-        ResultSet resultSet = db.selectSQLWithParams(sql);
+        String sql = "SELECT fldParkingSpotID, fldLocation, fldPrice, fldAvailability, fldServices, fldLandlordID, fldZipCode, fldCity, fldPhotoFilePath " +
+                "FROM tblParkingSpot";
 
         try {
-            // Process each row in the result set and create ParkingSpotData objects
-            while (resultSet.next()) {
-                String photoFilePath = resultSet.getString("fldPhotoFilePath");
-                String address = resultSet.getString("fldLocation");
-                String zipCode = resultSet.getString("fldZipCode");
-                String city = resultSet.getString("fldCity");
-                double rating = resultSet.getDouble("fldRating");
-                double price = resultSet.getDouble("fldPrice");
-                String services = resultSet.getString("fldServices");
-                boolean availability = resultSet.getBoolean("fldAvailability");
-
-                // Create an Image object from the photo file path
-                Image image = getImageFromFilePath(photoFilePath);
-
-                // Create a Rent button
+            db.selectSQLWithParams(sql);
+            while (db.hasMoreData()) {
+                int spotID = Integer.parseInt(db.getData());
+                String location = db.getData();
+                double price = Double.parseDouble(db.getData());
+                boolean availability = db.getData().equals("1");
+                String services = db.getData();
+                int landlordID = Integer.parseInt(db.getData());
+                String zipCode = db.getData();
+                String city = db.getData();
+                String photoFilePath = db.getData();
+                Image photo = getImageFromFilePath(photoFilePath);
                 Button rentButton = new Button("Rent");
 
                 // Create a ParkingSpotData object and add it to the list
-                ParkingSpotData parkingSpotData = new ParkingSpotData(image, address, zipCode, city, rating, price, services, availability, rentButton);
+                ParkingSpotData parkingSpotData = new ParkingSpotData(photo, location, zipCode, city, price, services, availability, rentButton);
+
                 data.add(parkingSpotData);
             }
-        } catch (RuntimeException | SQLException e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
         } finally {
             db.close(); // Close the database connection
@@ -193,11 +184,10 @@ public class HomeController {
 
         return data;
     }
-
     private Image getImageFromFilePath(String filePath) {
         try {
-            // Load the image from the resource path
-            return new Image(getClass().getResourceAsStream("/" + filePath));
+            // Load the image using the file path
+            return new Image("file:" + filePath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -205,26 +195,27 @@ public class HomeController {
         return null;
     }
 
+    public void setStage(Stage stage) {
+    }
+
     public static class ParkingSpotData {
         private final Image photo;
         private final String address;
         private final String zipCode;
         private final String city;
-        private final double rating;
         private final double price;
         private final String services;
-        private final String availability;
+        private final boolean availability;
         private final Button rentButton;
 
-        public ParkingSpotData(Image photo, String address, String zipCode, String city, double rating, double price, String services, boolean availability, Button rentButton) {
+        public ParkingSpotData(Image photo, String address, String zipCode, String city, double price, String services, boolean availability, Button rentButton) {
             this.photo = photo;
             this.address = address;
             this.zipCode = zipCode;
             this.city = city;
-            this.rating = rating;
             this.price = price;
             this.services = services;
-            this.availability = availability ? "Available" : "Not Available";
+            this.availability = availability;
             this.rentButton = rentButton;
         }
 
@@ -244,10 +235,6 @@ public class HomeController {
             return city;
         }
 
-        public double getRating() {
-            return rating;
-        }
-
         public double getPrice() {
             return price;
         }
@@ -256,7 +243,7 @@ public class HomeController {
             return services;
         }
 
-        public String getAvailability() {
+        public boolean getAvailability() {
             return availability;
         }
 

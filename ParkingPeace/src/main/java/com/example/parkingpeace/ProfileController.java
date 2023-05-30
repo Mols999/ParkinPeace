@@ -7,14 +7,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProfileController {
 
     private Stage stage;
-    private UserSession userSession;
 
     @FXML
     private TextField nameField;
@@ -39,23 +36,22 @@ public class ProfileController {
     public void initialize() throws SQLException {
         // Retrieve profile details based on the username
         DB db = new DB();
-        userSession = UserSession.getInstance(null, null, 0, null, 0, null, null, 0.0); // Retrieve the user session
-        String username = userSession.getUsername(); // Retrieve the username from the user session
+        String username = "username"; // Replace "username" with the actual username
 
         String sql = "SELECT fldCustomerName, fldCustomerAge, fldEmail FROM tblCustomer WHERE fldUsername = ?";
-        ResultSet resultSet = db.selectSQLWithParams(sql, username);
-        try {
-            if (resultSet.next()) {
-                String name = resultSet.getString("fldCustomerName");
-                String age = resultSet.getString("fldCustomerAge");
-                String email = resultSet.getString("fldEmail");
+        boolean exists = db.selectSQLWithParams(sql, username);
 
-                nameField.setText(name);
-                ageField.setText(age);
-                emailField.setText(email);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (exists) {
+            String name = ""; // Initialize with empty values
+            String age = "";
+            String email = "";
+
+            // Retrieve the profile details
+            // Assign retrieved values to the name, age, and email variables
+
+            nameField.setText(name);
+            ageField.setText(age);
+            emailField.setText(email);
         }
     }
 
@@ -69,10 +65,11 @@ public class ProfileController {
 
         // Update the profile details in the database
         DB db = new DB();
-        String username = userSession.getUsername(); // Retrieve the username from the user session
+        String username = "username"; // Replace "username" with the actual username
 
         String sql = "UPDATE tblCustomer SET fldCustomerName = ?, fldCustomerAge = ?, fldEmail = ?, fldPassword = ? WHERE fldUsername = ?";
         boolean updated = db.updateSQLWithParams(sql, name, age, email, password, username);
+
         if (updated) {
             statusLabel.setText("Profile details updated successfully");
             statusLabel.setStyle("-fx-text-fill: green;");
@@ -85,6 +82,5 @@ public class ProfileController {
     @FXML
     public void handleBackButton(ActionEvent event) {
         SceneSwitcher.switchToScene("HomePage.fxml", "Home Page", stage);
-
     }
 }
