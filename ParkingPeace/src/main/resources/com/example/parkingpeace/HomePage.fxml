@@ -27,18 +27,6 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" />
-            <ComboBox promptText="Menu" onMouseClicked="#handleMenuClick" fx:id="menuComboBox">
-                <contextMenu>
-                    <ContextMenu>
-                        <items>
-                            <MenuItem text="Profile" onAction="#handleProfileClick" />
-                            <MenuItem text="Logout" onAction="#handleLogoutClick" />
-                            <MenuItem text="Bookings" onAction="#handleBookingsClick" />
-                            <MenuItem text="Ratings and Comments" onAction="#handleRatingsCommentsClick" />
-                        </items>
-                    </ContextMenu>
-                </contextMenu>
-            </ComboBox>
         </HBox>
     </top>
     <center>

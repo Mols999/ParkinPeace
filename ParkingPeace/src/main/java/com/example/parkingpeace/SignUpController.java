@@ -22,8 +22,6 @@ public class SignUpController {
     @FXML
     private TextField emailField;
     @FXML
-    private ComboBox<String> genderComboBox;
-    @FXML
     private PasswordField passwordField;
     private String role = "";
     private DB db;
@@ -34,13 +32,10 @@ public class SignUpController {
         db = new DB();
     }
 
-
     @FXML
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
-
-
     @FXML
     public void handleCustomerButton(ActionEvent event) {
         role = "Customer";
@@ -75,7 +70,6 @@ public class SignUpController {
             System.out.println("There was an error signing up the user.");
         }
     }
-
     @FXML
     public void handleBackButton(ActionEvent event) {
         try {

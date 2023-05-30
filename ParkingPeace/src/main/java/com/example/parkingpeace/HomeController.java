@@ -1,6 +1,5 @@
 package com.example.parkingpeace;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,12 +8,18 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import java.sql.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import com.example.parkingpeace.DB;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class HomeController {
 
@@ -38,8 +43,9 @@ public class HomeController {
     private TableColumn<ParkingSpotData, String> availabilityColumn;
     @FXML
     private TableColumn<ParkingSpotData, Button> rentColumn;
-    @FXML
-    private MenuButton menuButton;
+
+
+
 
 
     public void initialize() {
@@ -58,8 +64,8 @@ public class HomeController {
         photoColumn.setCellFactory(column -> new TableCell<ParkingSpotData, Image>() {
             private final ImageView imageView = new ImageView();
             {
-                imageView.setFitHeight(50);
-                imageView.setFitWidth(50);
+                imageView.setFitHeight(100);
+                imageView.setFitWidth(100);
             }
 
             @Override
@@ -74,9 +80,13 @@ public class HomeController {
             }
         });
 
+
+
+
         // Set up the custom cell factory for the rentColumn
         rentColumn.setCellFactory(column -> new TableCell<ParkingSpotData, Button>() {
             private final Button rentButton = new Button("Rent");
+
 
             @Override
             protected void updateItem(Button item, boolean empty) {
@@ -95,10 +105,17 @@ public class HomeController {
         });
 
         // Populate the TableView with data
-        tableView.setItems(getParkingSpotData());
+        try {
+            tableView.setItems(getParkingSpotData());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    private ObservableList<ParkingSpotData> getParkingSpotData() {
+
+
+
+    private ObservableList<ParkingSpotData> getParkingSpotData() throws SQLException {
         ObservableList<ParkingSpotData> data = FXCollections.observableArrayList();
 
         // Establish a database connection using the DB class
@@ -120,34 +137,7 @@ public class HomeController {
                 boolean availability = db.getData().equalsIgnoreCase("1");
 
                 // Create an Image object from the photo file path
-                Image image = new Image("file:" + photoFilePath);
-                photoColumn.setCellFactory(column -> new TableCell<ParkingSpotData, Image>() {
-                    private final ImageView imageView = new ImageView();
-                    private final Label failureLabel = new Label("Failed to load image");
-
-                    {
-                        imageView.setFitHeight(50);
-                        imageView.setFitWidth(50);
-                        failureLabel.setVisible(false);
-                    }
-
-                    @Override
-                    protected void updateItem(Image item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                            failureLabel.setVisible(false);
-                        } else if (item.isError()) {
-                            setGraphic(failureLabel);
-                            failureLabel.setVisible(true);
-                        } else {
-                            imageView.setImage(item);
-                            setGraphic(imageView);
-                            failureLabel.setVisible(false);
-                        }
-                    }
-                });
-
+                Image image = getImageFromFilePath(photoFilePath);
 
                 // Create a Rent button
                 Button rentButton = new Button("Rent");
@@ -165,98 +155,23 @@ public class HomeController {
         return data;
     }
 
+
+
+
+    private Image getImageFromFilePath(String filePath) {
+        try {
+            // Load the image from the resource path
+            return new Image(getClass().getResourceAsStream("/" + filePath));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
     public void setStage(Stage stage) {
     }
-
-    @FXML
-    private void handleLogoutClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Login.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Close the current window (assuming this is the HomeController window)
-            Stage currentStage = (Stage) menuButton.getScene().getWindow();
-            currentStage.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleProfileClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Profile.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Close the current window (assuming this is the HomeController window)
-            Stage currentStage = (Stage) menuButton.getScene().getWindow();
-            currentStage.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleBookingsClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Bookings.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Close the current window (assuming this is the HomeController window)
-            Stage currentStage = (Stage) menuButton.getScene().getWindow();
-            currentStage.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void handleMenuClick(MouseEvent event) {
-        // Get the selected menu item
-        MenuItem selectedItem = (MenuItem) event.getTarget();
-
-        // Get the text of the selected menu item
-        String menuText = selectedItem.getText();
-
-        // Perform different actions based on the selected menu item
-        if (menuText.equals("Profile")) {
-            handleProfileClick();
-        } else if (menuText.equals("Logout")) {
-            handleLogoutClick();
-        } else if (menuText.equals("Bookings")) {
-            handleBookingsClick();
-        } else if (menuText.equals("Ratings and Comments")) {
-            handleRatingsCommentsClick();
-        }
-    }
-
-
-    @FXML
-    private void handleRatingsCommentsClick() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("RatingsandComments.fxml"));
-            Parent root = fxmlLoader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.show();
-
-            // Close the current window (assuming this is the HomeController window)
-            Stage currentStage = (Stage) menuButton.getScene().getWindow();
-            currentStage.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 
     public static class ParkingSpotData {
