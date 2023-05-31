@@ -1,5 +1,6 @@
 package com.example.parkingpeace;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,11 +14,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -43,10 +39,45 @@ public class HomeController {
     private TableColumn<ParkingSpotData, String> availabilityColumn;
     @FXML
     private TableColumn<ParkingSpotData, Button> rentColumn;
+    @FXML
+    private ComboBox<String> dropdownMenu;
 
+    private String username;
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    @FXML
+    public void handleDropdownMenuAction(ActionEvent event) {
+        String menuItem = dropdownMenu.getValue().toString();
+        String username = ""; // Obtain the username from your application
 
+        if (menuItem.equals("Edit Profile")) {
+            try {
+                Stage profileStage = new Stage();
+                profileStage.setTitle("Edit Profile");
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+                Parent profileRoot = loader.load();
+                ProfileController profileController = loader.getController();
+
+                profileController.setStage(profileStage);
+
+                Scene profileScene = new Scene(profileRoot);
+                profileStage.setScene(profileScene);
+                profileStage.showAndWait();
+
+                initialize();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (menuItem.equals("Another Action")) {
+            // Code to handle the "Another Action" action
+        }
+    }
+
+    private FXMLLoader loader;
 
     public void initialize() {
         // Set up the cell value factories for each column
@@ -63,6 +94,7 @@ public class HomeController {
         // Set up the custom cell factory for the photoColumn
         photoColumn.setCellFactory(column -> new TableCell<ParkingSpotData, Image>() {
             private final ImageView imageView = new ImageView();
+
             {
                 imageView.setFitHeight(100);
                 imageView.setFitWidth(100);
@@ -80,13 +112,26 @@ public class HomeController {
             }
         });
 
-
-
-
         // Set up the custom cell factory for the rentColumn
         rentColumn.setCellFactory(column -> new TableCell<ParkingSpotData, Button>() {
             private final Button rentButton = new Button("Rent");
 
+            {
+                rentButton.setOnAction(event -> {
+                    ParkingSpotData parkingSpotData = getTableView().getItems().get(getIndex());
+                    Stage stage = (Stage) rentButton.getScene().getWindow();
+                    SceneSwitcher.switchToScene("Bookings.fxml", "Bookings", stage);
+                    // Pass the necessary data to the BookingController here
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("Bookings.fxml"));
+                        Parent root = loader.load();
+                        BookingController bookingController = loader.getController();
+                        bookingController.setData(parkingSpotData);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
 
             @Override
             protected void updateItem(Button item, boolean empty) {
@@ -94,56 +139,41 @@ public class HomeController {
                 if (empty || item == null) {
                     setGraphic(null);
                 } else {
-                    rentButton.setOnAction(event -> {
-                        ParkingSpotData parkingSpotData = getTableView().getItems().get(getIndex());
-                        // Perform the rent logic here
-                        System.out.println("Rent button clicked for: " + parkingSpotData.getAddress());
-                    });
                     setGraphic(rentButton);
                 }
             }
         });
 
         // Populate the TableView with data
-        try {
-            tableView.setItems(getParkingSpotData());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tableView.setItems(getParkingSpotData());
     }
 
-
-
-
-    private ObservableList<ParkingSpotData> getParkingSpotData() throws SQLException {
+    private ObservableList<ParkingSpotData> getParkingSpotData() {
         ObservableList<ParkingSpotData> data = FXCollections.observableArrayList();
 
         // Establish a database connection using the DB class
         DB db = new DB();
-        db.selectSQL("SELECT ps.fldPhotoFilePath, ps.fldLocation, ps.fldZipCode, ps.fldCity, l.fldRating, ps.fldPrice, ps.fldServices, ps.fldAvailability " +
-                "FROM tblParkingSpot ps " +
-                "INNER JOIN tblLandlord l ON ps.fldLandlordID = l.fldLandlordID");
+        String sql = "SELECT fldParkingSpotID, fldLocation, fldPrice, fldAvailability, fldServices, fldLandlordID, fldZipCode, fldCity, fldPhotoFilePath " +
+                "FROM tblParkingSpot";
 
         try {
-            // Process each row in the result set and create ParkingSpotData objects
-            while (db.moreData) {
-                String photoFilePath = db.getData();
-                String address = db.getData();
+            db.selectSQLWithParams(sql);
+            while (db.hasMoreData()) {
+                int spotID = Integer.parseInt(db.getData());
+                String location = db.getData();
+                double price = Double.parseDouble(db.getData());
+                boolean availability = db.getData().equals("1");
+                String services = db.getData();
+                int landlordID = Integer.parseInt(db.getData());
                 String zipCode = db.getData();
                 String city = db.getData();
-                double rating = Double.parseDouble(db.getData());
-                double price = Double.parseDouble(db.getData());
-                String services = db.getData();
-                boolean availability = db.getData().equalsIgnoreCase("1");
-
-                // Create an Image object from the photo file path
-                Image image = getImageFromFilePath(photoFilePath);
-
-                // Create a Rent button
+                String photoFilePath = db.getData();
+                Image photo = getImageFromFilePath(photoFilePath);
                 Button rentButton = new Button("Rent");
 
                 // Create a ParkingSpotData object and add it to the list
-                ParkingSpotData parkingSpotData = new ParkingSpotData(image, address, zipCode, city, rating, price, services, availability, rentButton);
+                ParkingSpotData parkingSpotData = new ParkingSpotData(photo, location, zipCode, city, price, services, availability, rentButton);
+
                 data.add(parkingSpotData);
             }
         } catch (RuntimeException e) {
@@ -154,14 +184,10 @@ public class HomeController {
 
         return data;
     }
-
-
-
-
     private Image getImageFromFilePath(String filePath) {
         try {
-            // Load the image from the resource path
-            return new Image(getClass().getResourceAsStream("/" + filePath));
+            // Load the image using the file path
+            return new Image("file:" + filePath);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,31 +195,27 @@ public class HomeController {
         return null;
     }
 
-
     public void setStage(Stage stage) {
     }
-
 
     public static class ParkingSpotData {
         private final Image photo;
         private final String address;
         private final String zipCode;
         private final String city;
-        private final double rating;
         private final double price;
         private final String services;
-        private final String availability;
+        private final boolean availability;
         private final Button rentButton;
 
-        public ParkingSpotData(Image photo, String address, String zipCode, String city, double rating, double price, String services, boolean availability, Button rentButton) {
+        public ParkingSpotData(Image photo, String address, String zipCode, String city, double price, String services, boolean availability, Button rentButton) {
             this.photo = photo;
             this.address = address;
             this.zipCode = zipCode;
             this.city = city;
-            this.rating = rating;
             this.price = price;
             this.services = services;
-            this.availability = availability ? "Available" : "Not Available";
+            this.availability = availability;
             this.rentButton = rentButton;
         }
 
@@ -213,10 +235,6 @@ public class HomeController {
             return city;
         }
 
-        public double getRating() {
-            return rating;
-        }
-
         public double getPrice() {
             return price;
         }
@@ -225,7 +243,7 @@ public class HomeController {
             return services;
         }
 
-        public String getAvailability() {
+        public boolean getAvailability() {
             return availability;
         }
 

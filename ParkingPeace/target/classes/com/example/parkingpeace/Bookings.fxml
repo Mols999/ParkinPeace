@@ -1,22 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Button?>
+<?import java.lang.String?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.collections.FXCollections?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.parkingpeace.BookingController"
-      alignment="CENTER"
-      spacing="10">
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import java.time.LocalDate?>
 
-    <Label text="Booking Details" styleClass="title" />
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.BookingController"
+      prefWidth="960" prefHeight="540" spacing="10">
 
-    <Label text="Name:" />
-    <TextField fx:id="nameTextField" promptText="Enter your name" />
+    <Label text="Select booking dates"/>
 
-    <Label text="Date:" />
-    <TextField fx:id="dateTextField" promptText="Enter booking date" />
+    <DatePicker fx:id="startDatePicker" promptText="Start Date"/>
+    <DatePicker fx:id="endDatePicker" promptText="End Date"/>
 
-    <Button text="Book" onAction="#handleBookButton" />
+    <Button fx:id="bookButton" text="Book" onAction="#handleBookButton"/>
+
 </VBox>

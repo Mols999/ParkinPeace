@@ -58,8 +58,6 @@ public class DB {
         disconnect();
     }
 
-
-
     private void disconnect() {
         try {
             if (rs != null) {
@@ -76,29 +74,6 @@ public class DB {
         }
     }
 
-    public void selectSQL(String sql) {
-        if (terminated) {
-            System.exit(0);
-        }
-        try {
-            if (ps != null) {
-                ps.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
-            connect();
-            ps = con.prepareStatement(sql);
-            rs = ps.executeQuery();
-            pendingData = true;
-            moreData = rs.next();
-            ResultSetMetaData rsmd = rs.getMetaData();
-            numberOfColumns = rsmd.getColumnCount();
-        } catch (Exception e) {
-            System.err.println("Error in the sql parameter, please test this in SQLServer first");
-            System.err.println(e.getMessage());
-        }
-    }
 
     public String getDisplayData() {
         if (terminated) {
@@ -170,6 +145,24 @@ public class DB {
         return executeUpdate(sql, values);
     }
 
+    public boolean updateSQLWithParams(String sql, Object... params) {
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                ps.setObject(i + 1, params[i]);
+            }
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
+
+
     private boolean executeUpdate(String sql, Object... values) {
         if (terminated) {
             System.exit(0);
@@ -201,39 +194,22 @@ public class DB {
     }
 
     public boolean selectSQLWithParams(String sql, String... params) {
-        if (terminated) {
-            System.exit(0);
-        }
         try {
-            if (ps != null) {
-                ps.close();
-            }
-            if (rs != null) {
-                rs.close();
-            }
             connect();
             ps = con.prepareStatement(sql);
             for (int i = 0; i < params.length; i++) {
                 ps.setString(i + 1, params[i]);
             }
             rs = ps.executeQuery();
-            pendingData = true;
-            moreData = rs.next();
-            if (!moreData) {
-                disconnect();
-                pendingData = false;
-            }
-            ResultSetMetaData rsmd = rs.getMetaData();
-            numberOfColumns = rsmd.getColumnCount();
-            return moreData;
-        } catch (Exception e) {
-            System.err.println("Error in the sql parameter, please test this in SQL Server first");
+            return rs.next();
+        } catch (SQLException e) {
             System.err.println(e.getMessage());
+        } finally {
             disconnect();
-            pendingData = false;
-            return false;
         }
+        return false;
     }
+
 
 
     public boolean hasMoreData() {
