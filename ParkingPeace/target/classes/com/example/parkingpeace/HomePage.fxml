@@ -21,7 +21,7 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" fx:id="searchTextField" onKeyReleased="#handleSearch" />
-            <ComboBox fx:id="dropdownMenu" promptText="Select Action" onAction="#handleDropdownMenuAction">
+            <ComboBox fx:id="dropdownMenu" promptText="Menu" onAction="#handleDropdownMenuAction">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Edit Profile" />

@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -185,13 +186,13 @@ public class HomeController {
                     if (image != null) {
                         imageView.setImage(image);
                     } else {
-                        // Set a default image here
-                        imageView.setImage(new Image("ParkingImage/image1.jpg"));
+                        System.out.println("Failed to load image for: " + photoFilePath);
                     }
                 }
                 setGraphic(imageView);
             }
         });
+
 
         addressColumn.setCellValueFactory(cellData -> cellData.getValue().locationProperty());
         zipCodeColumn.setCellValueFactory(cellData -> cellData.getValue().zipCodeProperty());
@@ -239,8 +240,14 @@ public class HomeController {
 
     private Image getImageFromFilePath(String filePath) {
         try {
-            // Load the image using the file path
-            return new Image("file:" + filePath);
+            // Check if the file path starts with "ParkingImage/"
+            if (filePath.startsWith("ParkingImage/")) {
+                // Remove the "ParkingImage/" prefix from the file path
+                filePath = filePath.substring("ParkingImage/".length());
+            }
+
+            // Load the image using the modified file path
+            return new Image(getClass().getResourceAsStream("/ParkingImage/" + filePath));
         } catch (Exception e) {
             e.printStackTrace();
         }
