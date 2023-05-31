@@ -20,12 +20,14 @@
                     <Image url="@Logo.png" />
                 </image>
             </ImageView>
-            <TextField promptText="Search" />
+            <TextField promptText="Search" fx:id="searchTextField" onKeyReleased="#handleSearch" />
             <ComboBox fx:id="dropdownMenu" promptText="Select Action" onAction="#handleDropdownMenuAction">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Edit Profile" />
-                        <String fx:value="Another Action" />
+                        <String fx:value="Bookings" />
+                        <String fx:value="Ratings and Comments" />
+                        <String fx:value="Logout" />
                     </FXCollections>
                 </items>
             </ComboBox>
@@ -72,11 +74,6 @@
                 <TableColumn fx:id="priceColumn" text="Price">
                     <cellValueFactory>
                         <PropertyValueFactory property="price" />
-                    </cellValueFactory>
-                </TableColumn>
-                <TableColumn fx:id="rentColumn" text="">
-                    <cellValueFactory>
-                        <PropertyValueFactory property="rentButton" />
                     </cellValueFactory>
                 </TableColumn>
             </columns>

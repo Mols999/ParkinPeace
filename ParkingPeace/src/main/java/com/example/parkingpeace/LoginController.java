@@ -77,8 +77,6 @@ public class LoginController {
                 navigateToHomePage();
                 return;
             }
-
-            // If we reach here, login has failed
             errorLabel.setText("Incorrect login credentials");
             errorLabel.setStyle("-fx-text-fill: red;");
         } catch (IOException e) {

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.Properties;
 
 public class DB {
@@ -14,7 +15,6 @@ public class DB {
     private String databaseName;
     private String userName;
     private String password;
-
     public static final String NOMOREDATA = "|ND|";
     private int numberOfColumns;
     private int currentColumnNumber = 1;
@@ -22,6 +22,9 @@ public class DB {
     protected boolean moreData = false;
     private boolean pendingData = false;
     private boolean terminated = false;
+
+
+
 
     public DB() {
         initialize();
@@ -45,6 +48,8 @@ public class DB {
         }
     }
 
+
+
     private void connect() {
         try {
             String url = "jdbc:sqlserver://51.195.118.225:" + port + ";databaseName=" + databaseName + ";encrypt=false;trustServerCertificate=true;sslProtocol=TLSv1.2";
@@ -58,7 +63,7 @@ public class DB {
         disconnect();
     }
 
-    private void disconnect() {
+    public void disconnect() {
         try {
             if (rs != null) {
                 rs.close();
@@ -73,6 +78,8 @@ public class DB {
             System.err.println(e.getMessage());
         }
     }
+
+
 
 
     public String getDisplayData() {
@@ -145,6 +152,8 @@ public class DB {
         return executeUpdate(sql, values);
     }
 
+
+
     public boolean updateSQLWithParams(String sql, Object... params) {
         try {
             connect();
@@ -208,6 +217,44 @@ public class DB {
             disconnect();
         }
         return false;
+    }
+
+    public boolean isParkingSpotBooked(String parkingSpotID, LocalDate date) {
+        try {
+            int parkingSpotIDInt = Integer.parseInt(parkingSpotID);
+            String sql = "SELECT COUNT(*) FROM tblBooking WHERE fldParkingSpotID = ? AND DATE(fldStartDateTime) <= ? AND DATE(fldEndDateTime) >= ?";
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, parkingSpotIDInt);
+            ps.setDate(2, java.sql.Date.valueOf(date));
+            ps.setDate(3, java.sql.Date.valueOf(date));
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
+
+
+    public ResultSet selectSQLWithResultParams(String sql, String... params) {
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            for (int i = 0; i < params.length; i++) {
+                ps.setString(i + 1, params[i]);
+            }
+            rs = ps.executeQuery();
+            return rs;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+        return null;
     }
 
 
