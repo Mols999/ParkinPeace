@@ -134,12 +134,11 @@ public class ParkingSpot {
 
     public boolean isDateBooked(String dateString) {
         LocalDate date = LocalDate.parse(dateString);
-        DB db = new DB();
-        boolean isBooked = db.isParkingSpotBooked(getParkingSpotID(), date);
+        String parkingSpotIdString = getParkingSpotID();
+        boolean isBooked = db.isParkingSpotBooked(parkingSpotIdString, date);
         db.disconnect();
         return isBooked;
     }
-
 
     public ObservableList<ParkingSpot> getParkingSpotsForBooking() {
         ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();

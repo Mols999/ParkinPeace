@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 
 public class DB {
     private Connection con;
@@ -224,11 +225,11 @@ public class DB {
 
     public boolean isParkingSpotBooked(String parkingSpotID, LocalDate date) {
         try {
-            int parkingSpotIDInt = Integer.parseInt(parkingSpotID);
+            int spotID = Integer.parseInt(parkingSpotID);
             String sql = "SELECT COUNT(*) FROM tblBooking WHERE fldParkingSpotID = ? AND DATE(fldStartDateTime) <= ? AND DATE(fldEndDateTime) >= ?";
             connect();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, parkingSpotIDInt);
+            ps.setInt(1, spotID);
             ps.setDate(2, java.sql.Date.valueOf(date));
             ps.setDate(3, java.sql.Date.valueOf(date));
             rs = ps.executeQuery();
@@ -243,6 +244,9 @@ public class DB {
         }
         return false;
     }
+
+
+
 
     public List<Booking> fetchBookings() {
         List<Booking> bookings = new ArrayList<>();
