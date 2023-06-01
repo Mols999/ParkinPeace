@@ -269,7 +269,6 @@ public class DB {
         } finally {
             disconnect();
         }
-
         return bookings;
     }
 
