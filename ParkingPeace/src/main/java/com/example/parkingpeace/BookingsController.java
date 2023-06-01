@@ -1,26 +1,28 @@
 package com.example.parkingpeace;
 
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.DateCell;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
-import javafx.scene.paint.Color;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.DateCell;
 import javafx.util.Callback;
 
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class BookingsController implements Initializable {
+
+    private DB db;
 
     @FXML
     private DatePicker datePicker;
@@ -36,6 +38,9 @@ public class BookingsController implements Initializable {
 
     private HomeController homeController;
     private ParkingSpot parkingSpot;
+
+
+
 
     public void setHomeController(HomeController homeController) {
         this.homeController = homeController;
@@ -75,7 +80,6 @@ public class BookingsController implements Initializable {
 
     private void configureTableView() {
         dateColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate()));
-
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
 
         priceColumn.setCellFactory(column -> new TableCell<ParkingSpot, String>() {
@@ -90,8 +94,20 @@ public class BookingsController implements Initializable {
             }
         });
 
-        tableView.getItems().addAll(parkingSpot.getParkingSpotsForBooking());
+        // Create an ObservableList of ParkingSpot objects
+        ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
+
+        // Assuming you have a method in DB class that fetches a list of ParkingSpot objects
+        //List<ParkingSpot> spotsFromDB = db.fetchParkingSpots();
+
+        // Add the parking spots to the ObservableList
+       // parkingSpots.addAll(spotsFromDB);
+
+        // Set the items property of the TableView to the ObservableList
+        tableView.setItems(parkingSpots);
     }
+
+
 
     @FXML
     private void handleConfirmButton() {
