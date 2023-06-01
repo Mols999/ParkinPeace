@@ -16,14 +16,12 @@ public class Main extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 300, 400);
         LoginController controller = fxmlLoader.getController();
         controller.setStage(stage);
-        stage.setTitle("Park in Peace");stage.getIcons().add(new Image(Main.class.getResourceAsStream("Logo.png")));
-
+        stage.setTitle("Park in Peace");
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/example/parkingpeace/Trailer.png")));
         stage.setScene(scene);
         stage.show();
-
-
-
     }
+
 
     public static void main(String[] args) {
         launch();

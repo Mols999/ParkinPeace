@@ -1,6 +1,7 @@
 package com.example.parkingpeace;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,20 +23,20 @@ import java.util.ResourceBundle;
 
 public class BookingsController implements Initializable {
 
-    private DB db;
+    private DB db = new DB();
+
 
     @FXML
     private DatePicker datePicker;
 
     @FXML
-    private TableView<ParkingSpot> tableView;
+    private TableView<Booking> tableView;
 
     @FXML
-    private TableColumn<ParkingSpot, LocalDate> dateColumn;
+    private TableColumn<Booking, LocalDate> dateColumn;
 
     @FXML
-    private TableColumn<ParkingSpot, String> priceColumn;
-
+    private TableColumn<Booking, String> priceColumn;
     private HomeController homeController;
     private ParkingSpot parkingSpot;
 
@@ -67,7 +68,7 @@ public class BookingsController implements Initializable {
                     setTooltip(new Tooltip("Today"));
                 }
 
-                if (parkingSpot.isDateBooked(date.toString())) { // Pass the date as a string
+                if (parkingSpot.isDateBooked(date.toString())) { // Check if the date is booked
                     setStyle("-fx-background-color: red;");
                 } else {
                     setStyle("");
@@ -79,10 +80,10 @@ public class BookingsController implements Initializable {
     }
 
     private void configureTableView() {
-        dateColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getDate()));
-        priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
+        dateColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getBookingDate().toLocalDate()));
+        priceColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrice()));
 
-        priceColumn.setCellFactory(column -> new TableCell<ParkingSpot, String>() {
+        priceColumn.setCellFactory(column -> new TableCell<Booking, String>() {
             @Override
             protected void updateItem(String price, boolean empty) {
                 super.updateItem(price, empty);
@@ -94,17 +95,17 @@ public class BookingsController implements Initializable {
             }
         });
 
-        // Create an ObservableList of ParkingSpot objects
-        ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
+        // Create an ObservableList of Booking objects
+        ObservableList<Booking> bookings = FXCollections.observableArrayList();
 
-        // Assuming you have a method in DB class that fetches a list of ParkingSpot objects
-        //List<ParkingSpot> spotsFromDB = db.fetchParkingSpots();
+        // Fetch Booking objects from the database
+        List<Booking> bookingsFromDB = db.fetchBookings();
 
-        // Add the parking spots to the ObservableList
-       // parkingSpots.addAll(spotsFromDB);
+        // Add the bookings to the ObservableList
+        bookings.addAll(bookingsFromDB);
 
         // Set the items property of the TableView to the ObservableList
-        tableView.setItems(parkingSpots);
+        tableView.setItems(bookings);
     }
 
 

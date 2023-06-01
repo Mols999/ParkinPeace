@@ -5,6 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class DB {
@@ -239,6 +242,35 @@ public class DB {
             disconnect();
         }
         return false;
+    }
+
+    public List<Booking> fetchBookings() {
+        List<Booking> bookings = new ArrayList<>();
+        String sql = "SELECT * FROM tblBooking";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int bookingID = rs.getInt("fldBookingID");
+                int customerID = rs.getInt("fldCustomerID");
+                int parkingSpotID = rs.getInt("fldParkingSpotID");
+                LocalDateTime startDateTime = rs.getTimestamp("fldStartDateTime").toLocalDateTime();
+                LocalDateTime endDateTime = rs.getTimestamp("fldEndDateTime").toLocalDateTime();
+                String bookingStatus = rs.getString("fldBookingStatus");
+
+                Booking booking = new Booking(bookingID, customerID, parkingSpotID, startDateTime, endDateTime, bookingStatus);
+                bookings.add(booking);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+
+        return bookings;
     }
 
 
