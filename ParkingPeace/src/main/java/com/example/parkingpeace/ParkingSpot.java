@@ -7,11 +7,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.UUID;
 
 public class ParkingSpot {
     private DB db = new DB();
@@ -23,13 +21,19 @@ public class ParkingSpot {
     private final SimpleStringProperty city;
     private final SimpleStringProperty photoFilePath;
     private final SimpleStringProperty rating;
+
     private final SimpleStringProperty parkingSpotID;
+
+    private final SimpleStringProperty customerID;
     private final SimpleObjectProperty<LocalDate> date;
 
 
 
 
-    public ParkingSpot(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating) {
+
+    public ParkingSpot(String parkingSpotID, String customerID,String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating) {
+        this.parkingSpotID = new SimpleStringProperty(parkingSpotID);
+        this.customerID = new SimpleStringProperty(customerID);
         this.location = new SimpleStringProperty(location);
         this.availability = new SimpleStringProperty(availability);
         this.price = new SimpleStringProperty(price);
@@ -38,15 +42,17 @@ public class ParkingSpot {
         this.city = new SimpleStringProperty(city);
         this.photoFilePath = new SimpleStringProperty(photoFilePath);
         this.rating = new SimpleStringProperty(rating);
-        this.parkingSpotID = new SimpleStringProperty(generateParkingSpotID());// Initialize the parking spot ID
         this.date = new SimpleObjectProperty<>();
     }
 
 
 
-    public String getParkingSpotID() {
-        return parkingSpotID.get();
-    }
+
+
+
+    public String getParkingSpotID(){return parkingSpotID.get();}
+
+    public String getCustomerID(){return customerID.get();}
 
     public String getLocation() {
         return location.get();
@@ -93,6 +99,12 @@ public class ParkingSpot {
     }
 
 
+
+
+    public SimpleStringProperty parkingSpotID(){return parkingSpotID;}
+
+    public SimpleStringProperty customerID(){return customerID;}
+
     public SimpleObjectProperty<LocalDate> dateProperty() {
         return date;
     }
@@ -128,17 +140,10 @@ public class ParkingSpot {
         return rating;
     }
 
-    public SimpleStringProperty parkingSpotIDProperty() {
-        return parkingSpotID;
-    }
 
-    public boolean isDateBooked(String dateString) {
-        LocalDate date = LocalDate.parse(dateString);
-        String parkingSpotIdString = getParkingSpotID();
-        boolean isBooked = db.isParkingSpotBooked(parkingSpotIdString, date);
-        db.disconnect();
-        return isBooked;
-    }
+
+
+
 
     public ObservableList<ParkingSpot> getParkingSpotsForBooking() {
         ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
@@ -151,6 +156,8 @@ public class ParkingSpot {
 
         try {
             while (rs.next()) {
+                String parkingSpotID = rs.getString("fldParkingSpotID");
+                String customerID = rs.getString("fldCustomerID");
                 String location = rs.getString("fldLocation");
                 String availability = rs.getString("fldAvailability");
                 String price = rs.getString("fldPrice");
@@ -160,7 +167,8 @@ public class ParkingSpot {
                 String photoFilePath = rs.getString("fldPhotoFilePath");
                 String rating = rs.getString("fldRating");
 
-                parkingSpots.add(new ParkingSpot(location, availability, price, services, zipCode, city, photoFilePath, rating));
+                ParkingSpot parkingSpot = new ParkingSpot(parkingSpotID,customerID, location, availability, price, services, zipCode, city, photoFilePath, rating);
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -196,9 +204,5 @@ public class ParkingSpot {
             imageView.setImage(new Image("ParkingImage/image1.jpg"));
         }
         return imageView;
-    }
-
-    private String generateParkingSpotID() {
-        return UUID.randomUUID().toString(); // Generate a unique ID using UUID
     }
 }

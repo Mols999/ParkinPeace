@@ -9,14 +9,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -26,6 +24,7 @@ public class HomeController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
 
     private DB db = new DB();
     private ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
@@ -63,6 +62,11 @@ public class HomeController {
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
 
+    private String customerID;
+    private String landlordID;
+    private String adminID;
+
+
     @FXML
     private void initialize() {
         populateTableView();
@@ -91,6 +95,7 @@ public class HomeController {
         }
     }
 
+
     @FXML
     public void handleSearch(KeyEvent event) {
         String searchQuery = searchTextField.getText().trim();
@@ -105,34 +110,39 @@ public class HomeController {
         tableView.getItems().clear();
         parkingSpots.clear();
 
-        String sql = "SELECT * FROM tblParkingSpot WHERE fldLocation LIKE ? OR fldZipCode LIKE ? OR fldCity LIKE ?";
+
+        String sql = "SELECT fldParkingSpotID, fldLocation, fldAvailability, fldPrice, fldServices, fldZipCode, fldCity, fldPhotoFilePath, fldRating " +
+                "FROM tblParkingSpot " +
+                "WHERE fldLocation LIKE ? OR fldZipCode LIKE ? OR fldCity LIKE ?";
         ResultSet rs = db.selectSQLWithResultParams(sql, "%" + searchQuery + "%", "%" + searchQuery + "%", "%" + searchQuery + "%");
         try {
             while (rs.next()) {
-                String location = rs.getString(2);
-                String availability = rs.getString(6);
-                String price = rs.getString(7);
-                String services = rs.getString(5);
-                String zipCode = rs.getString(3);
-                String city = rs.getString(4);
-                String photoFilePath = rs.getString(1);
-                String rating = rs.getString(8);
-                parkingSpots.add(new ParkingSpot(location, availability, price, services, zipCode, city, photoFilePath, rating));
+                String parkingSpotID = rs.getString("fldParkingSpotID");
+                String location = rs.getString("fldLocation");
+                String availability = rs.getString("fldAvailability");
+                String price = rs.getString("fldPrice");
+                String services = rs.getString("fldServices");
+                String zipCode = rs.getString("fldZipCode");
+                String city = rs.getString("fldCity");
+                String photoFilePath = rs.getString("fldPhotoFilePath");
+                String rating = rs.getString("fldRating");
+
+                parkingSpots.add(new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
             db.disconnect();
         }
-
         tableView.setItems(parkingSpots);
     }
+
 
     private void populateTableView() {
         tableView.getItems().clear();
         parkingSpots.clear();
 
-        String sql = "SELECT ps.fldLocation, ps.fldAvailability, ps.fldPrice, ps.fldServices, ps.fldZipCode, ps.fldCity, ps.fldPhotoFilePath, ll.fldRating " +
+        String sql = "SELECT ps.fldLocation, ps.fldAvailability, ps.fldPrice, ps.fldServices, ps.fldZipCode, ps.fldCity, ps.fldPhotoFilePath, ll.fldRating, ps.fldParkingSpotID " +
                 "FROM tblParkingSpot ps " +
                 "INNER JOIN tblLandlord ll ON ps.fldLandlordID = ll.fldLandlordID";
 
@@ -147,14 +157,15 @@ public class HomeController {
                 String city = rs.getString(6);
                 String photoFilePath = rs.getString(7);
                 String rating = rs.getString(8);
-                parkingSpots.add(new ParkingSpot(location, availability, price, services, zipCode, city, photoFilePath, rating));
+                String parkingSpotID = rs.getString(9);
+
+                parkingSpots.add(new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
             db.disconnect();
         }
-
         tableView.setItems(parkingSpots);
     }
 
@@ -218,8 +229,9 @@ public class HomeController {
                         String city = parkingSpot.getCity();
                         String photoFilePath = parkingSpot.getPhotoFilePath();
                         String rating = parkingSpot.getRating();
+                        String parkingSpotID = parkingSpot.getParkingSpotID(); // Get parkingSpotID
 
-                        handleRentButton(location, availability, price, services, zipCode, city, photoFilePath, rating);
+                        handleRentButton(location, availability, price, services, zipCode, city, photoFilePath, rating, parkingSpotID);
                     }
                 });
             }
@@ -234,7 +246,6 @@ public class HomeController {
                 }
             }
         });
-
         tableView.getColumns().add(rentButtonColumn);
     }
 
@@ -254,20 +265,38 @@ public class HomeController {
         return null;
     }
 
-    private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating) {
+    private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         try {
             FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("Bookings.fxml"));
             Parent root = loader.load();
             BookingsController bookingsController = loader.getController();
-            bookingsController.setBookingData(location, availability, price, services, zipCode, city, photoFilePath, rating);
+            bookingsController.setBookingData(location, availability, price, services, zipCode, city, photoFilePath, rating, parkingSpotID);
+            bookingsController.setCustomerID(customerID);
+            bookingsController.setHomeController(this); // Pass the HomeController instance
 
             Scene scene = new Scene(root);
             Stage bookingsStage = new Stage();
             bookingsStage.setScene(scene);
             bookingsStage.setTitle("Bookings");
+
+            // Pass the stage object to the BookingsController
+            bookingsController.setStage(bookingsStage);
+
             bookingsStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public void setIDs(String customerID, String landlordID, String adminID) {
+        this.customerID = customerID;
+        this.landlordID = landlordID;
+        this.adminID = adminID;
+    }
+
+    public Stage getStage() {
+        return this.stage;
     }
 }

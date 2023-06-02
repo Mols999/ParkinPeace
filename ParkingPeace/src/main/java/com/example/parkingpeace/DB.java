@@ -22,17 +22,16 @@ public class DB {
     public static final String NOMOREDATA = "|ND|";
     private int numberOfColumns;
     private int currentColumnNumber = 1;
-
     protected boolean moreData = false;
     private boolean pendingData = false;
     private boolean terminated = false;
 
 
-
-
     public DB() {
         initialize();
     }
+
+
 
     private void initialize() {
         Properties props = new Properties();
@@ -63,10 +62,11 @@ public class DB {
         }
     }
 
+
+
     public void close() {
         disconnect();
     }
-
     public void disconnect() {
         try {
             if (rs != null) {
@@ -82,10 +82,6 @@ public class DB {
             System.err.println(e.getMessage());
         }
     }
-
-
-
-
     public String getDisplayData() {
         if (terminated) {
             System.exit(0);
@@ -101,7 +97,6 @@ public class DB {
             return getNextValue(true);
         }
     }
-
     public int getNumberOfColumns() {
         return numberOfColumns;
     }
@@ -121,6 +116,9 @@ public class DB {
             return getNextValue(false).trim();
         }
     }
+
+
+
 
     private String getNextValue(boolean view) {
         StringBuilder value = new StringBuilder();
@@ -144,6 +142,8 @@ public class DB {
         return value.toString();
     }
 
+
+
     public boolean insertSQL(String sql, Object... values) {
         return executeUpdate(sql, values);
     }
@@ -155,6 +155,7 @@ public class DB {
     public boolean deleteSQL(String sql, Object... values) {
         return executeUpdate(sql, values);
     }
+
 
 
 
@@ -174,6 +175,7 @@ public class DB {
         }
         return false;
     }
+
 
 
     private boolean executeUpdate(String sql, Object... values) {
@@ -206,6 +208,8 @@ public class DB {
         return false;
     }
 
+
+
     public boolean selectSQLWithParams(String sql, String... params) {
         try {
             connect();
@@ -222,6 +226,9 @@ public class DB {
         }
         return false;
     }
+
+
+
 
     public boolean isParkingSpotBooked(String parkingSpotID, LocalDate date) {
         try {
@@ -244,6 +251,7 @@ public class DB {
         }
         return false;
     }
+
 
 
 
@@ -292,7 +300,109 @@ public class DB {
         return null;
     }
 
+    public boolean isParkingSpotBooked(int parkingSpotID, LocalDate date) {
+        String sql = "SELECT COUNT(*) FROM tblBooking WHERE fldParkingSpotID = ? AND fldStartDateTime < ? AND fldEndDateTime > ?";
 
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, parkingSpotID);
+            ps.setTimestamp(2, Timestamp.valueOf(date.plusDays(1).atStartOfDay())); // Start of next day
+            ps.setTimestamp(3, Timestamp.valueOf(date.atStartOfDay())); // Start of this day
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
+
+
+
+
+
+
+
+    public List<Review> fetchLandlordReviews(int landlordID) {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT * FROM tblRating WHERE fldLandlordID = ?";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, landlordID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int ratingID = rs.getInt("fldRatingID");
+                int customerID = rs.getInt("fldCustomerID");
+                int ratingValue = rs.getInt("fldRatingValue");
+                String ratingComment = rs.getString("fldRatingComment");
+
+                Review review = new Review(ratingID, customerID, landlordID, ratingValue, ratingComment);
+                reviews.add(review);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return reviews;
+    }
+
+    public List<Review> fetchCustomerReviews(int customerID) {
+        List<Review> reviews = new ArrayList<>();
+        String sql = "SELECT * FROM tblRating WHERE fldCustomerID = ?";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int ratingID = rs.getInt("fldRatingID");
+                int landlordID = rs.getInt("fldLandlordID");
+                int ratingValue = rs.getInt("fldRatingValue");
+                String ratingComment = rs.getString("fldRatingComment");
+
+                Review review = new Review(ratingID, customerID, landlordID, ratingValue, ratingComment);
+                reviews.add(review);
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return reviews;
+    }
+
+    public boolean addReview(int customerID, int landlordID, int ratingValue, String ratingComment) {
+        String sql = "INSERT INTO tblRating (fldCustomerID, fldLandlordID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?, ?)";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            ps.setInt(2, landlordID);
+            ps.setInt(3, ratingValue);
+            ps.setString(4, ratingComment);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
 
     public boolean hasMoreData() {
         return moreData;

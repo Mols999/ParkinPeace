@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
@@ -21,38 +22,36 @@
                         <Image url="@Logo.png" />
                     </image>
                 </ImageView>
-                <DatePicker fx:id="datePicker" />
                 <TextField fx:id="searchField" promptText="Search" />
-                <ComboBox fx:id="dropdownMenu">
-                    <!-- Add menu items here -->
-                </ComboBox>
-                <Button onAction="#handleConfirmButton" text="Confirm" />
             </children>
         </HBox>
     </top>
 
     <!-- Calendar and booking details -->
-    <!-- Calendar and booking details -->
     <center>
         <VBox alignment="CENTER" spacing="10">
             <children>
-                <Label fx:id="monthLabel" styleClass="month-label" />
-                <GridPane fx:id="calendarGrid" alignment="CENTER" hgap="10" vgap="10">
-                    <!-- Add calendar labels dynamically using drawCalendar method -->
-                </GridPane>
+                <DatePicker fx:id="startDatePicker" />
+                <Label text="To" />
+                <DatePicker fx:id="endDatePicker" />
+                <Button fx:id="bookButton" onAction="#handleBookButton" text="Book" />
+                <Button fx:id="cancelButton" onAction="#handleCancelButton" prefHeight="18.0" prefWidth="49.0" text="Cancel">
+               <font>
+                  <Font size="11.0" />
+               </font></Button>
             </children>
         </VBox>
     </center>
 
     <!-- Booking details -->
     <right>
-        <VBox prefHeight="482.0" prefWidth="84.0" spacing="10">
+        <VBox prefHeight="515.0" prefWidth="187.0" spacing="10">
             <children>
                 <Label fx:id="nightsLabel" text="Nights: " />
                 <Label fx:id="pricePerNightLabel" text="Price per night: " />
                 <Label fx:id="totalPriceLabel" text="Total price: " />
-                <Button fx:id="rentButton" prefHeight="35.0" prefWidth="83.0" text="Rent" />
             </children>
         </VBox>
     </right>
+
 </BorderPane>

@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class LoginController {
 
@@ -26,13 +28,9 @@ public class LoginController {
     private Label errorLabel;
 
 
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
-
     @FXML
     public void handleGoToSignUpButton(ActionEvent event) {
         try {
@@ -46,54 +44,69 @@ public class LoginController {
         }
     }
 
+
     @FXML
     public void handleLoginButton(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
+        String customerID = ""; // Initialize an empty string to store the customer ID
+        String landlordID = ""; // Initialize an empty string to store the landlord ID
+        String adminID = ""; // Initialize an empty string to store the admin ID
+
+
 
         try {
             DB db = new DB();
 
-            String sql = "SELECT fldUsername, fldPassword FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            String sql = "SELECT fldUsername, fldPassword, fldCustomerID FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
+            ResultSet rs = db.selectSQLWithResultParams(sql, username, password);
+            if (rs != null && rs.next()) {
                 // Handle customer login
                 System.out.println("Login successful as customer!");
-                navigateToHomePage();
+                customerID = rs.getString("fldCustomerID"); // Retrieve the customer ID from the database
+                navigateToHomePage(customerID, landlordID, adminID);
                 return;
             }
 
-            sql = "SELECT fldUsername, fldPassword FROM tblLandlord WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            sql = "SELECT fldUsername, fldPassword, fldLandlordID FROM tblLandlord WHERE fldUsername = ? AND fldPassword = ?";
+            rs = db.selectSQLWithResultParams(sql, username, password);
+            if (rs != null && rs.next()) {
                 // Handle landlord login
                 System.out.println("Login successful as landlord!");
-                navigateToHomePage();
+                landlordID = rs.getString("fldLandlordID"); // Retrieve the landlord ID from the database
+                navigateToHomePage(customerID, landlordID, adminID);
                 return;
             }
 
-            sql = "SELECT fldUsername, fldPassword FROM tblAdmin WHERE fldUsername = ? AND fldPassword = ?";
-            if (db.selectSQLWithParams(sql, username, password)) {
+            sql = "SELECT fldUsername, fldPassword, fldAdminID FROM tblAdmin WHERE fldUsername = ? AND fldPassword = ?";
+            rs = db.selectSQLWithResultParams(sql, username, password);
+            if (rs != null && rs.next()) {
                 // Handle admin login
                 System.out.println("Login successful as admin!");
-                navigateToHomePage();
+                adminID = rs.getString("fldAdminID"); // Retrieve the admin ID from the database
+                navigateToHomePage(customerID, landlordID, adminID);
                 return;
             }
+
             errorLabel.setText("Incorrect login credentials");
             errorLabel.setStyle("-fx-text-fill: red;");
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             errorLabel.setText("An error occurred. Please try again.");
             errorLabel.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
         }
     }
 
-    private void navigateToHomePage() throws IOException {
+    private void navigateToHomePage(String customerID, String landlordID, String adminID) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
         Parent root = loader.load();
         HomeController homeController = loader.getController();
         homeController.setStage(stage);
+        homeController.setIDs(customerID, landlordID, adminID); // Set the IDs in HomeController
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Home Page");
         stage.show();
     }
+
 }
