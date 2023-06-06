@@ -404,6 +404,39 @@ public class DB {
         return false;
     }
 
+
+
+    public List<LocalDate> getBookedDatesForParkingSpot(String parkingSpotID) {
+        List<LocalDate> bookedDates = new ArrayList<>();
+        String sql = "SELECT fldStartDateTime, fldEndDateTime FROM tblBooking WHERE fldParkingSpotID = ?";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setString(1, parkingSpotID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                LocalDateTime startDateTime = rs.getTimestamp("fldStartDateTime").toLocalDateTime();
+                LocalDateTime endDateTime = rs.getTimestamp("fldEndDateTime").toLocalDateTime();
+
+                LocalDate date = startDateTime.toLocalDate();
+                while (!date.isAfter(endDateTime.toLocalDate())) {
+                    bookedDates.add(date);
+                    date = date.plusDays(1);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+
+        return bookedDates;
+    }
+
+
+
     public boolean hasMoreData() {
         return moreData;
     }

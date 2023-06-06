@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.control.*?>
@@ -33,19 +34,18 @@
                 <DatePicker fx:id="startDatePicker" />
                 <Label text="To" />
                 <DatePicker fx:id="endDatePicker" />
-                <Button fx:id="bookButton" text="Book" onAction="#handleBookButton" />
+                <Button fx:id="bookButton" onAction="#handleBookButton" text="Book" />
             </children>
         </VBox>
     </center>
 
     <!-- Booking details -->
     <right>
-        <VBox prefHeight="482.0" prefWidth="84.0" spacing="10">
+        <VBox prefHeight="515.0" prefWidth="187.0" spacing="10">
             <children>
                 <Label fx:id="nightsLabel" text="Nights: " />
                 <Label fx:id="pricePerNightLabel" text="Price per night: " />
                 <Label fx:id="totalPriceLabel" text="Total price: " />
-                <Button fx:id="cancelButton" prefHeight="35.0" prefWidth="83.0" text="Cancel Booking" onAction="#handleCancelButton" />
             </children>
         </VBox>
     </right>

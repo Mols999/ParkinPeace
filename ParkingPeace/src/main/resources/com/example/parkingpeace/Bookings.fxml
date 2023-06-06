@@ -35,10 +35,6 @@
                 <Label text="To" />
                 <DatePicker fx:id="endDatePicker" />
                 <Button fx:id="bookButton" onAction="#handleBookButton" text="Book" />
-                <Button fx:id="cancelButton" onAction="#handleCancelButton" prefHeight="18.0" prefWidth="49.0" text="Cancel">
-               <font>
-                  <Font size="11.0" />
-               </font></Button>
             </children>
         </VBox>
     </center>

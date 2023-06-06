@@ -6,12 +6,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class BookingsController implements Initializable {
 
@@ -79,6 +79,10 @@ public class BookingsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Callback<DatePicker, DateCell> dayCellFactory = this::createDayCell;
+        startDatePicker.setDayCellFactory(dayCellFactory);
+        endDatePicker.setDayCellFactory(dayCellFactory);
+
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             startDate = newValue;
             handleDateSelection();
@@ -102,7 +106,8 @@ public class BookingsController implements Initializable {
 
     private void handleDateSelection() {
         if (startDate != null && endDate != null && !startDate.isAfter(endDate)) {
-            if (isParkingSpotBooked(startDate, endDate)) {
+            if (db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), startDate) ||
+                    db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), endDate)) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Booking Unavailable");
                 alert.setHeaderText(null);
@@ -127,10 +132,12 @@ public class BookingsController implements Initializable {
         }
     }
 
+
     @FXML
     private void handleBookButton(ActionEvent event) {
         if (startDate != null && endDate != null && !startDate.isAfter(endDate)) {
-            if (isParkingSpotBooked(startDate, endDate)) {
+            if (db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), startDate) ||
+                    db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), endDate)) {
                 Alert alert = new Alert(AlertType.WARNING);
                 alert.setTitle("Booking Unavailable");
                 alert.setHeaderText(null);
@@ -162,7 +169,6 @@ public class BookingsController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Your booking has been successfully made.");
             alert.showAndWait();
-
             SceneSwitcher.switchToScene("Home.fxml", "Home", stage);
         } else {
             Alert alert = new Alert(AlertType.ERROR);
@@ -173,44 +179,28 @@ public class BookingsController implements Initializable {
         }
     }
 
-
-
-    @FXML
-    private void handleCancelButton(ActionEvent event) {
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setTitle("Cancel Booking");
-        alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to cancel the booking?");
-
-        ButtonType buttonTypeYes = new ButtonType("Yes");
-        ButtonType buttonTypeNo = new ButtonType("No");
-
-        alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == buttonTypeYes) {
-            // Implement cancellation logic and remove the booking from the database
-            String bookingID = generateBookingID();
-
-            Timestamp startDateTime = Timestamp.valueOf(startDate.atStartOfDay());
-            Timestamp endDateTime = Timestamp.valueOf(endDate.atStartOfDay());
-
-            String sql = "INSERT INTO tblBooking (fldBookingID, fldCustomerID, fldParkingSpotID, fldStartDateTime, fldEndDateTime, fldBookingStatus) VALUES (?, ?, ?, ?, ?, ?)";
-            boolean success = db.insertSQL(sql, bookingID, customerID, parkingSpotID, startDateTime, endDateTime, "Booked");
-
-            if (success) {
-                Alert cancellationAlert = new Alert(AlertType.INFORMATION);
-                cancellationAlert.setTitle("Booking Cancelled");
-                cancellationAlert.setHeaderText(null);
-                cancellationAlert.setContentText("Your booking has been cancelled.");
-                cancellationAlert.showAndWait();
-
-                SceneSwitcher.switchToScene("Home.fxml", "Home", stage);
-            } else {
-                // handle error, e.g. show an error dialog
-            }
+    private DateCell createDayCell(DatePicker datePicker) {
+        Map<LocalDate, Boolean> bookingMap = new HashMap<>();
+        List<LocalDate> bookedDates = db.getBookedDatesForParkingSpot(parkingSpot.getParkingSpotID());
+        for (LocalDate bookedDate : bookedDates) {
+            bookingMap.put(bookedDate, true);
         }
+
+        return new DateCell() {
+            @Override
+            public void updateItem(LocalDate item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item != null) {
+                    if (bookingMap.containsKey(item)) {
+                        setStyle("-fx-background-color: #FF0000;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        };
     }
+
 
 
     private boolean isParkingSpotBooked(LocalDate startDate, LocalDate endDate) {
@@ -222,9 +212,6 @@ public class BookingsController implements Initializable {
     }
 
     private double calculatePricePerNight(String price) {
-        // Assuming the price is stored as a string, you can convert it to a numeric value here
-        // and apply any necessary calculations
-        // For example, if the price is stored as a decimal string, you can parse it as follows:
         return Double.parseDouble(price);
     }
 }
