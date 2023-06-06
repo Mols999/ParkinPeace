@@ -103,6 +103,7 @@ public class LoginController {
         HomeController homeController = loader.getController();
         homeController.setStage(stage);
         homeController.setIDs(customerID, landlordID, adminID); // Set the IDs in HomeController
+        homeController.setCustomerID(customerID); // Pass the customerID to HomeController
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Home Page");

@@ -321,6 +321,24 @@ public class DB {
         }
         return false;
     }
+    public boolean deleteBooking(int bookingID) {
+        String sql = "DELETE FROM tblBooking WHERE fldBookingID = ?";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, bookingID);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
 
 
     public String getCustomerName(int customerID) {
@@ -400,6 +418,7 @@ public class DB {
         }
         return reviews;
     }
+
 
     public boolean addReview(int customerID, int landlordID, int ratingValue, String ratingComment) {
         String sql = "INSERT INTO tblRating (fldCustomerID, fldLandlordID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?, ?)";

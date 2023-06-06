@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -59,10 +60,24 @@ public class BookingListController implements Initializable {
                         + "End Date/Time: " + dateFormat.format(endDateTime) + "\n"
                         + "Booking Status: " + bookingStatus + "\n");
 
-                bookingDetailsBox.getChildren().addAll(bookingLabel);
+                Button deleteButton = new Button("Delete");
+                deleteButton.setOnAction(event -> deleteBooking(bookingID));
+
+                bookingDetailsBox.getChildren().addAll(bookingLabel, deleteButton);
 
                 bookingListView.getItems().add(bookingDetailsBox);
             }
+        }
+    }
+
+    private void deleteBooking(int bookingID) {
+        boolean success = db.deleteBooking(bookingID);
+
+        if (success) {
+            showAlert(AlertType.INFORMATION, "Booking Deletion", "Booking deleted successfully.");
+            loadBookingList();
+        } else {
+            showAlert(AlertType.ERROR, "Booking Deletion", "Failed to delete booking.");
         }
     }
 

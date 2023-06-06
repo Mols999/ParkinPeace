@@ -84,7 +84,7 @@ public class HomeController {
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             case "Ratings and Comments":
-                SceneSwitcher.switchToScene("Ratings.fxml", "Ratings and comments", (Stage) dropdownMenu.getScene().getWindow());
+                openRatingsPage();
                 break;
             case "Logout":
                 SceneSwitcher.switchToScene("Login.fxml", "Login", (Stage) dropdownMenu.getScene().getWindow());
@@ -94,6 +94,24 @@ public class HomeController {
                 break;
         }
     }
+
+    private void openRatingsPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            Parent root = loader.load();
+            RatingsController ratingsController = loader.getController();
+            ratingsController.setCustomerID(customerID); // Pass the customerID to RatingsController
+            ratingsController.initialize(null, null); // Manually call initialize method
+            Scene scene = new Scene(root);
+            Stage ratingsStage = new Stage();
+            ratingsStage.setScene(scene);
+            ratingsStage.setTitle("Ratings and Comments");
+            ratingsStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
     @FXML
@@ -173,11 +191,13 @@ public class HomeController {
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty());
 
+
         availabilityColumn.setCellValueFactory(cellData -> {
             String availabilityValue = cellData.getValue().getAvailability();
             String availabilityText = (availabilityValue.equals("1")) ? "Available" : "Unavailable";
             return new SimpleStringProperty(availabilityText);
         });
+
 
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -299,4 +319,9 @@ public class HomeController {
     public Stage getStage() {
         return this.stage;
     }
+
+    public void setCustomerID(String customerID) {
+        this.customerID = customerID;
+    }
+
 }
