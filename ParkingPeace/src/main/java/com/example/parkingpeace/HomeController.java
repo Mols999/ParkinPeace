@@ -81,7 +81,7 @@ public class HomeController {
                 SceneSwitcher.switchToScene("Login.fxml", "Login", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             case "Bookings":
-                SceneSwitcher.switchToScene("Bookings.fxml", "Bookings", (Stage) dropdownMenu.getScene().getWindow());
+                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             case "Ratings and Comments":
                 SceneSwitcher.switchToScene("Ratings.fxml", "Ratings and comments", (Stage) dropdownMenu.getScene().getWindow());

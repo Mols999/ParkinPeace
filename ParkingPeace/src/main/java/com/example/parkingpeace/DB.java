@@ -323,7 +323,26 @@ public class DB {
     }
 
 
+    public String getCustomerName(int customerID) {
+        String sql = "SELECT fldCustomerName FROM tblCustomer WHERE fldCustomerID = ?";
 
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("fldCustomerName");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+
+        return "";
+    }
 
 
 

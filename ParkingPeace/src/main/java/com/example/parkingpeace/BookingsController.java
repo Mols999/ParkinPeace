@@ -121,8 +121,8 @@ public class BookingsController implements Initializable {
 
                 // Update UI labels with the calculated values
                 nightsLabel.setText("Nights: " + nights);
-                pricePerNightLabel.setText("Price per night: $" + pricePerNight);
-                totalPriceLabel.setText("Total price: $" + totalPrice);
+                pricePerNightLabel.setText("Price per night: DKK" + pricePerNight);
+                totalPriceLabel.setText("Total price: DKK" + totalPrice);
             }
         } else {
             // Clear UI labels if dates are invalid
@@ -169,7 +169,7 @@ public class BookingsController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Your booking has been successfully made.");
             alert.showAndWait();
-            SceneSwitcher.switchToScene("Home.fxml", "Home", stage);
+            SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Booking Failed");
