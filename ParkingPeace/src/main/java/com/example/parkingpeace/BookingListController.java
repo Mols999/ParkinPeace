@@ -1,0 +1,76 @@
+package com.example.parkingpeace;
+
+import com.example.parkingpeace.Booking;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.layout.VBox;
+
+import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class BookingListController implements Initializable {
+
+    @FXML
+    private ListView<VBox> bookingListView;
+
+    private DB db;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        db = new DB();
+        loadBookingList();
+    }
+
+    private void loadBookingList() {
+        List<Booking> bookings = db.fetchBookings();
+
+        if (bookings.isEmpty()) {
+            showAlert(AlertType.INFORMATION, "Booking List", "No bookings found.");
+        } else {
+            bookingListView.getItems().clear();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            for (Booking booking : bookings) {
+                int bookingID = booking.getBookingID();
+                String customerName = db.getCustomerName(booking.getCustomerID()); // Retrieve customer name
+                int parkingSpotID = booking.getParkingSpotID();
+                Timestamp startDateTime = Timestamp.valueOf(booking.getStartDateTime());
+                Timestamp endDateTime = Timestamp.valueOf(booking.getEndDateTime());
+                String bookingStatus = booking.getBookingStatus();
+
+                VBox bookingDetailsBox = new VBox();
+
+                // Create and configure Label for booking details
+                Label bookingLabel = new Label();
+                bookingLabel.setText("Booking ID: " + bookingID + "\n"
+                        + "Customer Name: " + customerName + "\n" // Display customer name
+                        + "Parking Spot ID: " + parkingSpotID + "\n"
+                        + "Start Date/Time: " + dateFormat.format(startDateTime) + "\n"
+                        + "End Date/Time: " + dateFormat.format(endDateTime) + "\n"
+                        + "Booking Status: " + bookingStatus + "\n");
+
+                bookingDetailsBox.getChildren().addAll(bookingLabel);
+
+                bookingListView.getItems().add(bookingDetailsBox);
+            }
+        }
+    }
+
+    private void showAlert(AlertType alertType, String title, String content) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.BookingListController" prefWidth="960" prefHeight="540">
+    <top>
+        <HBox alignment="CENTER" spacing="25">
+            <ImageView>
+                <image>
+                    <Image url="@Logo.png" />
+                </image>
+            </ImageView>
+            <TextField promptText="Search" fx:id="searchTextField" />
+            <ComboBox fx:id="dropdownMenu" promptText="Menu">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Edit Profile" />
+                        <String fx:value="Bookings" />
+                        <String fx:value="Ratings and Comments" />
+                        <String fx:value="Logout" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </HBox>
+    </top>
+    <center>
+        <ListView fx:id="bookingListView" prefWidth="800" prefHeight="400" />
+    </center>
+</BorderPane>
