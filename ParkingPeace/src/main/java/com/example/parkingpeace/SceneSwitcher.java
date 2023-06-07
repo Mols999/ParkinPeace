@@ -22,6 +22,8 @@ public class SceneSwitcher {
         }
     }
 
+
+
     public static Parent loadFXML(String fxmlFile) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
         return loader.load();

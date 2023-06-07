@@ -10,8 +10,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
-<?import javafx.geometry.Pos?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 
@@ -39,9 +37,6 @@
     <center>
         <ListView fx:id="ratingsListView" prefWidth="800" prefHeight="400">
             <!-- Define the cell factory for displaying each rating -->
-            <cellFactory>
-                <com.example.parkingpeace.RatingCellFactory />
-            </cellFactory>
         </ListView>
     </center>
 </BorderPane>

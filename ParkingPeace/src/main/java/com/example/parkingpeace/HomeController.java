@@ -74,7 +74,7 @@ public class HomeController {
     }
 
     @FXML
-    private void handleDropdownMenuAction(ActionEvent event) {
+    private void handleDropdownMenuAction(ActionEvent event) throws IOException {
         String action = dropdownMenu.getValue();
         switch (action) {
             case "Edit Profile":
@@ -84,33 +84,31 @@ public class HomeController {
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             case "Ratings and Comments":
-                openRatingsPage();
+                navigateToRatings(customerID);
                 break;
             case "Logout":
                 SceneSwitcher.switchToScene("Login.fxml", "Login", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             default:
-                // Nothing for now
                 break;
         }
     }
 
-    private void openRatingsPage() {
+    public void navigateToRatings(String customerID) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
             Parent root = loader.load();
             RatingsController ratingsController = loader.getController();
-            ratingsController.setCustomerID(customerID); // Pass the customerID to RatingsController
-            ratingsController.initialize(null, null); // Manually call initialize method
+            ratingsController.setCustomerID(customerID); // Pass the customerID to the RatingsController
             Scene scene = new Scene(root);
-            Stage ratingsStage = new Stage();
-            ratingsStage.setScene(scene);
-            ratingsStage.setTitle("Ratings and Comments");
-            ratingsStage.show();
+            stage.setScene(scene);
+            stage.setTitle("Ratings");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
@@ -314,7 +312,9 @@ public class HomeController {
         this.customerID = customerID;
         this.landlordID = landlordID;
         this.adminID = adminID;
+        System.out.println(this.customerID);  // Print the customerID here
     }
+
 
     public Stage getStage() {
         return this.stage;

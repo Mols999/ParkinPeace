@@ -1,6 +1,5 @@
 package com.example.parkingpeace;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -9,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.UUID;
 
 public class DB {
     private Connection con;
@@ -381,7 +379,7 @@ public class DB {
                 int ratingValue = rs.getInt("fldRatingValue");
                 String ratingComment = rs.getString("fldRatingComment");
 
-                Review review = new Review(ratingID, customerID, landlordID, ratingValue, ratingComment);
+                Review review = new Review(ratingID, customerID,ratingValue, ratingComment);
                 reviews.add(review);
             }
         } catch (SQLException e) {
@@ -392,23 +390,30 @@ public class DB {
         return reviews;
     }
 
-    public List<Review> fetchCustomerReviews(int customerID) {
+    public List<Review> fetchCustomerReviews(String customerIDParam) {
         List<Review> reviews = new ArrayList<>();
-        String sql = "SELECT * FROM tblRating WHERE fldCustomerID = ?";
+        String sql = "SELECT * FROM tblRatingCustomer WHERE fldCustomerID = ?";
 
         try {
             connect();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, customerID);
+
+            if (customerIDParam != null) {
+                ps.setInt(1, Integer.parseInt(customerIDParam));
+            } else {
+                // Handle the case when customerIDParam is null
+                ps.setNull(1, Types.INTEGER);
+            }
+
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 int ratingID = rs.getInt("fldRatingID");
-                int landlordID = rs.getInt("fldLandlordID");
+                int customerID = rs.getInt("fldCustomerID");
                 int ratingValue = rs.getInt("fldRatingValue");
                 String ratingComment = rs.getString("fldRatingComment");
 
-                Review review = new Review(ratingID, customerID, landlordID, ratingValue, ratingComment);
+                Review review = new Review(ratingID, customerID, ratingValue, ratingComment);
                 reviews.add(review);
             }
         } catch (SQLException e) {
@@ -418,6 +423,11 @@ public class DB {
         }
         return reviews;
     }
+
+
+
+
+
 
 
     public boolean addReview(int customerID, int landlordID, int ratingValue, String ratingComment) {

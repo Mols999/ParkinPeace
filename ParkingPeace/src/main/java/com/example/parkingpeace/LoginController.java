@@ -31,10 +31,15 @@ public class LoginController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
     @FXML
     public void handleGoToSignUpButton(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("SignUp.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("SignUp.fxml"));
+            Parent root = loader.load();
+            SignUpController signUpController = loader.getController();
+            signUpController.setStage(stage); // Pass the stage object to the SignUpController
+
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Sign Up");
@@ -49,11 +54,9 @@ public class LoginController {
     public void handleLoginButton(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
-        String customerID = ""; // Initialize an empty string to store the customer ID
-        String landlordID = ""; // Initialize an empty string to store the landlord ID
-        String adminID = ""; // Initialize an empty string to store the admin ID
-
-
+        String customerID = "";
+        String landlordID = "";
+        String adminID = "";
 
         try {
             DB db = new DB();
@@ -101,9 +104,9 @@ public class LoginController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
         Parent root = loader.load();
         HomeController homeController = loader.getController();
+        homeController.setIDs(customerID, landlordID, adminID);
+        homeController.setCustomerID(customerID);
         homeController.setStage(stage);
-        homeController.setIDs(customerID, landlordID, adminID); // Set the IDs in HomeController
-        homeController.setCustomerID(customerID); // Pass the customerID to HomeController
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Home Page");

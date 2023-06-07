@@ -11,8 +11,6 @@ import javafx.scene.control.cell.TextFieldListCell;
 import javafx.util.StringConverter;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -22,22 +20,23 @@ public class RatingsController implements Initializable {
     private ListView<Review> ratingsListView;
 
     private DB db;
-    private String customerID; // Add the customerID variable
+    private String customerID;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         db = new DB();
-        loadRatings();
     }
 
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
+        loadRatings();
     }
 
-    // Rest of the code...
-
     private void loadRatings() {
-        List<Review> reviews = db.fetchCustomerReviews(Integer.parseInt(customerID));
+        List<Review> reviews = db.fetchCustomerReviews(customerID);
+
+        System.out.println("Customer ID: " + customerID); // Add this line to check the value of customerID
 
         if (reviews.isEmpty()) {
             showAlert(AlertType.INFORMATION, "Ratings and Comments", "No ratings and comments found.");
@@ -51,12 +50,12 @@ public class RatingsController implements Initializable {
 
                 @Override
                 public Review fromString(String string) {
-                    // Not used in this case
                     return null;
                 }
             }));
         }
     }
+
 
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
