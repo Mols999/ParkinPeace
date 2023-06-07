@@ -1,22 +1,13 @@
 package com.example.parkingpeace;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class EditProfileController {
-
-    private DB db;
-
     @FXML
     private TextField usernameField;
     @FXML
@@ -28,70 +19,98 @@ public class EditProfileController {
     @FXML
     private PasswordField passwordField;
 
-    private String userID;
-    private String role;
+    private String username;
+    private String name;
+    private int age;
+    private String email;
+    private String password;
 
-    public void setUserData(String userID, String role) {
-        this.userID = userID;
-        this.role = role;
+    private DB db; // Database connection object
 
-        // Load user data from the database
-        loadUserData();
-    }
+    private String customerID;
+    private String landlordID;
+    private String adminID;
 
-    public void initialize() {
+    public EditProfileController() {
         db = new DB();
-    }
-
-    private void loadUserData() {
-        String sql = "";
-        if (role.equals("Customer")) {
-            sql = "SELECT * FROM tblCustomer WHERE fldCustomerID = ?";
-        } else if (role.equals("Landlord")) {
-            sql = "SELECT * FROM tblLandlord WHERE fldLandlordID = ?";
-        } else if (role.equals("Admin")) {
-            sql = "SELECT * FROM tblAdmin WHERE fldAdminID = ?";
-        }
-
-        try {
-            ResultSet rs = db.selectSQLWithResultParams(sql, userID);
-            if (rs != null && rs.next()) {
-                usernameField.setText(rs.getString("fldUsername"));
-                nameField.setText(rs.getString("fldName"));
-                ageField.setText(String.valueOf(rs.getInt("fldAge")));
-                emailField.setText(rs.getString("fldEmail"));
-                passwordField.setText(rs.getString("fldPassword"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        // Initialize these variables to empty strings
+        this.customerID = "";
+        this.landlordID = "";
+        this.adminID = "";
     }
 
     @FXML
-    public void handleSaveChangesButton(ActionEvent event) {
-        String name = nameField.getText();
-        int age = Integer.parseInt(ageField.getText()); // Make sure to handle NumberFormatException
-        String username = usernameField.getText();
-        String email = emailField.getText();
-        String password = passwordField.getText();
+    protected void handleSaveChangesButton() {
+        if (validateInput()) {
+            username = usernameField.getText();
+            name = nameField.getText(); // Get the value from the nameField
+            age = Integer.parseInt(ageField.getText()); // Get the value from the ageField
+            email = emailField.getText();
+            password = passwordField.getText();
 
-        String sql = "";
-        if (role.equals("Customer")) {
-            sql = "UPDATE tblCustomer SET fldCustomerName = ?, fldCustomerAge = ?, fldUsername = ?, fldEmail = ?, fldPassword = ? WHERE fldCustomerID = ?";
-        } else if (role.equals("Landlord")) {
-            sql = "UPDATE tblLandlord SET fldLandlordName = ?, fldLandlordAge = ?, fldUsername = ?, fldEmail = ?, fldPassword = ? WHERE fldLandlordID = ?";
-        } else if (role.equals("Admin")) {
-            sql = "UPDATE tblAdmin SET fldAdminName = ?, fldAdminAge = ?, fldUsername = ?, fldEmail = ?, fldPassword = ? WHERE fldAdminID = ?";
-        }
+            boolean isUpdated = false;
+            String sql;
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setHeaderText(null);
 
-        boolean success = db.updateSQL(sql, name, age, username, email, password, userID);
-        if (success) {
-            System.out.println("User data updated successfully!");
-        } else {
-            System.out.println("There was an error updating the user data.");
+            // Check if user is a landlord
+            if (!landlordID.isEmpty()) {
+                // Update landlord in the database, including name and age
+                sql = "UPDATE tblLandlord SET fldUsername = ?, fldLandlordName = ?, fldLandlordAge = ?, fldEmail = ?, fldPassword = ? WHERE fldLandlordID = ?";
+                isUpdated = db.updateSQLWithParams(sql, username, name, age, email, password, landlordID);
+            }
+            // Check if user is a customer
+            else if (!customerID.isEmpty()) {
+                // Update customer in the database, including name and age
+                sql = "UPDATE tblCustomer SET fldUsername = ?, fldCustomerName = ?, fldCustomerAge = ?, fldEmail = ?, fldPassword = ? WHERE fldCustomerID = ?";
+                isUpdated = db.updateSQLWithParams(sql, username, name, age, email, password, customerID);
+            }
+
+            if (isUpdated) {
+                alert.setContentText("Profile changes saved!");
+                alert.showAndWait();
+
+                // Switch to the Login scene
+                Stage stage = (Stage) usernameField.getScene().getWindow();
+                SceneSwitcher.switchToScene("Login.fxml", "Login", stage);
+            } else {
+                alert.setContentText("Failed to save changes. Please try again.");
+                alert.showAndWait();
+            }
         }
     }
 
 
 
+    private boolean validateInput() {
+        if (usernameField.getText().isEmpty() || nameField.getText().isEmpty() ||
+                ageField.getText().isEmpty() || emailField.getText().isEmpty() ||
+                passwordField.getText().isEmpty()) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please fill in all fields.");
+            alert.showAndWait();
+            return false;
+        }
+        // Other validation could go here, for example checking that ageField contains a valid integer
+        try {
+            Integer.parseInt(ageField.getText());
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Please enter a valid age.");
+            alert.showAndWait();
+            return false;
+        }
+        return true;
+    }
+
+    public void setIDs(String customerID, String landlordID, String adminID) {
+        this.customerID = customerID;
+        this.landlordID = landlordID;
+        this.adminID = adminID;
+    }
 }

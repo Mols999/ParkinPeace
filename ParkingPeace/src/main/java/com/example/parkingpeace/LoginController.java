@@ -49,7 +49,6 @@ public class LoginController {
         }
     }
 
-
     @FXML
     public void handleLoginButton(ActionEvent event) {
         String username = usernameField.getText();
@@ -105,12 +104,12 @@ public class LoginController {
         Parent root = loader.load();
         HomeController homeController = loader.getController();
         homeController.setIDs(customerID, landlordID, adminID);
-        homeController.setCustomerID(customerID);
-        homeController.setStage(stage);
+
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle("Home Page");
         stage.show();
     }
+
 
 }

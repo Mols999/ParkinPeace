@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class HomeController {
     private Stage stage;
 
@@ -79,6 +80,7 @@ public class HomeController {
         switch (action) {
             case "Edit Profile":
                 SceneSwitcher.switchToScene("EditProfile.fxml", "EditProfile", (Stage) dropdownMenu.getScene().getWindow());
+                navigateToEditProfile(customerID);
                 break;
             case "Bookings":
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
@@ -104,6 +106,25 @@ public class HomeController {
             stage.setScene(scene);
             stage.setTitle("Ratings");
             stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void navigateToEditProfile(String customerID) {
+        try {
+            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+            Parent editProfileRoot = editProfileLoader.load();
+            EditProfileController editProfileController = editProfileLoader.getController();
+
+            // Pass the customerID, landlordID, and adminID to the EditProfileController
+            editProfileController.setIDs(customerID, landlordID, adminID);
+
+            // Get the EditProfileController's stage
+            Stage editProfileStage = new Stage();
+            editProfileStage.setScene(new Scene(editProfileRoot));
+            editProfileStage.setTitle("Edit Profile");
+            editProfileStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -312,16 +333,11 @@ public class HomeController {
         this.customerID = customerID;
         this.landlordID = landlordID;
         this.adminID = adminID;
-        System.out.println(this.customerID);  // Print the customerID here
     }
 
 
     public Stage getStage() {
         return this.stage;
-    }
-
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
     }
 
 }
