@@ -141,9 +141,6 @@ public class ParkingSpot {
 
 
 
-
-
-
     public ObservableList<ParkingSpot> getParkingSpotsForBooking() {
         ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
 

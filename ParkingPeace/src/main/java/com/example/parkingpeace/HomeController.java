@@ -78,7 +78,7 @@ public class HomeController {
         String action = dropdownMenu.getValue();
         switch (action) {
             case "Edit Profile":
-                SceneSwitcher.switchToScene("Login.fxml", "Login", (Stage) dropdownMenu.getScene().getWindow());
+                SceneSwitcher.switchToScene("EditProfile.fxml", "EditProfile", (Stage) dropdownMenu.getScene().getWindow());
                 break;
             case "Bookings":
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
