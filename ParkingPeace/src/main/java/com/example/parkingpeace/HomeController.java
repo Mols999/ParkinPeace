@@ -147,10 +147,11 @@ public class HomeController {
         tableView.getItems().clear();
         parkingSpots.clear();
 
+        String sql = "SELECT ps.fldParkingSpotID, ps.fldLocation, ps.fldAvailability, ps.fldPrice, ps.fldServices, ps.fldZipCode, ps.fldCity, ps.fldPhotoFilePath, ll.fldRating " +
+                "FROM tblParkingSpot ps " +
+                "INNER JOIN tblLandlord ll ON ps.fldLandlordID = ll.fldLandlordID " +
+                "WHERE ps.fldLocation LIKE ? OR ps.fldZipCode LIKE ? OR ps.fldCity LIKE ?";
 
-        String sql = "SELECT fldParkingSpotID, fldLocation, fldAvailability, fldPrice, fldServices, fldZipCode, fldCity, fldPhotoFilePath, fldRating " +
-                "FROM tblParkingSpot " +
-                "WHERE fldLocation LIKE ? OR fldZipCode LIKE ? OR fldCity LIKE ?";
         ResultSet rs = db.selectSQLWithResultParams(sql, "%" + searchQuery + "%", "%" + searchQuery + "%", "%" + searchQuery + "%");
         try {
             while (rs.next()) {
@@ -173,6 +174,7 @@ public class HomeController {
         }
         tableView.setItems(parkingSpots);
     }
+
 
 
     private void populateTableView() {

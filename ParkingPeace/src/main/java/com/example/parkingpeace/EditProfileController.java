@@ -1,11 +1,14 @@
 package com.example.parkingpeace;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 public class EditProfileController {
     @FXML
@@ -107,6 +110,56 @@ public class EditProfileController {
         }
         return true;
     }
+
+    @FXML
+    protected void handleDeleteAccountButton() {
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirmation");
+        alert.setHeaderText("Delete Account");
+        alert.setContentText("Are you sure you want to delete your account? This action cannot be undone.");
+
+        // Show the confirmation dialog and wait for the user's response
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            boolean isDeleted = false;
+            String sql;
+
+            // Check if user is a landlord
+            if (!landlordID.isEmpty()) {
+                // Delete landlord from the database
+                sql = "DELETE FROM tblLandlord WHERE fldLandlordID = ?";
+                isDeleted = db.updateSQLWithParams(sql, landlordID);
+            }
+            // Check if user is a customer
+            else if (!customerID.isEmpty()) {
+                // Delete customer from the database
+                sql = "DELETE FROM tblCustomer WHERE fldCustomerID = ?";
+                isDeleted = db.updateSQLWithParams(sql, customerID);
+            }
+
+            if (isDeleted) {
+                // Account successfully deleted
+                Alert successAlert = new Alert(AlertType.INFORMATION);
+                successAlert.setTitle("Success");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("Your account has been deleted.");
+                successAlert.showAndWait();
+
+                // Switch to the Login scene
+                Stage stage = (Stage) usernameField.getScene().getWindow();
+                SceneSwitcher.switchToScene("Login.fxml", "Login", stage);
+            } else {
+                // Failed to delete account
+                Alert errorAlert = new Alert(AlertType.ERROR);
+                errorAlert.setTitle("Error");
+                errorAlert.setHeaderText(null);
+                errorAlert.setContentText("Failed to delete account. Please try again.");
+                errorAlert.showAndWait();
+            }
+        }
+    }
+
+
 
     public void setIDs(String customerID, String landlordID, String adminID) {
         this.customerID = customerID;

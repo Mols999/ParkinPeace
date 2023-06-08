@@ -426,34 +426,6 @@ public class DB {
 
 
 
-
-
-
-
-    public boolean addReview(int customerID, int landlordID, int ratingValue, String ratingComment) {
-        String sql = "INSERT INTO tblRating (fldCustomerID, fldLandlordID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?, ?)";
-
-        try {
-            connect();
-            ps = con.prepareStatement(sql);
-            ps.setInt(1, customerID);
-            ps.setInt(2, landlordID);
-            ps.setInt(3, ratingValue);
-            ps.setString(4, ratingComment);
-
-            int rows = ps.executeUpdate();
-
-            return rows > 0;
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            disconnect();
-        }
-        return false;
-    }
-
-
-
     public List<LocalDate> getBookedDatesForParkingSpot(String parkingSpotID) {
         List<LocalDate> bookedDates = new ArrayList<>();
         String sql = "SELECT fldStartDateTime, fldEndDateTime FROM tblBooking WHERE fldParkingSpotID = ?";
@@ -481,8 +453,52 @@ public class DB {
         }
 
         return bookedDates;
+
     }
 
+
+    public int getLandlordIDFromParkingSpot(int parkingSpotID) {
+        String sql = "SELECT fldLandlordID FROM tblParkingSpot WHERE fldParkingSpotID = ?";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, parkingSpotID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("fldLandlordID");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+
+        return 0;
+    }
+
+
+    public boolean addReview(int landlordID, int ratingValue, String ratingComment) {
+        String sql = "INSERT INTO tblRatingLandlord (fldLandlordID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?)";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, landlordID);
+            ps.setInt(2, ratingValue);
+            ps.setString(3, ratingComment);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
 
 
     public boolean hasMoreData() {

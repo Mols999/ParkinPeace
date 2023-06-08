@@ -69,8 +69,7 @@ public class BookingListController implements Initializable {
                 Button reviewButton = new Button("Review");
                 reviewButton.setOnAction(event -> openReviewWindow(parkingSpotID));
 
-
-                bookingDetailsBox.getChildren().addAll(bookingLabel, deleteButton);
+                bookingDetailsBox.getChildren().addAll(bookingLabel, deleteButton, reviewButton);
 
                 bookingListView.getItems().add(bookingDetailsBox);
             }
@@ -104,6 +103,8 @@ public class BookingListController implements Initializable {
             showAlert(AlertType.ERROR, "Booking Deletion", "Failed to delete booking.");
         }
     }
+
+
 
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
