@@ -7,4 +7,5 @@ module com.example.parkingpeace {
 
     opens com.example.parkingpeace to javafx.fxml;
     exports com.example.parkingpeace;
+
 }

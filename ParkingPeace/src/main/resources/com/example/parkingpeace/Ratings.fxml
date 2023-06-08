@@ -18,7 +18,7 @@
         <HBox alignment="CENTER" spacing="25">
             <ImageView>
                 <image>
-                    <Image url="@Logo.png" />
+                    <Image url="@../../../Logo/Logo.png" />
                 </image>
             </ImageView>
             <TextField promptText="Search" fx:id="searchTextField" />

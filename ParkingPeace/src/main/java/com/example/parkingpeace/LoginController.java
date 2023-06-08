@@ -100,16 +100,32 @@ public class LoginController {
     }
 
 
-
     private void navigateToHomePage(String customerID, String landlordID, String adminID) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
-        Parent root = loader.load();
-        HomeController homeController = loader.getController();
-        homeController.setIDs(customerID, landlordID, adminID);
+        FXMLLoader loader;
+        Parent root;
+        if (!landlordID.isEmpty()) {
+            loader = new FXMLLoader(getClass().getResource("LandlordHomePage.fxml"));
+            root = loader.load();
+            LandlordHomeController landlordHomeController = loader.getController();
+            // Add necessary initialization for the LandlordHomeController if needed
+            stage.setTitle("Landlord Home Page");
+        } else if (!adminID.isEmpty()) {
+            loader = new FXMLLoader(getClass().getResource("AdminDashboard.fxml"));
+            root = loader.load();
+            AdminDashboardController adminDashboardController = loader.getController();
+            // Add necessary initialization for the AdminDashboardController if needed
+            stage.setTitle("Admin Dashboard");
+        } else {
+            loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
+            root = loader.load();
+            HomeController homeController = loader.getController();
+            homeController.setIDs(customerID, landlordID, adminID);
+            stage.setTitle("Home Page");
+        }
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle("Home Page");
         stage.show();
     }
+
 }

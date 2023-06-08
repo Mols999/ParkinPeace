@@ -19,7 +19,7 @@
             <children>
                 <ImageView>
                     <image>
-                        <Image url="@Logo.png" />
+                        <Image url="@../../../Logo/Logo.png" />
                     </image>
                 </ImageView>
                 <TextField fx:id="searchField" promptText="Search" />

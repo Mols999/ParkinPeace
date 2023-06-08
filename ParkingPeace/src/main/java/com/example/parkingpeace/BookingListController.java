@@ -2,6 +2,7 @@ package com.example.parkingpeace;
 
 import com.example.parkingpeace.Booking;
 import com.example.parkingpeace.DB;
+import com.example.parkingpeace.MakeReviewController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;

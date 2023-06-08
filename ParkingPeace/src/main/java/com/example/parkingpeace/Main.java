@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+
 public class Main extends Application {
 
     public void start(Stage stage) throws IOException {
@@ -15,7 +16,7 @@ public class Main extends Application {
         LoginController controller = fxmlLoader.getController();
         controller.setStage(stage);
         stage.setTitle("Park in Peace");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/com/example/parkingpeace/Trailer.png")));
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/Logo/Trailer.png")));
         stage.setScene(scene);
         stage.show();
     }
