@@ -11,18 +11,14 @@ import java.io.IOException;
 public class SceneSwitcher {
     public static void switchToScene(String fxmlFile, String title, Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
-            Parent root = loader.load();
+            Parent root = loadFXML(fxmlFile);
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle(title);
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
 
     public static Parent loadFXML(String fxmlFile) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));

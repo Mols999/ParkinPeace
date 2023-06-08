@@ -1,5 +1,6 @@
 package com.example.parkingpeace;
 
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -77,41 +78,42 @@ public class HomeController {
     @FXML
     private void handleDropdownMenuAction(ActionEvent event) throws IOException {
         String action = dropdownMenu.getValue();
+        Stage stage = (Stage) dropdownMenu.getScene().getWindow();
         switch (action) {
             case "Edit Profile":
-                SceneSwitcher.switchToScene("EditProfile.fxml", "EditProfile", (Stage) dropdownMenu.getScene().getWindow());
-                navigateToEditProfile(customerID);
+                navigateToEditProfile(customerID, stage);
                 break;
             case "Bookings":
-                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", (Stage) dropdownMenu.getScene().getWindow());
+                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
                 break;
             case "Ratings and Comments":
-                navigateToRatings(customerID);
+                navigateToRatings(customerID, stage);  // Pass the stage object
                 break;
             case "Logout":
-                SceneSwitcher.switchToScene("Login.fxml", "Login", (Stage) dropdownMenu.getScene().getWindow());
+                SceneSwitcher.switchToScene("Login.fxml", "Login", stage);
                 break;
             default:
                 break;
         }
     }
 
-    public void navigateToRatings(String customerID) {
+    private void navigateToRatings(String customerID, Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
-            Parent root = loader.load();
-            RatingsController ratingsController = loader.getController();
-            ratingsController.setCustomerID(customerID); // Pass the customerID to the RatingsController
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
+            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            Parent ratingsRoot = ratingsLoader.load();
+            RatingsController ratingsController = ratingsLoader.getController();
+            ratingsController.setCustomerID(customerID);
+
+            // Set the root of the stage to the Ratings view
+            stage.setScene(new Scene(ratingsRoot));
             stage.setTitle("Ratings");
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void navigateToEditProfile(String customerID) {
+
+    public void navigateToEditProfile(String customerID, Stage currentStage) {
         try {
             FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
@@ -120,15 +122,14 @@ public class HomeController {
             // Pass the customerID, landlordID, and adminID to the EditProfileController
             editProfileController.setIDs(customerID, landlordID, adminID);
 
-            // Get the EditProfileController's stage
-            Stage editProfileStage = new Stage();
-            editProfileStage.setScene(new Scene(editProfileRoot));
-            editProfileStage.setTitle("Edit Profile");
-            editProfileStage.show();
+            // Set the root of the current stage to the Edit Profile view
+            currentStage.getScene().setRoot(editProfileRoot);
+            currentStage.setTitle("Edit Profile");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
 
 
@@ -213,16 +214,34 @@ public class HomeController {
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty());
 
 
-        availabilityColumn.setCellValueFactory(cellData -> {
-            String availabilityValue = cellData.getValue().getAvailability();
-            String availabilityText = (availabilityValue.equals("1")) ? "Available" : "Unavailable";
-            return new SimpleStringProperty(availabilityText);
+        priceColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String price, boolean empty) {
+                super.updateItem(price, empty);
+                if (empty || price == null) {
+                    setText(null);
+                } else {
+                    setText(price + " DKK.");
+                }
+            }
+        });
+
+        availabilityColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String availability, boolean empty) {
+                super.updateItem(availability, empty);
+                if (empty || availability == null) {
+                    setText(null);
+                } else {
+                    int availabilityValue = Integer.parseInt(availability);
+                    setText((availabilityValue == 1) ? "Availability" : "Unavailable");
+                }
+            }
         });
 
 
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
-
             {
                 imageView.setFitHeight(100);
                 imageView.setFitWidth(100);
