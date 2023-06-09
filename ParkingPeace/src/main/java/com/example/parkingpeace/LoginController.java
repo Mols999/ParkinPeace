@@ -104,10 +104,10 @@ public class LoginController {
         FXMLLoader loader;
         Parent root;
         if (!landlordID.isEmpty()) {
-            loader = new FXMLLoader(getClass().getResource("LandlordHomePage.fxml"));
+            loader = new FXMLLoader(getClass().getResource("LandlordDashboard.fxml"));
             root = loader.load();
-            LandlordHomeController landlordHomeController = loader.getController();
-            // Add necessary initialization for the LandlordHomeController if needed
+            LandlordDashboardController landlordHomeController = loader.getController();
+            landlordHomeController.setIDs(customerID, landlordID, adminID);
             stage.setTitle("Landlord Home Page");
         } else if (!adminID.isEmpty()) {
             loader = new FXMLLoader(getClass().getResource("AdminDashboard.fxml"));
