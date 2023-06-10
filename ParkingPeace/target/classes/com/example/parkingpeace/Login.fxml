@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<Pane prefHeight="400.0" prefWidth="300.0" styleClass="main-pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.LoginController">
+<Pane prefHeight="400.0" prefWidth="300.0" styleClass="main-pane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.LoginController">
     <children>
         <Label layoutX="42.0" layoutY="55.0" prefHeight="35.0" prefWidth="218.0" styleClass="title-label" text="Parking Pace">
             <font>
