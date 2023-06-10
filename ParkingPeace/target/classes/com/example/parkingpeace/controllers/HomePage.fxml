@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.controllers.HomeController" prefWidth="960" prefHeight="540">
+    <top>
+        <HBox alignment="CENTER" spacing="25">
+            <ImageView>
+                <image>
+                    <Image url="@../../../../Logo/Logo.png" />
+                </image>
+            </ImageView>
+            <TextField promptText="Search" fx:id="searchTextField" onKeyReleased="#handleSearch" />
+            <ComboBox fx:id="dropdownMenu" promptText="Menu" onAction="#handleDropdownMenuAction">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Edit Profile" />
+                        <String fx:value="Bookings" />
+                        <String fx:value="Ratings and Comments" />
+                        <String fx:value="Logout" />
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </HBox>
+    </top>
+    <center>
+        <TableView fx:id="tableView">
+            <columns>
+                <TableColumn fx:id="photoColumn" prefWidth="150" text="Photo">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="photo" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="addressColumn" text="Address">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="address" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="zipCodeColumn" text="Zip Code">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="zipCode" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="cityColumn" text="City">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="city" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="ratingColumn" text="Rating">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="rating" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="servicesColumn" text="Services">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="services" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="availabilityColumn" text="Availability">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="availability" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn fx:id="priceColumn" text="Price">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="price" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>
