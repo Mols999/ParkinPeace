@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
@@ -24,16 +21,7 @@
                 </image>
             </ImageView>
             <TextField promptText="Search" fx:id="searchTextField" />
-            <ComboBox fx:id="dropdownMenu" promptText="Menu">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <String fx:value="Edit Profile" />
-                        <String fx:value="Bookings" />
-                        <String fx:value="Ratings and Comments" />
-                        <String fx:value="Logout" />
-                    </FXCollections>
-                </items>
-            </ComboBox>
+            <Button text="Home" onAction="#navigateToHomePage" />
         </HBox>
     </top>
     <center>

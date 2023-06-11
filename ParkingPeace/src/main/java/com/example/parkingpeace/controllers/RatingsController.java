@@ -57,6 +57,7 @@ public class RatingsController implements Initializable {
     }
 
 
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);

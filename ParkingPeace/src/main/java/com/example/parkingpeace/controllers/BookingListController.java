@@ -93,6 +93,8 @@ public class BookingListController implements Initializable {
 
 
 
+
+
     private void deleteBooking(int bookingID) {
         boolean success = db.deleteBooking(bookingID);
 
@@ -112,5 +114,12 @@ public class BookingListController implements Initializable {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+
+    @FXML
+    private void navigateToHomePage() throws IOException {
+        Stage stage = (Stage) bookingListView.getScene().getWindow();
+        SceneSwitcher.switchToHomePage(stage);
     }
 }

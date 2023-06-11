@@ -92,7 +92,6 @@ public class HomeController {
             case "Logout":
                 SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
                 break;
-
             default:
                 break;
         }

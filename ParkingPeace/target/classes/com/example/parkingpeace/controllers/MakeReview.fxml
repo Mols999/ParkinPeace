@@ -20,29 +20,21 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.TextField?>
 
-<BorderPane prefHeight="540" prefWidth="960" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="com.example.parkingpeace.controllers.MakeReviewController">
+<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.MakeReviewController">
     <top>
         <HBox alignment="CENTER" spacing="25">
-           <children>
-               <ImageView>
-                   <image>
-                       <Image url="@../../../../Logo/Logo.png" />
-                   </image>
-               </ImageView>
-               <TextField promptText="Search" />
-               <ComboBox promptText="Menu">
-                   <items>
-                       <FXCollections fx:factory="observableArrayList">
-                           <String fx:value="Edit Profile" />
-                           <String fx:value="Bookings" />
-                           <String fx:value="Ratings and Comments" />
-                           <String fx:value="Logout" />
-                       </FXCollections>
-                   </items>
-               </ComboBox>
-           </children>
+            <children>
+                <ImageView>
+                    <image>
+                        <Image url="@../../../../Logo/Logo.png" />
+                    </image>
+                </ImageView>
+                <TextField promptText="Search" />
+                <Button text="Home" />
+            </children>
         </HBox>
     </top>
+
     <center>
         <HBox alignment="CENTER">
            <children>

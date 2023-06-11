@@ -23,5 +23,10 @@ public class SceneSwitcher {
     public static Parent loadFXML(String fxmlFile) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
         return loader.load();
+
+    }
+
+    public static void switchToHomePage(Stage stage) {
+        switchToScene("HomePage.fxml", "Home Page", stage);
     }
 }

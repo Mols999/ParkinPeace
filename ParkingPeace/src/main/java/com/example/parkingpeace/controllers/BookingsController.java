@@ -10,6 +10,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -96,7 +97,10 @@ public class BookingsController implements Initializable {
         });
     }
 
-
+    @FXML
+    private void navigateToHomePage() throws IOException {
+        SceneSwitcher.switchToScene("HomePage.fxml", "Home Page", stage);
+    }
 
     private String generateBookingID() {
         // Generate a random number between 1000 and 9999
