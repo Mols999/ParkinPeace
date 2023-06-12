@@ -2,7 +2,10 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
 import java.util.Random;
 
 public class CreateParkingSpotController {
@@ -25,18 +28,39 @@ public class CreateParkingSpotController {
         db = new DB();
     }
 
+
+    private String landlordID;
+
+    public void setLandlordID(String landlordID) {
+        this.landlordID = landlordID;
+    }
+
+
+
     @FXML
     public void handleSaveButton() {
         String location = locationField.getText();
-        double price = Double.parseDouble(priceField.getText());
+        String priceText = priceField.getText();
         String services = servicesField.getText();
         String zipCode = zipCodeField.getText();
         String city = cityField.getText();
         String photoFilePath = photoFilePathField.getText();
 
-        int landlordId = 1; // Replace with actual landlord ID
+        // Check if any of the fields are empty
+        if(location.isEmpty() || services.isEmpty() || zipCode.isEmpty() || city.isEmpty() || photoFilePath.isEmpty() || priceText.isEmpty()){
+            displayErrorAlert("Please fill in all fields.");
+            return;
+        }
 
-        createParkingSpot(location, services, price, landlordId, zipCode, city, photoFilePath);
+        double price;
+        try {
+            price = Double.parseDouble(priceText);
+        } catch (NumberFormatException e) {
+            displayErrorAlert("Price must be a valid number.");
+            return;
+        }
+
+        boolean success = createParkingSpot(location, services, price, landlordID, zipCode, city, photoFilePath);
 
         // Clear the form
         locationField.clear();
@@ -45,9 +69,32 @@ public class CreateParkingSpotController {
         zipCodeField.clear();
         cityField.clear();
         photoFilePathField.clear();
+
+        // Display result
+        if(success) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Parking Spot Created Successfully.");
+            alert.showAndWait();
+            Stage stage = (Stage) locationField.getScene().getWindow();
+            SceneSwitcher.switchToScene("LandlordDashboard.fxml", "Landlord Dashboard", stage);
+        } else {
+            displayErrorAlert("There was an error creating the parking spot.");
+        }
     }
 
-    public boolean createParkingSpot(String location, String services, double price, int landlordId, String zipCode, String city, String photoFilePath) {
+    private void displayErrorAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+
+    public boolean createParkingSpot(String location, String services, double price, String landlordId, String zipCode, String city, String photoFilePath) {
         String parkingSpotId = generateParkingSpotId();
         String availability = "0";  // Initially set availability to 0
 
@@ -56,6 +103,7 @@ public class CreateParkingSpotController {
 
         return db.insertSQL(sql, parkingSpotId, location, availability, price, services, landlordId, zipCode, city, photoFilePath);
     }
+
 
     private String generateParkingSpotId() {
         Random rand = new Random();

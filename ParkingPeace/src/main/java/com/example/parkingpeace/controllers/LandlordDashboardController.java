@@ -2,15 +2,17 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.Button;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class LandlordDashboardController {
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
 
+    @FXML
+    private ComboBox<String> dropdownMenu;
+
     private String landlordID;
 
     private DB db;
@@ -55,6 +60,67 @@ public class LandlordDashboardController {
         db = new DB();
         configureTableColumns();
     }
+
+    @FXML
+    private void handleDropdownMenuAction(ActionEvent event) throws IOException {
+        String action = dropdownMenu.getValue();
+        Stage stage = (Stage) dropdownMenu.getScene().getWindow();
+        switch (action) {
+            case "Edit Profile":
+                navigateToEditProfile(landlordID, stage);
+                break;
+            case "Bookings":
+                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
+                break;
+            case "Ratings and Comments":
+                navigateToRatings(customerID, stage);  // Pass the stage object
+                break;
+            case "Logout":
+                SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void navigateToRatings(String customerID, Stage stage) {
+        try {
+            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            Parent ratingsRoot = ratingsLoader.load();
+            RatingsController ratingsController = ratingsLoader.getController();
+            ratingsController.setCustomerID(customerID);
+
+            // Set the root of the stage to the Ratings view
+            stage.setScene(new Scene(ratingsRoot));
+            stage.setTitle("Ratings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void navigateToEditProfile(String customerID, Stage currentStage) {
+        try {
+            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+            Parent editProfileRoot = editProfileLoader.load();
+            EditProfileController editProfileController = editProfileLoader.getController();
+
+            // Pass the customerID, landlordID, and adminID to the EditProfileController
+            editProfileController.setIDs(customerID, landlordID, adminID);
+
+            // Create a new scene and set its root to the Edit Profile view
+            Scene editProfileScene = new Scene(editProfileRoot);
+
+            // Set the scene of the current stage to the Edit Profile scene
+            currentStage.setScene(editProfileScene);
+            currentStage.setTitle("Edit Profile");
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void setIDs(String customerID, String landlordID, String adminID) {
         this.customerID = customerID;
@@ -240,15 +306,20 @@ public class LandlordDashboardController {
         Stage currentStage = (Stage) tableView.getScene().getWindow();
         SceneSwitcher.switchToScene("ModifyParkingSpot.fxml", "Modify Parking Spot", currentStage);
 
-        ModifyParkingSpotController.setCurrentParkingSpot(
-                new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating)
-        );
+        ModifyParkingSpotController controller = (ModifyParkingSpotController) SceneSwitcher.getCurrentController();
+        controller.setCurrentParkingSpot(new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating));
     }
+
+
 
     private void handleCreateParkingSpotButton() {
         Stage currentStage = (Stage) tableView.getScene().getWindow();
         SceneSwitcher.switchToScene("CreateParkingSpot.fxml", "Create Parking Spot", currentStage);
+
+        CreateParkingSpotController createParkingSpotController = (CreateParkingSpotController) SceneSwitcher.getCurrentController();
+        createParkingSpotController.setLandlordID(landlordID);
     }
+
 
     private Image getImageFromFilePath(String filePath) {
         try {
