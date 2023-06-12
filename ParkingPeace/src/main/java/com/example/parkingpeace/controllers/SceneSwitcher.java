@@ -4,17 +4,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
-
 public class SceneSwitcher {
+    private static Object currentController;
+
     public static void switchToScene(String fxmlFile, String title, Stage stage) {
         try {
-            Parent root = loadFXML(fxmlFile);
+            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
+            Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle(title);
+            currentController = loader.getController(); // Save the controller
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -23,7 +25,10 @@ public class SceneSwitcher {
     public static Parent loadFXML(String fxmlFile) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
         return loader.load();
+    }
 
+    public static Object getCurrentController() {
+        return currentController; // Allow access to the controller
     }
 
     public static void switchToHomePage(Stage stage) {

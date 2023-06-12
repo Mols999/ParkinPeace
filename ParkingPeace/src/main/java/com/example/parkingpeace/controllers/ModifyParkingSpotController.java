@@ -4,21 +4,14 @@ import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class ModifyParkingSpotController {
 
     @FXML
-    private TextField parkingSpotIDField;
-
-    @FXML
-    private TextField customerIDField;
-
-    @FXML
     private TextField locationField;
-
-    @FXML
-    private TextField availabilityField;
 
     @FXML
     private TextField priceField;
@@ -35,51 +28,53 @@ public class ModifyParkingSpotController {
     @FXML
     private TextField photoFilePathField;
 
-    @FXML
-    private TextField ratingField;
-
     private String parkingSpotID;
 
-    private static ParkingSpot currentParkingSpot; // Make this static so it persists between instances
+    private ParkingSpot currentParkingSpot;
+
+    public void setCurrentParkingSpot(ParkingSpot parkingSpot) {
+        this.currentParkingSpot = parkingSpot;
+        fillTextFieldsWithCurrentInfo();
+    }
 
     @FXML
-    public void initialize() {
+    private void initialize() {
         if (currentParkingSpot != null) {
             fillTextFieldsWithCurrentInfo();
-            // Save the ID
-            parkingSpotID = currentParkingSpot.getParkingSpotID();
-
+        } else {
+            System.out.println("No current parking spot exists.");
         }
     }
 
-    public void fillTextFieldsWithCurrentInfo() {
-        if (currentParkingSpot != null) {
-            // Set the specific fields to the current values
-            locationField.setText(currentParkingSpot.getLocation());
-            priceField.setText(currentParkingSpot.getPrice());
-            servicesField.setText(currentParkingSpot.getServices());
-            zipCodeField.setText(currentParkingSpot.getZipCode());
-            cityField.setText(currentParkingSpot.getCity());
-            photoFilePathField.setText(currentParkingSpot.getPhotoFilePath());
-
-        }
+    private void fillTextFieldsWithCurrentInfo() {
+        locationField.setText(currentParkingSpot.getLocation());
+        priceField.setText(currentParkingSpot.getPrice());
+        servicesField.setText(currentParkingSpot.getServices());
+        zipCodeField.setText(currentParkingSpot.getZipCode());
+        cityField.setText(currentParkingSpot.getCity());
+        photoFilePathField.setText(currentParkingSpot.getPhotoFilePath());
     }
+
+
 
     public boolean updateParkingSpot(String location, double price, String services, String zipCode, String city, String photoFilePath) {
-        String sql = "UPDATE tblParkingSpot SET fldLocation = '" + location + "', fldPrice = " + price + ", fldServices = '" + services + "', fldZipCode = '" + zipCode + "', fldCity = '" + city + "', fldPhotoFilePath = '" + photoFilePath + "' WHERE fldParkingSpotID = " + parkingSpotID;
+        String sql = "UPDATE tblParkingSpot SET fldLocation = ?, fldPrice = ?, fldServices = ?, fldZipCode = ?, fldCity = ?, fldPhotoFilePath = ? WHERE fldParkingSpotID = ?";
 
         try {
             DB db = new DB();
-            return db.updateSQL(sql);
+            return db.updateSQLWithParams(sql, location, price, services, zipCode, city, photoFilePath, parkingSpotID);
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
         return false;
     }
 
+
+
+
+
     @FXML
     public void handleSaveButton(ActionEvent event) {
-        // Get the field inputs
         String location = locationField.getText();
         double price = Double.parseDouble(priceField.getText());
         String services = servicesField.getText();
@@ -87,11 +82,31 @@ public class ModifyParkingSpotController {
         String city = cityField.getText();
         String photoFilePath = photoFilePathField.getText();
 
-        // Use the input to update the database
-        updateParkingSpot(location, price, services, zipCode, city, photoFilePath);
+        // Set the parkingSpotID based on the currentParkingSpot
+        if (currentParkingSpot != null) {
+            parkingSpotID = currentParkingSpot.getParkingSpotID();
+        }
+
+        boolean success = updateParkingSpot(location, price, services, zipCode, city, photoFilePath);
+
+        if (success) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("Parking Spot Modified Successfully.");
+            alert.showAndWait();
+
+            Stage stage = (Stage) locationField.getScene().getWindow();
+            SceneSwitcher.switchToScene("LandlordDashboard.fxml", "Landlord Dashboard", stage);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error Dialog");
+            alert.setHeaderText(null);
+            alert.setContentText("There was an error modifying the parking spot.");
+            alert.showAndWait();
+        }
     }
 
-    public static void setCurrentParkingSpot(ParkingSpot parkingSpot) {
-        currentParkingSpot = parkingSpot;
-    }
+
+
 }

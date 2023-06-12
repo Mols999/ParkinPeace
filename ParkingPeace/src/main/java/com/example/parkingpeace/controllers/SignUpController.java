@@ -38,7 +38,6 @@ public class SignUpController {
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
-
     @FXML
     public void handleCustomerButton(ActionEvent event) {
         role = "Customer";
@@ -76,8 +75,7 @@ public class SignUpController {
     @FXML
     public void handleBackButton(ActionEvent event) {
         try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Login.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/parkingpeace/Login.fxml"));
             Parent root = loader.load();
 
             LoginController loginController = loader.getController();
