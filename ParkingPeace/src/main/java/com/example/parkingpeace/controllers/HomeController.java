@@ -26,8 +26,6 @@ public class HomeController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-
     private DB db = new DB();
     private ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
 

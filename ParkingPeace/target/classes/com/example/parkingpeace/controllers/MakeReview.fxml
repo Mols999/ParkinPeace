@@ -46,7 +46,7 @@
                      </font>
                   </Label>
                       <Label text="Rating" />
-                      <TextField fx:id="ratingValueField" promptText="Enter rating value" />
+                      <TextField fx:id="ratingValueField" promptText="Enter rating value &quot;1-5&quot;" />
                       <Label text="Review Comment" />
                       <TextArea fx:id="reviewCommentField" prefHeight="100" promptText="Enter review comment" />
                       <Button onAction="#handleSaveButton" text="Save" />
