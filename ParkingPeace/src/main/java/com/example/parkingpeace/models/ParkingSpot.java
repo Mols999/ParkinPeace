@@ -3,6 +3,7 @@ package com.example.parkingpeace.models;
 import com.example.parkingpeace.db.DB;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -201,5 +202,17 @@ public class ParkingSpot {
             imageView.setImage(new Image("ParkingImage/image1.jpg"));
         }
         return imageView;
+    }
+
+    public ObservableValue<String> deleteProperty() {
+            // TODO: 12-06-2023
+
+
+        return null;
+    }
+
+    public ObservableValue<String> viewProperty() {
+        // TODO: 12-06-2023
+        return null;
     }
 }

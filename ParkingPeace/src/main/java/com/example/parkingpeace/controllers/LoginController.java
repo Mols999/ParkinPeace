@@ -111,7 +111,7 @@ public class LoginController {
             landlordHomeController.setIDs(customerID, landlordID, adminID);
             stage.setTitle("Landlord Home Page");
         } else if (!adminID.isEmpty()) {
-            loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
+            loader = new FXMLLoader(getClass().getResource("AdminHomePage.fxml"));
             root = loader.load();
             // Add necessary initialization for the AdminDashboardController if needed
             stage.setTitle("Admin Dashboard");

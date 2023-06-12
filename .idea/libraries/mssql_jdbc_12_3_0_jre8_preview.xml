@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="mssql-jdbc-12.3.0.jre8-preview">
     <CLASSES>
-      <root url="jar://$USER_HOME$/Desktop/mssql-jdbc-12.3.0.jre8-preview.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/mssql-jdbc-12.3.0.jre8-preview.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
