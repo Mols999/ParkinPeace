@@ -502,9 +502,4 @@ public class DB {
         }
         return false;
     }
-
-
-    public boolean hasMoreData() {
-        return moreData;
-    }
 }

@@ -175,7 +175,12 @@ public class BookingsController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Your booking has been successfully made.");
             alert.showAndWait();
-            SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
+
+            // Get the current stage
+            Stage currentStage = (Stage) nightsLabel.getScene().getWindow();
+
+            // Switch to the BookingList.fxml using the SceneSwitcher class
+            SceneSwitcher.switchToScene("BookingList.fxml", "Booking List", currentStage);
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Booking Failed");
@@ -184,6 +189,7 @@ public class BookingsController implements Initializable {
             alert.showAndWait();
         }
     }
+
 
     private DateCell createDayCell(DatePicker datePicker) {
         Map<LocalDate, Boolean> bookingMap = new HashMap<>();

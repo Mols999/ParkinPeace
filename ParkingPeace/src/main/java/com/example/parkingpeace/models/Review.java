@@ -38,4 +38,8 @@ public class Review {
                 ", ratingComment='" + ratingComment + '\'' +
                 '}';
     }
+
+    public void setRatingComment(String ratingComment) {
+        this.ratingComment = ratingComment;
+    }
 }

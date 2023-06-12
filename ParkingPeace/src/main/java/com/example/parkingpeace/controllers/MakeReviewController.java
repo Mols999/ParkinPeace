@@ -2,11 +2,14 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class MakeReviewController {
 
@@ -16,6 +19,8 @@ public class MakeReviewController {
     private TextArea reviewCommentField;
     @FXML
     private Button saveButton;
+    @FXML
+    private Button homeButton;
 
     private int parkingSpotID;
     private int landlordID;
@@ -31,7 +36,7 @@ public class MakeReviewController {
     }
 
     @FXML
-    protected void handleSaveButton() {
+    protected void handleSaveButton() throws IOException {
         int ratingValue = Integer.parseInt(ratingValueField.getText());
         String reviewComment = reviewCommentField.getText();
 
@@ -40,13 +45,11 @@ public class MakeReviewController {
 
         if (success) {
             showAlert(AlertType.INFORMATION, "Review Saved", "Your review has been saved.");
+            navigateToHomePage();
         } else {
             showAlert(AlertType.ERROR, "Error", "Failed to save the review.");
         }
     }
-
-
-
 
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
@@ -54,5 +57,11 @@ public class MakeReviewController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    private void navigateToHomePage() throws IOException {
+        Stage stage = (Stage) homeButton.getScene().getWindow();
+        SceneSwitcher.switchToHomePage(stage);
     }
 }
