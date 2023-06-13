@@ -24,7 +24,7 @@
                    </image>
                </ImageView>
                <TextField fx:id="searchTextField" promptText="Search" />
-               <Button text="Home" />
+               <Button fx:id="homeButton" text="Home" onAction="#navigateToHomePage" />
            </children>
         </HBox>
     </top>

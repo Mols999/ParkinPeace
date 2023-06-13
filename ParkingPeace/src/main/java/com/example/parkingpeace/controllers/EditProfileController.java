@@ -1,6 +1,7 @@
 package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
@@ -9,6 +10,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class EditProfileController {
@@ -160,6 +162,11 @@ public class EditProfileController {
         }
     }
 
+    @FXML
+    private void navigateToHomePage(ActionEvent event) throws IOException {
+        Stage stage = (Stage) usernameField.getScene().getWindow();
+        SceneSwitcher.switchToHomePage(stage);
+    }
 
 
     public void setIDs(String customerID, String landlordID, String adminID) {

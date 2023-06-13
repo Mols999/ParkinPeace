@@ -27,7 +27,7 @@ public class SignUpController {
     private PasswordField passwordField;
     private String role = "";
     private DB db;
-
+    private Stage stage; // Add the stage field
 
 
     public void initialize() {
@@ -68,6 +68,21 @@ public class SignUpController {
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
             System.out.println("User signed up successfully!");
+
+            // Navigate to the login screen
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/parkingpeace/Login.fxml"));
+                Parent root = loader.load();
+
+                LoginController loginController = loader.getController();
+                loginController.setStage(stage); // Pass the stage object to the LoginController
+
+                stage.setScene(new Scene(root));
+                stage.setTitle("Login");
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else {
             System.out.println("There was an error signing up the user.");
         }
@@ -79,16 +94,17 @@ public class SignUpController {
             Parent root = loader.load();
 
             LoginController loginController = loader.getController();
+            loginController.setStage(stage); // Pass the stage object to the LoginController
 
-            Stage currentStage = (Stage) usernameField.getScene().getWindow();
-            currentStage.setScene(new Scene(root));
-            currentStage.setTitle("Login");
-            currentStage.show();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Login");
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setStage(Stage stage) {
+        this.stage = stage;
     }
 }

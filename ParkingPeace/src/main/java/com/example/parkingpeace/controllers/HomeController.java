@@ -129,7 +129,10 @@ public class HomeController {
     }
 
 
-
+    public void loadData() {
+        populateTableView();
+        configureTableColumns();
+    }
 
 
     @FXML
@@ -325,26 +328,24 @@ public class HomeController {
 
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         try {
-            FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("Bookings.fxml"));
-            Parent root = loader.load();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("Bookings.fxml"));
+            Parent bookingsRoot = loader.load();
             BookingsController bookingsController = loader.getController();
             bookingsController.setBookingData(location, availability, price, services, zipCode, city, photoFilePath, rating, parkingSpotID);
             bookingsController.setCustomerID(customerID);
             bookingsController.setHomeController(this); // Pass the HomeController instance
 
-            Scene scene = new Scene(root);
-            Stage bookingsStage = new Stage();
-            bookingsStage.setScene(scene);
-            bookingsStage.setTitle("Bookings");
+            // Get the current scene
+            Scene currentScene = dropdownMenu.getScene();
 
-            // Pass the stage object to the BookingsController
-            bookingsController.setStage(bookingsStage);
-
-            bookingsStage.show();
+            // Replace the root node of the current scene with the Bookings view
+            currentScene.setRoot(bookingsRoot);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 
 

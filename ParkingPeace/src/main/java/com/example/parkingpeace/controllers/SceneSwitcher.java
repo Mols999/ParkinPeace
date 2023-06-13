@@ -16,7 +16,14 @@ public class SceneSwitcher {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle(title);
-            currentController = loader.getController(); // Save the controller
+
+            // Check if the controller implements the setStage method
+            Object controller = loader.getController();
+            if (controller instanceof HomeController) {
+                ((HomeController) controller).setStage(stage);
+            }
+
+            currentController = controller; // Save the controller
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -31,7 +38,10 @@ public class SceneSwitcher {
         return currentController; // Allow access to the controller
     }
 
-    public static void switchToHomePage(Stage stage) {
-        switchToScene("HomePage.fxml", "Home Page", stage);
+    public static void switchToHomePage(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("HomePage.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
     }
 }
