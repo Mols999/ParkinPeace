@@ -11,48 +11,55 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class LandlordDashboardController {
     @FXML
     private TableView<ParkingSpot> tableView;
+
     @FXML
     private TableColumn<ParkingSpot, String> photoColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> addressColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> zipCodeColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> cityColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> ratingColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> servicesColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> availabilityColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
+
     @FXML
     private ComboBox<String> dropdownMenu;
+
     private String landlordID;
+
     private DB db;
     private String customerID;
     private String adminID;
-
-
 
     @FXML
     public void initialize() {
         db = new DB();
         configureTableColumns();
     }
-
-
 
     @FXML
     private void handleDropdownMenuAction(ActionEvent event) throws IOException {
@@ -76,8 +83,6 @@ public class LandlordDashboardController {
         }
     }
 
-
-
     private void navigateToRatings(String customerID, Stage stage) {
         try {
             FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
@@ -92,7 +97,6 @@ public class LandlordDashboardController {
             e.printStackTrace();
         }
     }
-
 
 
     public void navigateToEditProfile(String customerID, Stage currentStage) {
@@ -128,14 +132,10 @@ public class LandlordDashboardController {
         loadParkingSpotsForLandlord(landlordID); // Load parking spots after IDs are set
     }
 
-
-
     public void loadParkingSpotsForLandlord(String landlordID) {
         List<ParkingSpot> parkingSpots = getParkingSpotsForLandlord();
         tableView.getItems().addAll(parkingSpots);
     }
-
-
 
     public List<ParkingSpot> getParkingSpotsForLandlord() {
         List<ParkingSpot> parkingSpots = new ArrayList<>();
@@ -144,6 +144,7 @@ public class LandlordDashboardController {
                 "FROM tblParkingSpot ps " +
                 "INNER JOIN tblLandlord ll ON ps.fldLandlordID = ll.fldLandlordID " +
                 "WHERE ps.fldLandlordID = ?";
+
         try {
             ResultSet rs = db.selectSQLWithResultParams(sql, this.landlordID);
 
@@ -168,8 +169,6 @@ public class LandlordDashboardController {
 
         return parkingSpots;
     }
-
-
 
     private void configureTableColumns() {
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
@@ -338,4 +337,7 @@ public class LandlordDashboardController {
         return null;
     }
 
+    private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
+        // Handle the rent button action
+    }
 }

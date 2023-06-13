@@ -1,5 +1,6 @@
 package com.example.parkingpeace.controllers;
 
+// Import necessary classes
 import com.example.parkingpeace.models.Booking;
 import com.example.parkingpeace.db.DB;
 import javafx.fxml.FXML;
@@ -14,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -22,29 +22,41 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 
+// Implement Initializable for initialization logic
 public class BookingListController implements Initializable {
 
+    // Declare a ListView of VBox (each VBox will represent a booking)
     @FXML
     private ListView<VBox> bookingListView;
 
+    // Declare the database access object
     private DB db;
 
+    // Initialize database object and load the booking list
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        db = new DB();
-        loadBookingList();
+        db = new DB(); // Initialize the database access object
+        loadBookingList(); // Load the booking list
     }
 
+    // Method to load bookings into the ListView
     private void loadBookingList() {
+        // Fetch bookings from the database
         List<Booking> bookings = db.fetchBookings();
 
+        // Check if there are no bookings
         if (bookings.isEmpty()) {
+            // If no bookings, display an informational alert
             showAlert(AlertType.INFORMATION, "Booking List", "No bookings found.");
         } else {
+            // If there are bookings, clear old items in the list view
             bookingListView.getItems().clear();
+            // Create a date format for displaying date and time
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+            // Loop through each booking
             for (Booking booking : bookings) {
+                // Get booking details
                 int bookingID = booking.getBookingID();
                 String customerName = db.getCustomerName(booking.getCustomerID()); // Retrieve customer name
                 int parkingSpotID = booking.getParkingSpotID();
@@ -52,6 +64,7 @@ public class BookingListController implements Initializable {
                 Timestamp endDateTime = Timestamp.valueOf(booking.getEndDateTime());
                 String bookingStatus = booking.getBookingStatus();
 
+                // Create a VBox for each booking
                 VBox bookingDetailsBox = new VBox();
 
                 // Create and configure Label for booking details
@@ -63,19 +76,24 @@ public class BookingListController implements Initializable {
                         + "End Date/Time: " + dateFormat.format(endDateTime) + "\n"
                         + "Booking Status: " + bookingStatus + "\n");
 
+                // Create delete button and attach delete action
                 Button deleteButton = new Button("Delete");
                 deleteButton.setOnAction(event -> deleteBooking(bookingID));
 
+                // Create review button and attach review window opening action
                 Button reviewButton = new Button("Review");
                 reviewButton.setOnAction(event -> openReviewWindow(parkingSpotID));
 
+                // Add the label and buttons to the VBox
                 bookingDetailsBox.getChildren().addAll(bookingLabel, deleteButton, reviewButton);
 
+                // Add the VBox to the list view
                 bookingListView.getItems().add(bookingDetailsBox);
             }
         }
     }
 
+    // Method to open review window
     private void openReviewWindow(int parkingSpotID) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MakeReview.fxml"));
@@ -91,13 +109,12 @@ public class BookingListController implements Initializable {
         }
     }
 
-
-
-
-
+    // Method to delete a booking
     private void deleteBooking(int bookingID) {
+        // Call the delete method in the DB class and get the result
         boolean success = db.deleteBooking(bookingID);
 
+        // If deletion was successful
         if (success) {
             showAlert(AlertType.INFORMATION, "Booking Deletion", "Booking deleted successfully.");
             loadBookingList();
@@ -106,8 +123,7 @@ public class BookingListController implements Initializable {
         }
     }
 
-
-
+    // Method to show an alert
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -116,7 +132,7 @@ public class BookingListController implements Initializable {
         alert.showAndWait();
     }
 
-
+    // Navigate back to the home page
     @FXML
     private void navigateToHomePage() throws IOException {
         Stage stage = (Stage) bookingListView.getScene().getWindow();

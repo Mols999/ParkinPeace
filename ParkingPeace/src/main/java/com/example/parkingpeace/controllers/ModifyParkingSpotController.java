@@ -29,12 +29,17 @@ public class ModifyParkingSpotController {
     private TextField photoFilePathField;
 
     private String parkingSpotID;
+    private String landlordID;
 
     private ParkingSpot currentParkingSpot;
 
     public void setCurrentParkingSpot(ParkingSpot parkingSpot) {
         this.currentParkingSpot = parkingSpot;
         fillTextFieldsWithCurrentInfo();
+    }
+
+    public void setLandlordID(String landlordID) {
+        this.landlordID = landlordID;
     }
 
     @FXML
@@ -55,8 +60,6 @@ public class ModifyParkingSpotController {
         photoFilePathField.setText(currentParkingSpot.getPhotoFilePath());
     }
 
-
-
     public boolean updateParkingSpot(String location, double price, String services, String zipCode, String city, String photoFilePath) {
         String sql = "UPDATE tblParkingSpot SET fldLocation = ?, fldPrice = ?, fldServices = ?, fldZipCode = ?, fldCity = ?, fldPhotoFilePath = ? WHERE fldParkingSpotID = ?";
 
@@ -68,10 +71,6 @@ public class ModifyParkingSpotController {
         }
         return false;
     }
-
-
-
-
 
     @FXML
     public void handleSaveButton(ActionEvent event) {
@@ -98,6 +97,9 @@ public class ModifyParkingSpotController {
 
             Stage stage = (Stage) locationField.getScene().getWindow();
             SceneSwitcher.switchToScene("LandlordDashboard.fxml", "Landlord Dashboard", stage);
+
+            // Reload parking spots in the LandlordDashboardController
+            LandlordDashboardController landlordDashboardController = (LandlordDashboardController) SceneSwitcher.getCurrentController();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
@@ -106,7 +108,4 @@ public class ModifyParkingSpotController {
             alert.showAndWait();
         }
     }
-
-
-
 }

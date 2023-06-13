@@ -13,22 +13,17 @@ public class Review {
         this.ratingComment = ratingComment;
     }
 
-    public int getRatingID() {
-        return ratingID;
-    }
-
-    public int getCustomerID() {
-        return customerID;
-    }
-
+    // Getter for ratingValue
     public int getRatingValue() {
         return ratingValue;
     }
 
+    // Getter for ratingComment
     public String getRatingComment() {
         return ratingComment;
     }
 
+    // toString method to provide a string representation of the Review object
     @Override
     public String toString() {
         return "Review{" +
@@ -37,9 +32,5 @@ public class Review {
                 ", ratingValue=" + ratingValue +
                 ", ratingComment='" + ratingComment + '\'' +
                 '}';
-    }
-
-    public void setRatingComment(String ratingComment) {
-        this.ratingComment = ratingComment;
     }
 }

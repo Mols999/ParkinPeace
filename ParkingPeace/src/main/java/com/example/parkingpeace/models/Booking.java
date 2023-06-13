@@ -12,6 +12,7 @@ public class Booking {
     private String bookingStatus;
     private String price;
 
+    // Constructor
     public Booking(int bookingID, int customerID, int parkingSpotID, LocalDateTime startDateTime, LocalDateTime endDateTime, String bookingStatus) {
         this.bookingID = bookingID;
         this.customerID = customerID;
@@ -22,67 +23,51 @@ public class Booking {
         this.price = price;
     }
 
+    // Getter for bookingID
     public int getBookingID() {
         return bookingID;
     }
 
-    public void setBookingID(int bookingID) {
-        this.bookingID = bookingID;
-    }
 
+    // Getter for customerID
     public int getCustomerID() {
         return customerID;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
 
+    // Getter for parkingSpotID
     public int getParkingSpotID() {
         return parkingSpotID;
     }
 
-    public void setParkingSpotID(int parkingSpotID) {
-        this.parkingSpotID = parkingSpotID;
-    }
 
+    // Getter for startDateTime
     public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
 
-    public void setStartDateTime(LocalDateTime startDateTime) {
-        this.startDateTime = startDateTime;
-    }
 
+    // Getter for endDateTime
     public LocalDateTime getEndDateTime() {
         return endDateTime;
     }
 
-    public void setEndDateTime(LocalDateTime endDateTime) {
-        this.endDateTime = endDateTime;
-    }
 
+    // Getter for bookingStatus
     public String getBookingStatus() {
         return bookingStatus;
     }
 
-    public void setBookingStatus(String bookingStatus) {
-        this.bookingStatus = bookingStatus;
-    }
 
+    // Getter for price
     public String getPrice() {
         return price;
     }
 
+
+    // Setter for price
     public void setPrice(String price) {
         this.price = price;
     }
 
-    public LocalDateTime getBookingDate() {
-        return startDateTime;
-    }
-
-    public void setBookingDate(LocalDateTime bookingDate) {
-        this.startDateTime = bookingDate;
-    }
 }

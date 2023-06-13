@@ -14,11 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 
 public class HomeController {
     private Stage stage;
@@ -26,6 +24,8 @@ public class HomeController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
+    // Database connection and parking spots list
     private DB db = new DB();
     private ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
 
@@ -38,41 +38,37 @@ public class HomeController {
     @FXML
     private TableView<ParkingSpot> tableView;
 
+    // Table columns
     @FXML
     private TableColumn<ParkingSpot, String> photoColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> addressColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> zipCodeColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> cityColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> ratingColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> servicesColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> availabilityColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
 
+    // User IDs
     private String customerID;
     private String landlordID;
     private String adminID;
 
-
     @FXML
     private void initialize() {
+        // Initialize the table view with data and configure table columns
         populateTableView();
         configureTableColumns();
     }
 
+    // Handle dropdown menu actions
     @FXML
     private void handleDropdownMenuAction(ActionEvent event) throws IOException {
         String action = dropdownMenu.getValue();
@@ -85,7 +81,7 @@ public class HomeController {
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
                 break;
             case "Ratings and Comments":
-                navigateToRatings(customerID, stage);  // Pass the stage object
+                navigateToRatings(customerID, stage);
                 break;
             case "Logout":
                 SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
@@ -95,6 +91,7 @@ public class HomeController {
         }
     }
 
+    // Navigate to ratings and comments view
     private void navigateToRatings(String customerID, Stage stage) {
         try {
             FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
@@ -110,7 +107,7 @@ public class HomeController {
         }
     }
 
-
+    // Navigate to edit profile view
     public void navigateToEditProfile(String customerID, Stage currentStage) {
         try {
             FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
@@ -128,13 +125,13 @@ public class HomeController {
         }
     }
 
-
+    // Load data into the table view
     public void loadData() {
         populateTableView();
         configureTableColumns();
     }
 
-
+    // Handle search by location, zip code, or city
     @FXML
     public void handleSearch(KeyEvent event) {
         String searchQuery = searchTextField.getText().trim();
@@ -145,6 +142,7 @@ public class HomeController {
         }
     }
 
+    // Search for parking spots based on the search query
     private void searchParkingSpots(String searchQuery) {
         tableView.getItems().clear();
         parkingSpots.clear();
@@ -177,8 +175,7 @@ public class HomeController {
         tableView.setItems(parkingSpots);
     }
 
-
-
+    // Populate the table view with parking spots from the database
     private void populateTableView() {
         tableView.getItems().clear();
         parkingSpots.clear();
@@ -210,10 +207,10 @@ public class HomeController {
         tableView.setItems(parkingSpots);
     }
 
+    // Configure table columns with cell factories and cell values
     private void configureTableColumns() {
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty());
-
 
         priceColumn.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -240,9 +237,9 @@ public class HomeController {
             }
         });
 
-
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
+
             {
                 imageView.setFitHeight(100);
                 imageView.setFitWidth(100);
@@ -264,7 +261,6 @@ public class HomeController {
                 setGraphic(imageView);
             }
         });
-
 
         addressColumn.setCellValueFactory(cellData -> cellData.getValue().locationProperty());
         zipCodeColumn.setCellValueFactory(cellData -> cellData.getValue().zipCodeProperty());
@@ -290,7 +286,7 @@ public class HomeController {
                         String city = parkingSpot.getCity();
                         String photoFilePath = parkingSpot.getPhotoFilePath();
                         String rating = parkingSpot.getRating();
-                        String parkingSpotID = parkingSpot.getParkingSpotID(); // Get parkingSpotID
+                        String parkingSpotID = parkingSpot.getParkingSpotID();
 
                         handleRentButton(location, availability, price, services, zipCode, city, photoFilePath, rating, parkingSpotID);
                     }
@@ -310,6 +306,7 @@ public class HomeController {
         tableView.getColumns().add(rentButtonColumn);
     }
 
+    // Get image from file path
     private Image getImageFromFilePath(String filePath) {
         try {
             // Check if the file path starts with "ParkingImage/"
@@ -326,6 +323,7 @@ public class HomeController {
         return null;
     }
 
+    // Handle rent button click
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("Bookings.fxml"));
@@ -345,19 +343,15 @@ public class HomeController {
         }
     }
 
-
-
-
-
+    // Set user IDs
     public void setIDs(String customerID, String landlordID, String adminID) {
         this.customerID = customerID;
         this.landlordID = landlordID;
         this.adminID = adminID;
     }
 
-
+    // Get the stage
     public Stage getStage() {
         return this.stage;
     }
-
 }

@@ -9,9 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-
 
 
 public class SignUpController {
@@ -30,6 +28,8 @@ public class SignUpController {
     private Stage stage; // Add the stage field
 
 
+
+
     public void initialize() {
         db = new DB();
     }
@@ -38,10 +38,13 @@ public class SignUpController {
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
+
     @FXML
     public void handleCustomerButton(ActionEvent event) {
         role = "Customer";
     }
+
+
 
     @FXML
     public void handleSignUpButton(ActionEvent event) {
@@ -56,14 +59,12 @@ public class SignUpController {
             return;
         }
 
-
         String sql = "";
         if (role.equals("Customer")) {
             sql = "INSERT INTO tblCustomer (fldCustomerName, fldCustomerAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         } else if (role.equals("Landlord")) {
             sql = "INSERT INTO tblLandlord (fldLandlordName, fldLandlordAge, fldUsername, fldEmail, fldPassword) VALUES (?, ?, ?, ?, ?)";
         }
-
 
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
@@ -87,6 +88,9 @@ public class SignUpController {
             System.out.println("There was an error signing up the user.");
         }
     }
+
+
+
     @FXML
     public void handleBackButton(ActionEvent event) {
         try {
@@ -103,6 +107,8 @@ public class SignUpController {
             e.printStackTrace();
         }
     }
+
+
 
     public void setStage(Stage stage) {
         this.stage = stage;

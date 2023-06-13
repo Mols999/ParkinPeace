@@ -4,7 +4,6 @@ import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.Review;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -12,24 +11,23 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.TextFieldListCell;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class RatingsController implements Initializable {
 
+
     @FXML
     private ListView<Review> ratingsListView;
-
-    private DB db;
-    private String customerID;
-    private Stage stage;
-    private ObservableList<Review> reviewsList;
     @FXML
     private Button homeButton;
+    private DB db;
+    private String customerID;
+    private ObservableList<Review> reviewsList;
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -37,10 +35,14 @@ public class RatingsController implements Initializable {
         reviewsList = FXCollections.observableArrayList();
     }
 
+
+
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
         loadRatings();
     }
+
+
 
     private void loadRatings() {
         List<Review> reviews = db.fetchCustomerReviews(customerID);
@@ -67,6 +69,8 @@ public class RatingsController implements Initializable {
         }
     }
 
+
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -74,6 +78,8 @@ public class RatingsController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+
 
     private void closeStage() {
         Stage currentStage = (Stage) ratingsListView.getScene().getWindow();
@@ -86,6 +92,4 @@ public class RatingsController implements Initializable {
         Stage stage = (Stage) homeButton.getScene().getWindow();
         SceneSwitcher.switchToHomePage(stage);
     }
-
-
 }

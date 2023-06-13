@@ -1,5 +1,6 @@
 package com.example.parkingpeace.controllers;
 
+// Necessary imports
 import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
 import javafx.event.ActionEvent;
@@ -16,23 +17,23 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
+// Implement Initializable for initialization logic
 public class BookingsController implements Initializable {
 
+    // Declare required fields
     private HomeController homeController;
     private ParkingSpot parkingSpot;
     private DB db = new DB();
     @FXML
-    private Label nightsLabel;
-
+    private Label nightsLabel; // label to show nights for booking
     @FXML
-    private Label pricePerNightLabel;
-
+    private Label pricePerNightLabel; // label to show price per night
     @FXML
-    private Label totalPriceLabel;
+    private Label totalPriceLabel; // label to show total price for the stay
     @FXML
-    private DatePicker startDatePicker;
+    private DatePicker startDatePicker; // date picker to select start date of the booking
     @FXML
-    private DatePicker endDatePicker;
+    private DatePicker endDatePicker; // date picker to select end date of the booking
     private LocalDate startDate;
     private LocalDate endDate;
     private String customerID;
@@ -47,7 +48,9 @@ public class BookingsController implements Initializable {
     private String photoFilePath;
     private String rating;
 
+    // Method to set the booking data
     public void setBookingData(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
+        // Assign data to the relevant fields
         this.location = location;
         this.availability = availability;
         this.price = price;
@@ -58,12 +61,15 @@ public class BookingsController implements Initializable {
         this.rating = rating;
         this.parkingSpotID = parkingSpotID;
 
+        // Initialize a parking spot object with the data
         this.parkingSpot = new ParkingSpot(parkingSpotID, "", location, availability, price, services, zipCode, city, photoFilePath, rating);
         if (homeController != null) {
+            // get stage from home controller if not null
             this.stage = homeController.getStage();
         }
     }
 
+    // Setter methods for different fields
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -80,12 +86,15 @@ public class BookingsController implements Initializable {
         this.homeController = homeController;
     }
 
+    // Method called during the initialization of the controller
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        // Create a day cell factory to show which dates are booked and available
         Callback<DatePicker, DateCell> dayCellFactory = this::createDayCell;
         startDatePicker.setDayCellFactory(dayCellFactory);
         endDatePicker.setDayCellFactory(dayCellFactory);
 
+        // Add listeners to update the nights and prices when the start and end dates are selected
         startDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             startDate = newValue;
             handleDateSelection();
@@ -97,11 +106,13 @@ public class BookingsController implements Initializable {
         });
     }
 
+    // Handler to navigate to home page
     @FXML
     private void navigateToHomePage() throws IOException {
         SceneSwitcher.switchToScene("HomePage.fxml", "Home Page", stage);
     }
 
+    // Generate a random booking ID
     private String generateBookingID() {
         // Generate a random number between 1000 and 9999
         int randomNumber = (int) (Math.random() * 9000) + 1000;
@@ -110,7 +121,9 @@ public class BookingsController implements Initializable {
         return String.valueOf(randomNumber);
     }
 
+    // Calculate nights and prices based on the selected dates
     private void handleDateSelection() {
+        // Continue if start date is not after end date
         if (startDate != null && endDate != null && !startDate.isAfter(endDate)) {
             if (db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), startDate) ||
                     db.isParkingSpotBooked(Integer.parseInt(parkingSpot.getParkingSpotID()), endDate)) {
@@ -138,7 +151,7 @@ public class BookingsController implements Initializable {
         }
     }
 
-
+    // Handle the booking action when book button is clicked
     @FXML
     private void handleBookButton(ActionEvent event) {
         if (startDate != null && endDate != null && !startDate.isAfter(endDate)) {
@@ -150,6 +163,7 @@ public class BookingsController implements Initializable {
                 alert.setContentText("The selected dates are already booked. Please choose different dates.");
                 alert.showAndWait();
             } else {
+                // make the booking
                 makeBooking();
             }
         } else {
@@ -161,6 +175,7 @@ public class BookingsController implements Initializable {
         }
     }
 
+    // Insert booking data into the database
     private void makeBooking() {
         String bookingID = generateBookingID();
         Timestamp startDateTime = Timestamp.valueOf(startDate.atStartOfDay());
@@ -190,7 +205,7 @@ public class BookingsController implements Initializable {
         }
     }
 
-
+    // Create a day cell showing booked dates with a specific color
     private DateCell createDayCell(DatePicker datePicker) {
         Map<LocalDate, Boolean> bookingMap = new HashMap<>();
         List<LocalDate> bookedDates = db.getBookedDatesForParkingSpot(parkingSpot.getParkingSpotID());
@@ -213,16 +228,17 @@ public class BookingsController implements Initializable {
         };
     }
 
-
-
+    // Checks if a parking spot is booked for the selected dates
     private boolean isParkingSpotBooked(LocalDate startDate, LocalDate endDate) {
         return db.isParkingSpotBooked(parkingSpot.getParkingSpotID(), startDate);
     }
 
+    // Calculate the number of nights for a given booking
     private int calculateNights(LocalDate startDate, LocalDate endDate) {
         return (int) startDate.until(endDate).getDays();
     }
 
+    // Calculate the price per night for a given booking
     private double calculatePricePerNight(String price) {
         return Double.parseDouble(price);
     }

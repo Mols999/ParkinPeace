@@ -29,17 +29,21 @@ public class SceneSwitcher {
         }
     }
 
-    public static Parent loadFXML(String fxmlFile) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource(fxmlFile));
-        return loader.load();
-    }
 
     public static Object getCurrentController() {
         return currentController; // Allow access to the controller
     }
 
+
     public static void switchToHomePage(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("HomePage.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+    }
+
+    public static void switchToLandlordDashboard(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("LandlordDashboard.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
