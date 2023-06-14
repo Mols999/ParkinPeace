@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.collections.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.collections.FXCollections?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.parkingpeace.controllers.LandlordDashboardController" prefWidth="960" prefHeight="540">
+<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.LandlordDashboardController">
     <top>
         <HBox alignment="CENTER" spacing="25">
             <ImageView>
@@ -18,8 +15,8 @@
                     <Image url="@../../../../Logo/Logo.png" />
                 </image>
             </ImageView>
-            <TextField promptText="Search" fx:id="searchTextField"/>
-            <ComboBox fx:id="dropdownMenu" promptText="Menu" onAction="#handleDropdownMenuAction">
+            <TextField fx:id="searchTextField" promptText="Search" />
+            <ComboBox fx:id="dropdownMenu" onAction="#handleDropdownMenuAction" promptText="Menu">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Edit Profile" />
@@ -29,6 +26,7 @@
                     </FXCollections>
                 </items>
             </ComboBox>
+         <Button fx:id="CreatPearkingspot" mnemonicParsing="false" onAction="#handleCreateParkingSpotButton" text="Create parkingspot" />
         </HBox>
     </top>
     <center>
@@ -78,4 +76,3 @@
         </TableView>
     </center>
 </BorderPane>
-

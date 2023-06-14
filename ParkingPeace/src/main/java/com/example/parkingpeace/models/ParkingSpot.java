@@ -151,15 +151,5 @@ public class ParkingSpot {
         return imageView;
     }
 
-    public ObservableValue<String> deleteProperty() {
-            // TODO: 12-06-2023
 
-
-        return null;
-    }
-
-    public ObservableValue<String> viewProperty() {
-        // TODO: 12-06-2023
-        return null;
-    }
 }

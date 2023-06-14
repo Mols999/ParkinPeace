@@ -188,7 +188,7 @@ public class BookingsController implements Initializable {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Booking Successful");
             alert.setHeaderText(null);
-            alert.setContentText("Your booking has been successfully made.");
+            alert.setContentText("Your booking has been successfully made. We have send you an email to your account regarding the booking");
             alert.showAndWait();
 
             // Get the current stage

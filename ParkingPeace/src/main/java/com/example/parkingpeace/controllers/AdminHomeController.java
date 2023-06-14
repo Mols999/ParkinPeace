@@ -174,8 +174,8 @@ public class AdminHomeController {
         servicesColumn.setCellValueFactory(cellData -> cellData.getValue().servicesProperty());
         availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().availabilityProperty());
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
-        deleteColumn.setCellValueFactory(cellData -> cellData.getValue().deleteProperty());
-        viewColumn.setCellValueFactory(cellData -> cellData.getValue().viewProperty());
+      //  deleteColumn.setCellValueFactory(cellData -> cellData.getValue().deleteProperty());
+       // viewColumn.setCellValueFactory(cellData -> cellData.getValue().viewProperty());
 
     }
 

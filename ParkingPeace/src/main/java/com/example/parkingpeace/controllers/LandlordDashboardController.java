@@ -288,6 +288,7 @@ public class LandlordDashboardController {
 
             }
 
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -312,6 +313,7 @@ public class LandlordDashboardController {
 
 
 
+    @FXML
     private void handleCreateParkingSpotButton() {
         Stage currentStage = (Stage) tableView.getScene().getWindow();
         SceneSwitcher.switchToScene("CreateParkingSpot.fxml", "Create Parking Spot", currentStage);
