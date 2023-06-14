@@ -20,10 +20,6 @@ public class DB {
     private String databaseName;
     private String userName;
     private String password;
-    public static final String NOMOREDATA = "|ND|";
-    private int numberOfColumns;
-    private int currentColumnNumber = 1;
-    protected boolean moreData = false;
     private boolean pendingData = false;
     private boolean terminated = false;
 
@@ -82,28 +78,6 @@ public class DB {
         }
     }
 
-    // Get the next value from the ResultSet
-    private String getNextValue(boolean view) {
-        StringBuilder value = new StringBuilder();
-        try {
-            value.append(rs.getString(currentColumnNumber));
-            if (currentColumnNumber >= numberOfColumns) {
-                currentColumnNumber = 1;
-                if (view) {
-                    value.append("\n");
-                }
-                moreData = rs.next();
-            } else {
-                if (view) {
-                    value.append(" ");
-                }
-                currentColumnNumber++;
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        }
-        return value.toString();
-    }
 
     // Insert data into the database
     public boolean insertSQL(String sql, Object... values) {
@@ -182,16 +156,46 @@ public class DB {
         return false;
     }
 
-    // Fetch bookings for a specific landlord
-    public List<Booking> fetchBookingsForLandlord(String landlordID) {
+
+
+    public List<Booking> fetchBookingsByCustomer(int customerID) {
         List<Booking> bookings = new ArrayList<>();
 
-        String sql = "SELECT b.* FROM tblBooking b JOIN tblParkingSpot p ON b.fldParkingSpotID = p.fldParkingSpotID WHERE p.fldLandlordID = ?";
+        try {
+            connect(); // Connect to the database
+            String sql = "SELECT * FROM tblBooking WHERE fldCustomerID = ?";
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int bookingID = rs.getInt("fldBookingID");
+                int retrievedCustomerID = rs.getInt("fldCustomerID");
+                int parkingSpotID = rs.getInt("fldParkingSpotID");
+                LocalDateTime startDateTime = rs.getTimestamp("fldStartDateTime").toLocalDateTime();
+                LocalDateTime endDateTime = rs.getTimestamp("fldEndDateTime").toLocalDateTime();
+                String bookingStatus = rs.getString("fldBookingStatus");
+
+                Booking booking = new Booking(bookingID, retrievedCustomerID, parkingSpotID, startDateTime, endDateTime, bookingStatus);
+                bookings.add(booking);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect(); // Disconnect from the database
+        }
+
+        return bookings;
+    }
+
+    public List<Booking> fetchBookingsByLandlord(int landlordID) {
+        List<Booking> bookings = new ArrayList<>();
 
         try {
-            connect();
+            connect(); // Connect to the database
+            String sql = "SELECT * FROM tblBooking WHERE fldParkingSpotID IN (SELECT fldParkingSpotID FROM tblParkingSpot WHERE fldLandlordID = ?)";
             ps = con.prepareStatement(sql);
-            ps.setString(1, landlordID);
+            ps.setInt(1, landlordID);
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -208,41 +212,12 @@ public class DB {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            disconnect();
+            disconnect(); // Disconnect from the database
         }
 
         return bookings;
     }
 
-    // Fetch all bookings
-    public List<Booking> fetchBookings(String customerId) {
-        List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM tblBooking WHERE fldCustomerID = ?";
-
-        try {
-            connect();
-            ps = con.prepareStatement(sql);
-            ps.setString(1, customerId); // Set the customer ID parameter
-            rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int bookingID = rs.getInt("fldBookingID");
-                int customerID = rs.getInt("fldCustomerID");
-                int parkingSpotID = rs.getInt("fldParkingSpotID");
-                LocalDateTime startDateTime = rs.getTimestamp("fldStartDateTime").toLocalDateTime();
-                LocalDateTime endDateTime = rs.getTimestamp("fldEndDateTime").toLocalDateTime();
-                String bookingStatus = rs.getString("fldBookingStatus");
-
-                Booking booking = new Booking(bookingID, customerID, parkingSpotID, startDateTime, endDateTime, bookingStatus);
-                bookings.add(booking);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            disconnect();
-        }
-        return bookings;
-    }
 
     // Select SQL query with parameters and return ResultSet
     public ResultSet selectSQLWithResultParams(String sql, String... params) {
@@ -326,23 +301,23 @@ public class DB {
     }
 
     // Fetch reviews for a specific landlord
-    public List<Review> fetchLandlordReviews(int landlordID) {
+    public List<Review> fetchLandlordReviews(String landlordID) {
         List<Review> reviews = new ArrayList<>();
-        String sql = "SELECT * FROM tblRating WHERE fldLandlordID = ?";
+        String sql = "SELECT * FROM tblRatingLandlord WHERE fldLandlordID = ?";
 
         try {
             connect();
             ps = con.prepareStatement(sql);
-            ps.setInt(1, landlordID);
+            ps.setString(1, landlordID);
             rs = ps.executeQuery();
 
             while (rs.next()) {
                 int ratingID = rs.getInt("fldRatingID");
-                int customerID = rs.getInt("fldCustomerID");
+                int reviewLandlordID = rs.getInt("fldLandlordID"); // Rename the variable to reviewLandlordID
                 int ratingValue = rs.getInt("fldRatingValue");
                 String ratingComment = rs.getString("fldRatingComment");
 
-                Review review = new Review(ratingID, customerID, ratingValue, ratingComment);
+                Review review = new Review(ratingID, reviewLandlordID, ratingValue, ratingComment);
                 reviews.add(review);
             }
         } catch (SQLException e) {
@@ -352,6 +327,8 @@ public class DB {
         }
         return reviews;
     }
+
+
 
     // Fetch reviews for a specific customer
     public List<Review> fetchCustomerReviews(String customerIDParam) {
@@ -461,4 +438,49 @@ public class DB {
         }
         return false;
     }
+
+    public boolean addCustomerReview(int customerID, int ratingValue, String ratingComment) {
+        String sql = "INSERT INTO tblRatingCustomer (fldCustomerID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?)";
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, customerID);
+            ps.setInt(2, ratingValue);
+            ps.setString(3, ratingComment);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+        return false;
+    }
+
+
+    public int getCustomerIDFromBooking(int bookingID) {
+        String sql = "SELECT fldCustomerID FROM tblBooking WHERE fldBookingID = ?";
+        int customerID = -1;
+
+        try {
+            connect();
+            ps = con.prepareStatement(sql);
+            ps.setInt(1, bookingID);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                customerID = rs.getInt("fldCustomerID");
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            disconnect();
+        }
+
+        return customerID;
+    }
+
 }

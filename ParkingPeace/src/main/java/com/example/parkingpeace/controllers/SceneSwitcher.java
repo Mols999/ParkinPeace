@@ -19,8 +19,8 @@ public class SceneSwitcher {
 
             // Check if the controller implements the setStage method
             Object controller = loader.getController();
-            if (controller instanceof HomeController) {
-                ((HomeController) controller).setStage(stage);
+            if (controller instanceof CustomerDashboardController) {
+                ((CustomerDashboardController) controller).setStage(stage);
             }
 
             currentController = controller; // Save the controller
@@ -36,7 +36,7 @@ public class SceneSwitcher {
 
 
     public static void switchToHomePage(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("HomePage.fxml"));
+        FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("CustomerDashboard.fxml"));
         Parent root = loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);

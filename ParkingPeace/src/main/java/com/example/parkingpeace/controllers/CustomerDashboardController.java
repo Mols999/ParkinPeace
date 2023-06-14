@@ -2,6 +2,7 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class HomeController {
+public class CustomerDashboardController {
     private Stage stage;
 
     public void setStage(Stage stage) {
@@ -59,8 +60,6 @@ public class HomeController {
 
     // User IDs
     private static String customerID;
-    private String landlordID;
-    private String adminID;
 
     public static String getCustomerID() {
         return customerID;
@@ -89,7 +88,7 @@ public class HomeController {
                 navigateToRatings(stage);
                 break;
             case "Logout":
-                SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
+                Platform.exit();
                 break;
             default:
                 break;
@@ -99,10 +98,10 @@ public class HomeController {
     // Navigate to ratings and comments view
     private void navigateToRatings(Stage stage) {
         try {
-            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("CustomerReviews.fxml"));
             Parent ratingsRoot = ratingsLoader.load();
-            RatingsController ratingsController = ratingsLoader.getController();
-            ratingsController.setCustomerID(getCustomerID());
+            CustomerReviewsController customerReviewsController = ratingsLoader.getController();
+            customerReviewsController.setCustomerID(getCustomerID());
 
             // Set the root of the stage to the Ratings view
             stage.setScene(new Scene(ratingsRoot));
@@ -115,10 +114,10 @@ public class HomeController {
     // Navigate to bookings view
     private void navigateToBookings(Stage stage) {
         try {
-            FXMLLoader bookingsLoader = new FXMLLoader(getClass().getResource("BookingList.fxml"));
+            FXMLLoader bookingsLoader = new FXMLLoader(getClass().getResource("CustomerBookingList.fxml"));
             Parent bookingsRoot = bookingsLoader.load();
-            BookingListController bookingListController = bookingsLoader.getController();
-            bookingListController.setCustomerID(getCustomerID());
+            CustomerBookingListController bookingListController = bookingsLoader.getController();
+
 
             // Set the root of the stage to the Bookings view
             stage.setScene(new Scene(bookingsRoot));
@@ -128,15 +127,13 @@ public class HomeController {
         }
     }
 
+
     // Navigate to edit profile view
     public void navigateToEditProfile(Stage currentStage) {
         try {
             FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
             EditProfileController editProfileController = editProfileLoader.getController();
-
-            // Pass the customerID, landlordID, and adminID to the EditProfileController
-            editProfileController.setIDs(getCustomerID(), landlordID, adminID);
 
             // Set the root of the current stage to the Edit Profile view
             currentStage.getScene().setRoot(editProfileRoot);

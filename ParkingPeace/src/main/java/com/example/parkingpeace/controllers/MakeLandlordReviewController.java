@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MakeReviewController {
+public class MakeLandlordReviewController {
 
     @FXML
     private TextField ratingValueField;
@@ -22,17 +22,17 @@ public class MakeReviewController {
     @FXML
     private Button homeButton;
 
-    private int parkingSpotID;
-    private int landlordID;
+    private int bookingID;
+    private int customerID;
     private DB db;
 
-    public MakeReviewController() {
+    public MakeLandlordReviewController() {
         db = new DB();
     }
 
-    public void setParkingSpotID(int parkingSpotID) {
-        this.parkingSpotID = parkingSpotID;
-        this.landlordID = db.getLandlordIDFromParkingSpot(parkingSpotID);
+    public void setBookingID(int bookingID) {
+        this.bookingID = bookingID;
+        this.customerID = db.getCustomerIDFromBooking(bookingID);
     }
 
     @FXML
@@ -41,15 +41,18 @@ public class MakeReviewController {
         String reviewComment = reviewCommentField.getText();
 
         // Save the review in the database
-        boolean success = db.addReview(landlordID, ratingValue, reviewComment);
+        boolean success = db.addCustomerReview(customerID, ratingValue, reviewComment);
 
         if (success) {
             showAlert(AlertType.INFORMATION, "Review Saved", "Your review has been saved.");
-            navigateToHomePage();
+            navigateToLandlordDashboard();
         } else {
+            System.out.println(customerID);
             showAlert(AlertType.ERROR, "Error", "Failed to save the review.");
         }
     }
+
+
 
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
@@ -60,8 +63,11 @@ public class MakeReviewController {
     }
 
     @FXML
-    private void navigateToHomePage() throws IOException {
+    private void navigateToLandlordDashboard() throws IOException {
         Stage stage = (Stage) homeButton.getScene().getWindow();
-        SceneSwitcher.switchToHomePage(stage);
+        SceneSwitcher.switchToLandlordDashboard(stage);
+    }
+
+    public void setCustomerID(String customerIDString) {
     }
 }

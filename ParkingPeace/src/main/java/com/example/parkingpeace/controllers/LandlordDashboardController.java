@@ -2,6 +2,7 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,8 @@ public class LandlordDashboardController {
 
     private static String landlordID; // Static variable to retain landlordID value
 
+
+
     private DB db;
 
     @FXML
@@ -71,13 +74,13 @@ public class LandlordDashboardController {
                 navigateToEditProfile(stage);
                 break;
             case "Bookings":
-                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
+                navigateToBookings(stage);
                 break;
             case "Ratings and Comments":
-                navigateToRatings(stage);  // Pass the stage object
+                 navigateToRatings(stage);
                 break;
             case "Logout":
-                SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
+                Platform.exit();
                 break;
             default:
                 break;
@@ -86,10 +89,9 @@ public class LandlordDashboardController {
 
     private void navigateToRatings(Stage stage) {
         try {
-            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("LandlordReviews.fxml"));
             Parent ratingsRoot = ratingsLoader.load();
-            RatingsController ratingsController = ratingsLoader.getController();
-            ratingsController.setCustomerID(landlordID);
+            LandlordReviewsController landlordReviewsController = ratingsLoader.getController();
 
             // Set the root of the stage to the Ratings view
             stage.setScene(new Scene(ratingsRoot));
@@ -98,6 +100,25 @@ public class LandlordDashboardController {
             e.printStackTrace();
         }
     }
+
+
+
+    private void navigateToBookings(Stage stage) {
+        try {
+            FXMLLoader bookingsLoader = new FXMLLoader(getClass().getResource("LandlordBookingList.fxml"));
+            Parent bookingsRoot = bookingsLoader.load();
+            LandlordBookingListController bookingListController = bookingsLoader.getController();
+
+            // Set the root of the stage to the Bookings view
+            stage.setScene(new Scene(bookingsRoot));
+            stage.setTitle("Bookings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 
     public void navigateToEditProfile(Stage currentStage) {
         try {

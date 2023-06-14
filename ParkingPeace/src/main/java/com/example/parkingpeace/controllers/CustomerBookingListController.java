@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -20,25 +19,24 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class LandlordBookingListController implements Initializable {
+public class CustomerBookingListController implements Initializable {
 
     @FXML
     private ListView<VBox> bookingListView;
 
     private DB db;
-    private String landlordID;
 
+    private String customerID;
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         db = new DB();
-        landlordID = LoginController.getLandlordID();
+        customerID = LoginController.getCustomerID(); // Retrieve the customer ID from the LoginController
         loadBookingList();
-
     }
 
-
     private void loadBookingList() {
-        List<Booking> bookings = db.fetchBookingsByLandlord(Integer.parseInt(landlordID));
+        List<Booking> bookings = db.fetchBookingsByCustomer(Integer.parseInt(customerID));
 
         if (bookings.isEmpty()) {
             showAlert(Alert.AlertType.INFORMATION, "Booking List", "No bookings found.");
@@ -48,16 +46,11 @@ public class LandlordBookingListController implements Initializable {
 
             for (Booking booking : bookings) {
                 String bookingID = String.valueOf(booking.getBookingID());
+                String customerName = db.getCustomerName(booking.getCustomerID());
                 String parkingSpotID = String.valueOf(booking.getParkingSpotID());
                 Timestamp startDateTime = Timestamp.valueOf(booking.getStartDateTime());
                 Timestamp endDateTime = Timestamp.valueOf(booking.getEndDateTime());
                 String bookingStatus = booking.getBookingStatus();
-
-                // Fetch the customer ID from the database
-                int customerID = db.getCustomerIDFromBooking(Integer.parseInt(bookingID));
-
-                // Fetch the customer name using the customer ID
-                String customerName = db.getCustomerName(customerID);
 
                 VBox bookingDetailsBox = new VBox();
 
@@ -73,43 +66,28 @@ public class LandlordBookingListController implements Initializable {
                 deleteButton.setOnAction(event -> deleteBooking(bookingID));
 
                 Button reviewButton = new Button("Review");
-                reviewButton.setOnAction(event -> openReviewWindow(bookingID, customerID));
+                reviewButton.setOnAction(event -> openReviewWindow(parkingSpotID));
 
-                HBox buttonsBox = new HBox(deleteButton, reviewButton);
-                buttonsBox.setSpacing(10);
-
-                bookingDetailsBox.getChildren().addAll(bookingLabel, buttonsBox);
+                bookingDetailsBox.getChildren().addAll(bookingLabel, deleteButton, reviewButton);
                 bookingListView.getItems().add(bookingDetailsBox);
             }
         }
     }
 
-
-
-
-    private void openReviewWindow(String bookingID, int customerID) {
+    private void openReviewWindow(String parkingSpotID) {
         try {
-            String customerIDString = String.valueOf(customerID);
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("MakeLandlordReview.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("MakeCustomerReview.fxml"));
             Parent root = loader.load();
-            MakeLandlordReviewController makeLandlordReviewController = loader.getController();
-            makeLandlordReviewController.setBookingID(Integer.parseInt(bookingID));
-            makeLandlordReviewController.setCustomerID(customerIDString);
-
-            Stage stage = (Stage) bookingListView.getScene().getWindow();
+            MakeCustomerReviewController makeCustomerReviewController = loader.getController();
+            makeCustomerReviewController.setParkingSpotID(Integer.parseInt(parkingSpotID));
             Scene scene = new Scene(root);
+            Stage stage = (Stage) bookingListView.getScene().getWindow();
             stage.setScene(scene);
             stage.setTitle("Make Review");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
-
-
-
-
 
     private void deleteBooking(String bookingID) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -129,8 +107,6 @@ public class LandlordBookingListController implements Initializable {
             }
         }
     }
-
-
 
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);

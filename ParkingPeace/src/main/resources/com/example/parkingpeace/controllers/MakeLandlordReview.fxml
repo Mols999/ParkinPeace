@@ -20,7 +20,7 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.TextField?>
 
-<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.MakeReviewController">
+<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.MakeLandlordReviewController">
     <top>
         <HBox alignment="CENTER" spacing="25">
             <children>
@@ -30,29 +30,29 @@
                     </image>
                 </ImageView>
                 <TextField promptText="Search" />
-                <Button fx:id="homeButton" text="Home" onAction="#navigateToHomePage" />
+                <Button fx:id="homeButton" text="Home" onAction="#navigateToLandlordDashboard" />
             </children>
         </HBox>
     </top>
 
     <center>
         <HBox alignment="CENTER">
-           <children>
-               <VBox alignment="CENTER" prefWidth="200" spacing="10">
-                  <children>
-                      <Label text="Review">
-                     <font>
-                        <Font name="System Bold" size="20.0" />
-                     </font>
-                  </Label>
-                      <Label text="Rating" />
-                      <TextField fx:id="ratingValueField" promptText="Enter rating value &quot;1-5&quot;" />
-                      <Label text="Review Comment" />
-                      <TextArea fx:id="reviewCommentField" prefHeight="100" promptText="Enter review comment" />
-                      <Button onAction="#handleSaveButton" text="Save" />
-                  </children>
-               </VBox>
-           </children>
+            <children>
+                <VBox alignment="CENTER" prefWidth="200" spacing="10">
+                    <children>
+                        <Label text="Review">
+                            <font>
+                                <Font name="System Bold" size="20.0" />
+                            </font>
+                        </Label>
+                        <Label text="Rating" />
+                        <TextField fx:id="ratingValueField" promptText="Enter rating value &quot;1-5&quot;" />
+                        <Label text="Review Comment" />
+                        <TextArea fx:id="reviewCommentField" prefHeight="100" promptText="Enter review comment" />
+                        <Button onAction="#handleSaveButton" text="Save" />
+                    </children>
+                </VBox>
+            </children>
         </HBox>
     </center>
 </BorderPane>

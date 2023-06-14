@@ -20,7 +20,7 @@
 <?import java.lang.String?>
 <?import javafx.scene.control.TextField?>
 
-<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.MakeReviewController">
+<BorderPane prefHeight="540" prefWidth="960" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.MakeCustomerReviewController">
     <top>
         <HBox alignment="CENTER" spacing="25">
             <children>

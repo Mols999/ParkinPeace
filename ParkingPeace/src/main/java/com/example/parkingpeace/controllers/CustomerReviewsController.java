@@ -16,7 +16,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class RatingsController implements Initializable {
+public class CustomerReviewsController implements Initializable {
 
     @FXML
     private ListView<Review> ratingsListView;
@@ -26,15 +26,12 @@ public class RatingsController implements Initializable {
     private String customerID;
     private ObservableList<Review> reviewsList;
 
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         db = new DB();
         reviewsList = FXCollections.observableArrayList();
+        customerID = LoginController.getCustomerID();
     }
-
-
 
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
