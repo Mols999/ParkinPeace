@@ -327,6 +327,8 @@ public class LandlordDashboardController {
         return null;
     }
 
+
+
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         // Handle the rent button action
     }
