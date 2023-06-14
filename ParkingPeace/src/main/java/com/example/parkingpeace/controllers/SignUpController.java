@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -55,7 +56,7 @@ public class SignUpController {
         String password = passwordField.getText();
 
         if (role.equals("")) {
-            System.out.println("Please select a role (Landlord or Customer)");
+            showPopupMessage("Please select a role (Landlord or Customer)");
             return;
         }
 
@@ -68,7 +69,7 @@ public class SignUpController {
 
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
-            System.out.println("User signed up successfully! We have sent you an email with your login information.");
+            showPopupMessage("User signed up successfully! We have sent you an email with your login information.");
 
             // Navigate to the login screen
             try {
@@ -85,7 +86,7 @@ public class SignUpController {
                 e.printStackTrace();
             }
         } else {
-            System.out.println("There was an error signing up the user.");
+            showPopupMessage("There was an error signing up the user.");
         }
     }
 
@@ -107,6 +108,15 @@ public class SignUpController {
             e.printStackTrace();
         }
     }
+    public static void showPopupMessage(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Popup Message");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+
+        alert.showAndWait();
+    }
+
 
 
 
