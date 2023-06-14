@@ -3,10 +3,7 @@ package com.example.parkingpeace.controllers;
 import com.example.parkingpeace.db.DB;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextField;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
@@ -179,5 +176,15 @@ public class EditProfileController {
         this.customerID = customerID;
         this.landlordID = landlordID;
         this.adminID = adminID;
+    }
+
+    @FXML
+    Button homeFromEditLandlord;
+
+    @FXML
+    public void navigateToLandlordDashboard() throws IOException {
+        Stage stage = (Stage) homeFromEditLandlord.getScene().getWindow();
+        SceneSwitcher.switchToLandlordDashboard(stage);
+
     }
 }

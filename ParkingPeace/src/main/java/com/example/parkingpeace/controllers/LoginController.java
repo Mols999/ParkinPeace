@@ -59,6 +59,7 @@ public class LoginController {
         String adminID = "";
 
         try {
+
             DB db = new DB();
 
             String sql = "SELECT fldUsername, fldPassword, fldCustomerID FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
