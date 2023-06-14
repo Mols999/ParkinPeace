@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 
 public class RatingsController implements Initializable {
 
-
     @FXML
     private ListView<Review> ratingsListView;
     @FXML

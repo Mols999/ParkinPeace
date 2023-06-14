@@ -11,12 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class LandlordDashboardController {
     @FXML
@@ -49,16 +50,16 @@ public class LandlordDashboardController {
     @FXML
     private ComboBox<String> dropdownMenu;
 
-    private String landlordID;
+    private static String landlordID; // Static variable to retain landlordID value
 
     private DB db;
-    private String customerID;
-    private String adminID;
 
     @FXML
     public void initialize() {
         db = new DB();
+        landlordID = LoginController.getLandlordID(); // Retrieve landlord ID from LoginController
         configureTableColumns();
+        loadParkingSpotsForLandlord(landlordID); // Load parking spots after ID is set
     }
 
     @FXML
@@ -67,13 +68,13 @@ public class LandlordDashboardController {
         Stage stage = (Stage) dropdownMenu.getScene().getWindow();
         switch (action) {
             case "Edit Profile":
-                navigateToEditProfile(landlordID, stage);
+                navigateToEditProfile(stage);
                 break;
             case "Bookings":
                 SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
                 break;
             case "Ratings and Comments":
-                navigateToRatings(customerID, stage);  // Pass the stage object
+                navigateToRatings(stage);  // Pass the stage object
                 break;
             case "Logout":
                 SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
@@ -83,12 +84,12 @@ public class LandlordDashboardController {
         }
     }
 
-    private void navigateToRatings(String customerID, Stage stage) {
+    private void navigateToRatings(Stage stage) {
         try {
             FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
             Parent ratingsRoot = ratingsLoader.load();
             RatingsController ratingsController = ratingsLoader.getController();
-            ratingsController.setCustomerID(customerID);
+            ratingsController.setCustomerID(landlordID);
 
             // Set the root of the stage to the Ratings view
             stage.setScene(new Scene(ratingsRoot));
@@ -98,15 +99,13 @@ public class LandlordDashboardController {
         }
     }
 
-
-    public void navigateToEditProfile(String customerID, Stage currentStage) {
+    public void navigateToEditProfile(Stage currentStage) {
         try {
             FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
             EditProfileController editProfileController = editProfileLoader.getController();
 
-            // Pass the customerID, landlordID, and adminID to the EditProfileController
-            editProfileController.setIDs(customerID, landlordID, adminID);
+            // Pass the landlordID to the EditProfileControlle
 
             // Create a new scene and set its root to the Edit Profile view
             Scene editProfileScene = new Scene(editProfileRoot);
@@ -120,20 +119,9 @@ public class LandlordDashboardController {
         }
     }
 
-
-
-    public void setIDs(String customerID, String landlordID, String adminID) {
-        this.customerID = customerID;
-        this.landlordID = landlordID;
-        this.adminID = adminID;
-
-        System.out.println("Landlord ID: " + landlordID); // Print the landlordID
-
-        loadParkingSpotsForLandlord(landlordID); // Load parking spots after IDs are set
-    }
-
     public void loadParkingSpotsForLandlord(String landlordID) {
         List<ParkingSpot> parkingSpots = getParkingSpotsForLandlord();
+        tableView.getItems().clear(); // Clear existing items
         tableView.getItems().addAll(parkingSpots);
     }
 
@@ -159,7 +147,7 @@ public class LandlordDashboardController {
                 String photoFilePath = rs.getString("fldPhotoFilePath");
                 String rating = rs.getString("fldRating");
 
-                parkingSpots.add(new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating));
+                parkingSpots.add(new ParkingSpot(parkingSpotID, landlordID, location, availability, price, services, zipCode, city, photoFilePath, rating));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -341,5 +329,10 @@ public class LandlordDashboardController {
 
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         // Handle the rent button action
+    }
+
+    // Add the following method to retrieve the landlordID
+    public static String getLandlordID() {
+        return landlordID;
     }
 }

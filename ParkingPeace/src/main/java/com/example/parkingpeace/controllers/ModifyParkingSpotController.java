@@ -38,10 +38,6 @@ public class ModifyParkingSpotController {
         fillTextFieldsWithCurrentInfo();
     }
 
-    public void setLandlordID(String landlordID) {
-        this.landlordID = landlordID;
-    }
-
     @FXML
     private void initialize() {
         if (currentParkingSpot != null) {
@@ -49,6 +45,7 @@ public class ModifyParkingSpotController {
         } else {
             System.out.println("No current parking spot exists.");
         }
+        landlordID = LoginController.getLandlordID();
     }
 
     private void fillTextFieldsWithCurrentInfo() {
@@ -100,6 +97,7 @@ public class ModifyParkingSpotController {
 
             // Reload parking spots in the LandlordDashboardController
             LandlordDashboardController landlordDashboardController = (LandlordDashboardController) SceneSwitcher.getCurrentController();
+            landlordDashboardController.loadParkingSpotsForLandlord(landlordID);
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");

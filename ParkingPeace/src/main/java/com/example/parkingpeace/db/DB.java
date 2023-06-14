@@ -2,6 +2,7 @@ package com.example.parkingpeace.db;
 
 import com.example.parkingpeace.models.Booking;
 import com.example.parkingpeace.models.Review;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -26,15 +27,9 @@ public class DB {
     private boolean pendingData = false;
     private boolean terminated = false;
 
-
-
-
     public DB() {
         initialize();
     }
-
-
-
 
     // Initialize the database connection properties from the db.properties file
     private void initialize() {
@@ -55,9 +50,6 @@ public class DB {
         }
     }
 
-
-
-
     // Connect to the database
     private void connect() {
         try {
@@ -68,16 +60,10 @@ public class DB {
         }
     }
 
-
-
-
     // Close the database connection
     public void close() {
         disconnect();
     }
-
-
-
 
     // Disconnect from the database
     public void disconnect() {
@@ -95,9 +81,6 @@ public class DB {
             System.err.println(e.getMessage());
         }
     }
-
-
-
 
     // Get the next value from the ResultSet
     private String getNextValue(boolean view) {
@@ -122,16 +105,10 @@ public class DB {
         return value.toString();
     }
 
-
-
-
     // Insert data into the database
     public boolean insertSQL(String sql, Object... values) {
         return executeUpdate(sql, values);
     }
-
-
-
 
     // Update data in the database using parameters
     public boolean updateSQLWithParams(String sql, Object... params) {
@@ -150,9 +127,6 @@ public class DB {
         }
         return false;
     }
-
-
-
 
     // Execute an update statement
     private boolean executeUpdate(String sql, Object... values) {
@@ -185,9 +159,6 @@ public class DB {
         return false;
     }
 
-
-
-
     // Check if a parking spot is booked on a specific date
     public boolean isParkingSpotBooked(String parkingSpotID, LocalDate date) {
         try {
@@ -210,9 +181,6 @@ public class DB {
         }
         return false;
     }
-
-
-
 
     // Fetch bookings for a specific landlord
     public List<Booking> fetchBookingsForLandlord(String landlordID) {
@@ -246,17 +214,15 @@ public class DB {
         return bookings;
     }
 
-
-
-
     // Fetch all bookings
-    public List<Booking> fetchBookings() {
+    public List<Booking> fetchBookings(String customerId) {
         List<Booking> bookings = new ArrayList<>();
-        String sql = "SELECT * FROM tblBooking";
+        String sql = "SELECT * FROM tblBooking WHERE fldCustomerID = ?";
 
         try {
             connect();
             ps = con.prepareStatement(sql);
+            ps.setString(1, customerId); // Set the customer ID parameter
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -278,9 +244,6 @@ public class DB {
         return bookings;
     }
 
-
-
-
     // Select SQL query with parameters and return ResultSet
     public ResultSet selectSQLWithResultParams(String sql, String... params) {
         try {
@@ -296,9 +259,6 @@ public class DB {
         }
         return null;
     }
-
-
-
 
     // Check if a parking spot is booked on a specific date
     public boolean isParkingSpotBooked(int parkingSpotID, LocalDate date) {
@@ -323,9 +283,6 @@ public class DB {
         return false;
     }
 
-
-
-
     // Delete a booking from the database
     public boolean deleteBooking(int bookingID) {
         String sql = "DELETE FROM tblBooking WHERE fldBookingID = ?";
@@ -345,9 +302,6 @@ public class DB {
         }
         return false;
     }
-
-
-
 
     // Get the customer name based on the customerID
     public String getCustomerName(int customerID) {
@@ -371,9 +325,6 @@ public class DB {
         return "";
     }
 
-
-
-
     // Fetch reviews for a specific landlord
     public List<Review> fetchLandlordReviews(int landlordID) {
         List<Review> reviews = new ArrayList<>();
@@ -391,7 +342,7 @@ public class DB {
                 int ratingValue = rs.getInt("fldRatingValue");
                 String ratingComment = rs.getString("fldRatingComment");
 
-                Review review = new Review(ratingID, customerID,ratingValue, ratingComment);
+                Review review = new Review(ratingID, customerID, ratingValue, ratingComment);
                 reviews.add(review);
             }
         } catch (SQLException e) {
@@ -401,9 +352,6 @@ public class DB {
         }
         return reviews;
     }
-
-
-
 
     // Fetch reviews for a specific customer
     public List<Review> fetchCustomerReviews(String customerIDParam) {
@@ -440,9 +388,6 @@ public class DB {
         return reviews;
     }
 
-
-
-
     // Get the booked dates for a specific parking spot
     public List<LocalDate> getBookedDatesForParkingSpot(String parkingSpotID) {
         List<LocalDate> bookedDates = new ArrayList<>();
@@ -473,9 +418,6 @@ public class DB {
         return bookedDates;
     }
 
-
-
-
     // Get the landlord ID from a parking spot ID
     public int getLandlordIDFromParkingSpot(int parkingSpotID) {
         String sql = "SELECT fldLandlordID FROM tblParkingSpot WHERE fldParkingSpotID = ?";
@@ -497,8 +439,6 @@ public class DB {
 
         return 0;
     }
-
-
 
     // Add a review for a landlord
     public boolean addReview(int landlordID, int ratingValue, String ratingComment) {
