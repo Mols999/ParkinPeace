@@ -3,9 +3,11 @@ package com.example.parkingpeace.controllers;
 import com.example.parkingpeace.db.DB;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.Random;
 
 // Controller for the CreateParkingSpot view
@@ -23,6 +25,8 @@ public class CreateParkingSpotController {
     private TextField cityField;
     @FXML
     private TextField photoFilePathField;
+    @FXML
+    Button BackButton;
 
     // Declare the database object
     private DB db;
@@ -123,5 +127,12 @@ public class CreateParkingSpotController {
         Random rand = new Random();
         // Generate a random 4-digit number and return it as a string
         return String.format("%04d", rand.nextInt(10000));
+    }
+
+    @FXML
+    public void HandleBackButton() throws IOException {
+        Stage stage = (Stage) BackButton.getScene().getWindow();
+     SceneSwitcher.switchToLandlordDashboard(stage);
+
     }
 }

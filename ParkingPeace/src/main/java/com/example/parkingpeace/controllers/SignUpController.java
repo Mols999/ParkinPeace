@@ -68,7 +68,7 @@ public class SignUpController {
 
         boolean success = db.insertSQL(sql, name, age, username, email, password);
         if (success) {
-            System.out.println("User signed up successfully!");
+            System.out.println("User signed up successfully! We have sent you an email with your login information.");
 
             // Navigate to the login screen
             try {
