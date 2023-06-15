@@ -23,7 +23,7 @@
                     </image>
                 </ImageView>
                 <TextField fx:id="searchField" promptText="Search" />
-                <Button text="Home" onAction="#navigateToHomePage" />
+                <Button fx:id="homeButton" text="Home" onAction="#navigateToHomePage" />
             </children>
         </HBox>
     </top>

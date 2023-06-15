@@ -2,6 +2,7 @@ package com.example.parkingpeace.controllers;
 
 import com.example.parkingpeace.db.DB;
 import com.example.parkingpeace.models.ParkingSpot;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,8 @@ public class LandlordDashboardController {
 
     private static String landlordID; // Static variable to retain landlordID value
 
+
+
     private DB db;
 
     @FXML
@@ -68,16 +71,16 @@ public class LandlordDashboardController {
         Stage stage = (Stage) dropdownMenu.getScene().getWindow();
         switch (action) {
             case "Edit Profile":
-                navigateToEditProfile(stage);
+                navigateToLandlordEditProfile(stage);
                 break;
             case "Bookings":
-                SceneSwitcher.switchToScene("BookingList.fxml", "BookingList", stage);
+                navigateToBookings(stage);
                 break;
             case "Ratings and Comments":
-                navigateToRatings(stage);  // Pass the stage object
+                 navigateToRatings(stage);
                 break;
             case "Logout":
-                SceneSwitcher.switchToScene("/com/example/parkingpeace/Login.fxml", "Login", stage);
+                Platform.exit();
                 break;
             default:
                 break;
@@ -86,10 +89,9 @@ public class LandlordDashboardController {
 
     private void navigateToRatings(Stage stage) {
         try {
-            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("Ratings.fxml"));
+            FXMLLoader ratingsLoader = new FXMLLoader(getClass().getResource("LandlordReviews.fxml"));
             Parent ratingsRoot = ratingsLoader.load();
-            RatingsController ratingsController = ratingsLoader.getController();
-            ratingsController.setCustomerID(landlordID);
+            LandlordReviewsController landlordReviewsController = ratingsLoader.getController();
 
             // Set the root of the stage to the Ratings view
             stage.setScene(new Scene(ratingsRoot));
@@ -99,25 +101,46 @@ public class LandlordDashboardController {
         }
     }
 
-    public void navigateToEditProfile(Stage currentStage) {
+
+
+    private void navigateToBookings(Stage stage) {
         try {
-            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+            FXMLLoader bookingsLoader = new FXMLLoader(getClass().getResource("LandlordBookingList.fxml"));
+            Parent bookingsRoot = bookingsLoader.load();
+            LandlordBookingListController bookingListController = bookingsLoader.getController();
+
+            // Set the root of the stage to the Bookings view
+            stage.setScene(new Scene(bookingsRoot));
+            stage.setTitle("Bookings");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+    public void navigateToLandlordEditProfile(Stage currentStage) {
+        try {
+            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("LandlordEditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
-            EditProfileController editProfileController = editProfileLoader.getController();
+            LandlordEditProfileController editProfileController = editProfileLoader.getController();
 
-            // Pass the landlordID to the EditProfileControlle
+            // Pass the stage to the EditProfileController
+            editProfileController.setStage(currentStage);
 
-            // Create a new scene and set its root to the Edit Profile view
+            // Create a new scene and set its root to the Landlord Edit Profile view
             Scene editProfileScene = new Scene(editProfileRoot);
 
-            // Set the scene of the current stage to the Edit Profile scene
+            // Set the scene of the current stage to the Landlord Edit Profile scene
             currentStage.setScene(editProfileScene);
-            currentStage.setTitle("Edit Profile");
+            currentStage.setTitle("Landlord Edit Profile");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void loadParkingSpotsForLandlord(String landlordID) {
         List<ParkingSpot> parkingSpots = getParkingSpotsForLandlord();

@@ -27,7 +27,6 @@
             <children>
                 <Button onAction="#handleSaveChangesButton" text="Save Changes" />
                 <Button fx:id="deleteAccountButton" onAction="#handleDeleteAccountButton" text="Delete Account" />
-                <Button fx:id="homeFromEditLandlord" onAction="#navigateToLandlordDashboard" text="Home" />
             </children>
         </VBox>
     </children>

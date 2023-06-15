@@ -23,7 +23,7 @@ public class BookingsController implements Initializable {
 
 
     // Declare required fields
-    private HomeController homeController;
+    private CustomerDashboardController customerDashboardController;
     private ParkingSpot parkingSpot;
     private DB db = new DB();
     @FXML
@@ -36,6 +36,8 @@ public class BookingsController implements Initializable {
     private DatePicker startDatePicker; // date picker to select start date of the booking
     @FXML
     private DatePicker endDatePicker; // date picker to select end date of the booking
+    @FXML
+    private Button homeButton;
     private LocalDate startDate;
     private LocalDate endDate;
     private String customerID;
@@ -65,9 +67,9 @@ public class BookingsController implements Initializable {
 
         // Initialize a parking spot object with the data
         this.parkingSpot = new ParkingSpot(parkingSpotID, "", location, availability, price, services, zipCode, city, photoFilePath, rating);
-        if (homeController != null) {
+        if (customerDashboardController != null) {
             // get stage from home controller if not null
-            this.stage = homeController.getStage();
+            this.stage = customerDashboardController.getStage();
         }
     }
 
@@ -84,8 +86,8 @@ public class BookingsController implements Initializable {
         this.parkingSpotID = parkingSpotID;
     }
 
-    public void setHomeController(HomeController homeController) {
-        this.homeController = homeController;
+    public void setHomeController(CustomerDashboardController customerDashboardController) {
+        this.customerDashboardController = customerDashboardController;
     }
 
     // Method called during the initialization of the controller
@@ -110,9 +112,13 @@ public class BookingsController implements Initializable {
 
     // Handler to navigate to home page
     @FXML
-    private void navigateToHomePage() throws IOException {
-        SceneSwitcher.switchToScene("HomePage.fxml", "Home Page", stage);
+    private void navigateToHomePage(ActionEvent event) throws IOException {
+        Stage stage = (Stage) homeButton.getScene().getWindow();
+        SceneSwitcher.switchToHomePage(stage);
     }
+
+
+
 
     // Generate a random booking ID
     private String generateBookingID() {
@@ -196,8 +202,8 @@ public class BookingsController implements Initializable {
             // Get the current stage
             Stage currentStage = (Stage) nightsLabel.getScene().getWindow();
 
-            // Switch to the BookingList.fxml using the SceneSwitcher class
-            SceneSwitcher.switchToScene("BookingList.fxml", "Booking List", currentStage);
+            // Switch to the CustomerBookingList.fxml using the SceneSwitcher class
+            SceneSwitcher.switchToScene("CustomerBookingList.fxml", "Booking List", currentStage);
         } else {
             Alert alert = new Alert(AlertType.ERROR);
             alert.setTitle("Booking Failed");

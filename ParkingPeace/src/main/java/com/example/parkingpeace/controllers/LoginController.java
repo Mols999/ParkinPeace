@@ -10,6 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,10 +47,6 @@ public class LoginController {
         return landlordID;
     }
 
-    // Getter for adminID
-    public static String getAdminID() {
-        return adminID;
-    }
 
     @FXML
     public void handleGoToSignUpButton(ActionEvent event) {
@@ -74,7 +71,6 @@ public class LoginController {
         String password = passwordField.getText();
 
         try {
-
             DB db = new DB();
 
             String sql = "SELECT fldUsername, fldPassword, fldCustomerID FROM tblCustomer WHERE fldUsername = ? AND fldPassword = ?";
@@ -130,9 +126,9 @@ public class LoginController {
             // Add necessary initialization for the AdminDashboardController if needed
             stage.setTitle("Admin Dashboard");
         } else {
-            loader = new FXMLLoader(getClass().getResource("HomePage.fxml"));
+            loader = new FXMLLoader(getClass().getResource("CustomerDashboard.fxml"));
             root = loader.load();
-            HomeController homeController = loader.getController();
+            CustomerDashboardController customerDashboardController = loader.getController();
             stage.setTitle("Home Page");
         }
 
