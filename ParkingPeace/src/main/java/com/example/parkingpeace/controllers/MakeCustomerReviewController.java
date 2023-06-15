@@ -21,19 +21,21 @@ public class MakeCustomerReviewController {
     private Button saveButton;
     @FXML
     private Button homeButton;
-
     private int parkingSpotID;
     private int landlordID;
     private DB db;
+
 
     public MakeCustomerReviewController() {
         db = new DB();
     }
 
+
     public void setParkingSpotID(int parkingSpotID) {
         this.parkingSpotID = parkingSpotID;
         this.landlordID = db.getLandlordIDFromParkingSpot(parkingSpotID);
     }
+
 
     @FXML
     protected void handleSaveButton() throws IOException {
@@ -51,6 +53,7 @@ public class MakeCustomerReviewController {
         }
     }
 
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -58,6 +61,7 @@ public class MakeCustomerReviewController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 
     @FXML
     private void navigateToHomePage() throws IOException {

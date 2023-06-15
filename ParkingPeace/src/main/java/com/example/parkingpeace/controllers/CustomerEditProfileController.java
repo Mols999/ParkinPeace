@@ -8,7 +8,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class CustomerEditProfileController {
@@ -22,12 +21,13 @@ public class CustomerEditProfileController {
     private TextField emailField;
     @FXML
     private PasswordField passwordField;
-
     private Stage stage;
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
 
     @FXML
     private void handleSaveChangesButton() {
@@ -37,6 +37,7 @@ public class CustomerEditProfileController {
         int age = Integer.parseInt(ageField.getText());
         String email = emailField.getText();
         String password = passwordField.getText();
+
 
         // Update the customer's profile in the database
         DB db = new DB();
@@ -49,6 +50,7 @@ public class CustomerEditProfileController {
             showAlert(AlertType.ERROR, "Error", "Failed to save changes. Please try again.");
         }
     }
+
 
     @FXML
     private void handleDeleteAccountButton() {
@@ -73,6 +75,7 @@ public class CustomerEditProfileController {
         }
     }
 
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -80,6 +83,7 @@ public class CustomerEditProfileController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 
     private void navigateToHomePage() {
         try {

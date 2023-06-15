@@ -10,21 +10,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginController {
-
     private Stage stage;
-
     @FXML
     private TextField usernameField;
-
     @FXML
     private PasswordField passwordField;
-
     @FXML
     private Label errorLabel;
 
@@ -36,12 +31,10 @@ public class LoginController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
     // Getter for customerID
     public static String getCustomerID() {
         return customerID;
     }
-
     // Getter for landlordID
     public static String getLandlordID() {
         return landlordID;
@@ -64,6 +57,7 @@ public class LoginController {
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void handleLoginButton(ActionEvent event) {
@@ -112,6 +106,7 @@ public class LoginController {
         }
     }
 
+
     private void navigateToHomePage() throws IOException {
         FXMLLoader loader;
         Parent root;
@@ -123,7 +118,7 @@ public class LoginController {
         } else if (!adminID.isEmpty()) {
             loader = new FXMLLoader(getClass().getResource("AdminHomePage.fxml"));
             root = loader.load();
-            // Add necessary initialization for the AdminDashboardController if needed
+            // Placeholder
             stage.setTitle("Admin Dashboard");
         } else {
             loader = new FXMLLoader(getClass().getResource("CustomerDashboard.fxml"));
@@ -131,7 +126,6 @@ public class LoginController {
             CustomerDashboardController customerDashboardController = loader.getController();
             stage.setTitle("Home Page");
         }
-
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

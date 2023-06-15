@@ -21,19 +21,17 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class LandlordBookingListController implements Initializable {
-
     @FXML
     private ListView<VBox> bookingListView;
-
     private DB db;
     private String landlordID;
+
 
 
     public void initialize(URL location, ResourceBundle resources) {
         db = new DB();
         landlordID = LoginController.getLandlordID();
         loadBookingList();
-
     }
 
 
@@ -85,8 +83,6 @@ public class LandlordBookingListController implements Initializable {
     }
 
 
-
-
     private void openReviewWindow(String bookingID, int customerID) {
         try {
             String customerIDString = String.valueOf(customerID);
@@ -105,10 +101,6 @@ public class LandlordBookingListController implements Initializable {
             e.printStackTrace();
         }
     }
-
-
-
-
 
 
     private void deleteBooking(String bookingID) {
@@ -131,7 +123,6 @@ public class LandlordBookingListController implements Initializable {
     }
 
 
-
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -139,6 +130,7 @@ public class LandlordBookingListController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 
     @FXML
     private void navigateToHomePage() throws IOException {

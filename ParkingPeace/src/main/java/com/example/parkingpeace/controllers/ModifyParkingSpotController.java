@@ -9,34 +9,30 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 public class ModifyParkingSpotController {
-
     @FXML
     private TextField locationField;
-
     @FXML
     private TextField priceField;
-
     @FXML
     private TextField servicesField;
-
     @FXML
     private TextField zipCodeField;
-
     @FXML
     private TextField cityField;
-
     @FXML
     private TextField photoFilePathField;
-
     private String parkingSpotID;
     private String landlordID;
-
     private ParkingSpot currentParkingSpot;
+
+
 
     public void setCurrentParkingSpot(ParkingSpot parkingSpot) {
         this.currentParkingSpot = parkingSpot;
         fillTextFieldsWithCurrentInfo();
     }
+
+
 
     @FXML
     private void initialize() {
@@ -48,6 +44,8 @@ public class ModifyParkingSpotController {
         landlordID = LoginController.getLandlordID();
     }
 
+
+
     private void fillTextFieldsWithCurrentInfo() {
         locationField.setText(currentParkingSpot.getLocation());
         priceField.setText(currentParkingSpot.getPrice());
@@ -56,6 +54,8 @@ public class ModifyParkingSpotController {
         cityField.setText(currentParkingSpot.getCity());
         photoFilePathField.setText(currentParkingSpot.getPhotoFilePath());
     }
+
+
 
     public boolean updateParkingSpot(String location, double price, String services, String zipCode, String city, String photoFilePath) {
         String sql = "UPDATE tblParkingSpot SET fldLocation = ?, fldPrice = ?, fldServices = ?, fldZipCode = ?, fldCity = ?, fldPhotoFilePath = ? WHERE fldParkingSpotID = ?";
@@ -68,6 +68,8 @@ public class ModifyParkingSpotController {
         }
         return false;
     }
+
+
 
     @FXML
     public void handleSaveButton(ActionEvent event) {

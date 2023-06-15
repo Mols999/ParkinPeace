@@ -18,15 +18,14 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class LandlordReviewsController implements Initializable {
-
     @FXML
     private ListView<Review> ratingsListView;
     @FXML
     private Button homeButton;
-
     private DB db;
     private String landlordID;
     private ObservableList<Review> reviewsList;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -37,6 +36,7 @@ public class LandlordReviewsController implements Initializable {
     }
 
 
+    // Load the ratings and comments for the landlord
     private void loadRatings() {
         List<Review> reviews = db.fetchLandlordReviews(landlordID);
 
@@ -62,6 +62,8 @@ public class LandlordReviewsController implements Initializable {
         }
     }
 
+
+    // Show an alert dialog with the specified type, title, and content
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -70,11 +72,15 @@ public class LandlordReviewsController implements Initializable {
         alert.showAndWait();
     }
 
+
+    // Close the current stage
     private void closeStage() {
         Stage currentStage = (Stage) ratingsListView.getScene().getWindow();
         currentStage.close();
     }
 
+
+    // Navigate to the landlord dashboard scene
     @FXML
     private void navigateToLandlordDashboard() throws IOException {
         Stage stage = (Stage) homeButton.getScene().getWindow();

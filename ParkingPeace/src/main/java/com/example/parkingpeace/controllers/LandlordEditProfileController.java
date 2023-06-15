@@ -10,7 +10,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-
 public class LandlordEditProfileController {
     @FXML
     private TextField usernameField;
@@ -22,12 +21,13 @@ public class LandlordEditProfileController {
     private TextField emailField;
     @FXML
     private PasswordField passwordField;
-
     private Stage stage;
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
+
 
     @FXML
     private void handleSaveChangesButton() {
@@ -50,6 +50,7 @@ public class LandlordEditProfileController {
         }
     }
 
+
     @FXML
     private void handleDeleteAccountButton() {
         // Ask for confirmation before deleting the account
@@ -57,6 +58,7 @@ public class LandlordEditProfileController {
         alert.setTitle("Confirmation");
         alert.setHeaderText("Delete Account");
         alert.setContentText("Are you sure you want to delete your account? This action cannot be undone.");
+
 
         // Wait for the user's response
         if (alert.showAndWait().orElse(null) == ButtonType.OK) {
@@ -73,6 +75,7 @@ public class LandlordEditProfileController {
         }
     }
 
+
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -80,6 +83,7 @@ public class LandlordEditProfileController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
 
     private void navigateToLandlordDashboard() {
         try {

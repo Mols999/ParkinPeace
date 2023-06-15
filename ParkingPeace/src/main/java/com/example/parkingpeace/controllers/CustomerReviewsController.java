@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class CustomerReviewsController implements Initializable {
-
     @FXML
     private ListView<Review> ratingsListView;
     @FXML
@@ -26,6 +25,7 @@ public class CustomerReviewsController implements Initializable {
     private String customerID;
     private ObservableList<Review> reviewsList;
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         db = new DB();
@@ -33,11 +33,11 @@ public class CustomerReviewsController implements Initializable {
         customerID = LoginController.getCustomerID();
     }
 
+
     public void setCustomerID(String customerID) {
         this.customerID = customerID;
         loadRatings();
     }
-
 
 
     private void loadRatings() {
@@ -66,7 +66,6 @@ public class CustomerReviewsController implements Initializable {
     }
 
 
-
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -74,7 +73,6 @@ public class CustomerReviewsController implements Initializable {
         alert.setContentText(content);
         alert.showAndWait();
     }
-
 
 
     private void closeStage() {

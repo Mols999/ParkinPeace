@@ -18,44 +18,32 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class LandlordDashboardController {
     @FXML
     private TableView<ParkingSpot> tableView;
-
+    // Table columns
     @FXML
     private TableColumn<ParkingSpot, String> photoColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> addressColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> zipCodeColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> cityColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> ratingColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> servicesColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> availabilityColumn;
-
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
-
     @FXML
     private ComboBox<String> dropdownMenu;
-
     private static String landlordID; // Static variable to retain landlordID value
-
-
-
     private DB db;
+
+
 
     @FXML
     public void initialize() {
@@ -64,6 +52,8 @@ public class LandlordDashboardController {
         configureTableColumns();
         loadParkingSpotsForLandlord(landlordID); // Load parking spots after ID is set
     }
+
+
 
     @FXML
     private void handleDropdownMenuAction(ActionEvent event) throws IOException {
@@ -77,7 +67,7 @@ public class LandlordDashboardController {
                 navigateToBookings(stage);
                 break;
             case "Ratings and Comments":
-                 navigateToRatings(stage);
+                navigateToRatings(stage);
                 break;
             case "Logout":
                 Platform.exit();
@@ -86,6 +76,8 @@ public class LandlordDashboardController {
                 break;
         }
     }
+
+
 
     private void navigateToRatings(Stage stage) {
         try {
@@ -119,7 +111,6 @@ public class LandlordDashboardController {
 
 
 
-
     public void navigateToLandlordEditProfile(Stage currentStage) {
         try {
             FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("LandlordEditProfile.fxml"));
@@ -142,11 +133,14 @@ public class LandlordDashboardController {
     }
 
 
+
     public void loadParkingSpotsForLandlord(String landlordID) {
         List<ParkingSpot> parkingSpots = getParkingSpotsForLandlord();
         tableView.getItems().clear(); // Clear existing items
         tableView.getItems().addAll(parkingSpots);
     }
+
+
 
     public List<ParkingSpot> getParkingSpotsForLandlord() {
         List<ParkingSpot> parkingSpots = new ArrayList<>();
@@ -181,7 +175,10 @@ public class LandlordDashboardController {
         return parkingSpots;
     }
 
+
+
     private void configureTableColumns() {
+        // Configure cell value factories for table columns
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
         addressColumn.setCellValueFactory(cellData -> cellData.getValue().locationProperty());
         zipCodeColumn.setCellValueFactory(cellData -> cellData.getValue().zipCodeProperty());
@@ -191,8 +188,10 @@ public class LandlordDashboardController {
         availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().availabilityProperty());
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
 
+        // Configure custom cell factories for specific columns
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
+
             {
                 imageView.setFitHeight(100);
                 imageView.setFitWidth(100);
@@ -252,6 +251,8 @@ public class LandlordDashboardController {
             }
         });
 
+
+
         TableColumn<ParkingSpot, Void> modifyButtonColumn = new TableColumn<>("Modify");
         modifyButtonColumn.setCellFactory(param -> new TableCell<>() {
             private final Button modifyButton = new Button("Modify");
@@ -299,7 +300,6 @@ public class LandlordDashboardController {
 
             }
 
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -311,8 +311,10 @@ public class LandlordDashboardController {
             }
         });
 
+        // Add the custom columns to the table view
         tableView.getColumns().addAll(modifyButtonColumn, createParkingSpotButtonColumn);
     }
+
 
     private void handleModifyButton(String parkingSpotID, String customerID, String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating) {
         Stage currentStage = (Stage) tableView.getScene().getWindow();
@@ -321,7 +323,6 @@ public class LandlordDashboardController {
         ModifyParkingSpotController controller = (ModifyParkingSpotController) SceneSwitcher.getCurrentController();
         controller.setCurrentParkingSpot(new ParkingSpot(parkingSpotID, customerID, location, availability, price, services, zipCode, city, photoFilePath, rating));
     }
-
 
 
     @FXML
@@ -351,10 +352,10 @@ public class LandlordDashboardController {
     }
 
 
-
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
         // Handle the rent button action
     }
+
 
     // Add the following method to retrieve the landlordID
     public static String getLandlordID() {

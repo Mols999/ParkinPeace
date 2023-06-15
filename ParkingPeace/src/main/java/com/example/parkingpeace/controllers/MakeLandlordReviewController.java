@@ -11,8 +11,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MakeLandlordReviewController {
 
+public class MakeLandlordReviewController {
     @FXML
     private TextField ratingValueField;
     @FXML
@@ -21,19 +21,21 @@ public class MakeLandlordReviewController {
     private Button saveButton;
     @FXML
     private Button homeButton;
-
     private int bookingID;
     private int customerID;
     private DB db;
+
 
     public MakeLandlordReviewController() {
         db = new DB();
     }
 
+
     public void setBookingID(int bookingID) {
         this.bookingID = bookingID;
         this.customerID = db.getCustomerIDFromBooking(bookingID);
     }
+
 
     @FXML
     protected void handleSaveButton() throws IOException {
@@ -53,7 +55,6 @@ public class MakeLandlordReviewController {
     }
 
 
-
     private void showAlert(AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -62,11 +63,13 @@ public class MakeLandlordReviewController {
         alert.showAndWait();
     }
 
+
     @FXML
     private void navigateToLandlordDashboard() throws IOException {
         Stage stage = (Stage) homeButton.getScene().getWindow();
         SceneSwitcher.switchToLandlordDashboard(stage);
     }
+
 
     public void setCustomerID(String customerIDString) {
     }
