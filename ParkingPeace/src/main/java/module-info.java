@@ -4,6 +4,7 @@ module com.example.parkingpeace {
     requires java.sql;
     requires javafx.graphics;
     requires java.desktop;
+    requires junit;
 
     opens com.example.parkingpeace to javafx.fxml;
     exports com.example.parkingpeace;
