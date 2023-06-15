@@ -36,7 +36,7 @@ public class DB {
             input = getClass().getClassLoader().getResourceAsStream(fileName);
             props.load(input);
             port = props.getProperty("port", "1433");
-            databaseName = props.getProperty("databaseName", "dbParkinPeaceTOPG");
+            databaseName = props.getProperty("databaseName", "dbParkinPeace");
             userName = props.getProperty("userName", "sa");
             password = props.getProperty("password", "dm2022Sommer");
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
