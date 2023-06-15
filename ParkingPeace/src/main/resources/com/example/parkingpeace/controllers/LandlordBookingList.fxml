@@ -19,7 +19,7 @@
                     <Image url="@../../../../Logo/Logo.png" />
                 </image>
             </ImageView>
-            <Button text="Home" onAction="#navigateToHomePage" />
+            <Button fx:id="homeButton" text="Home" onAction="#navigateToLandlordDashboard" />
         </HBox>
     </top>
     <center>

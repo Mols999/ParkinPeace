@@ -26,6 +26,8 @@ public class LandlordBookingListController implements Initializable {
     private DB db;
     private String landlordID;
 
+    @FXML
+    private Button homeButton;
 
 
     public void initialize(URL location, ResourceBundle resources) {
@@ -132,9 +134,9 @@ public class LandlordBookingListController implements Initializable {
     }
 
 
+    // Navigate to the landlord dashboard scene
     @FXML
-    private void navigateToHomePage() throws IOException {
-        Stage stage = (Stage) bookingListView.getScene().getWindow();
-        SceneSwitcher.switchToHomePage(stage);
-    }
-}
+    private void navigateToLandlordDashboard() throws IOException {
+        Stage stage = (Stage) homeButton.getScene().getWindow();
+        SceneSwitcher.switchToLandlordDashboard(stage);
+    }}

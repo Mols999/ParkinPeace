@@ -186,7 +186,6 @@ public class LandlordDashboardController {
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty());
         servicesColumn.setCellValueFactory(cellData -> cellData.getValue().servicesProperty());
         availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().availabilityProperty());
-        priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
 
         // Configure custom cell factories for specific columns
         photoColumn.setCellFactory(column -> new TableCell<>() {
@@ -312,7 +311,7 @@ public class LandlordDashboardController {
         });
 
         // Add the custom columns to the table view
-        tableView.getColumns().addAll(modifyButtonColumn, createParkingSpotButtonColumn);
+        tableView.getColumns().addAll(modifyButtonColumn);
     }
 
 
