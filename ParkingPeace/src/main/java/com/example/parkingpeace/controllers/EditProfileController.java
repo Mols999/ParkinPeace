@@ -24,6 +24,10 @@ public class EditProfileController {
     @FXML
     private PasswordField passwordField;
 
+    @FXML
+    Button homeFromEditLandlord;
+
+
     // Declare user details variables
     private String username;
     private String name;
@@ -166,9 +170,20 @@ public class EditProfileController {
 
     // Method to navigate to the home page
     @FXML
-    private void navigateToHomePage(ActionEvent event) throws IOException {
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-        SceneSwitcher.switchToHomePage(stage);
+    private void navigateToLandlordDashboard(ActionEvent event) throws IOException {
+
+        }
+
+    @FXML
+    public void navigateToLandlordDashboard() throws IOException {
+        if (LoginController.getLandlordID() == null) {
+            Stage stage = (Stage) homeFromEditLandlord.getScene().getWindow();
+            SceneSwitcher.switchToLandlordDashboard(stage);
+        }
+        else if (LoginController.getCustomerID()){
+                Stage stage = (Stage) homeFromEditLandlord.getScene().getWindow();
+                SceneSwitcher.switchToHomePage(stage);
+        }
     }
 
     // Method to set the user IDs
@@ -178,13 +193,5 @@ public class EditProfileController {
         this.adminID = adminID;
     }
 
-    @FXML
-    Button homeFromEditLandlord;
 
-    @FXML
-    public void navigateToLandlordDashboard() throws IOException {
-        Stage stage = (Stage) homeFromEditLandlord.getScene().getWindow();
-        SceneSwitcher.switchToLandlordDashboard(stage);
-
-    }
 }
