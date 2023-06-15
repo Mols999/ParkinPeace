@@ -47,10 +47,6 @@ public class LoginController {
         return landlordID;
     }
 
-    // Getter for adminID
-    public static String getAdminID() {
-        return adminID;
-    }
 
     @FXML
     public void handleGoToSignUpButton(ActionEvent event) {

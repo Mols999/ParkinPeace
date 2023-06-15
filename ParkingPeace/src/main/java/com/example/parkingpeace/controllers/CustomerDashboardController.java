@@ -131,17 +131,21 @@ public class CustomerDashboardController {
     // Navigate to edit profile view
     public void navigateToEditProfile(Stage currentStage) {
         try {
-            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("CustomerEditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
-            EditProfileController editProfileController = editProfileLoader.getController();
+            CustomerEditProfileController editProfileController = editProfileLoader.getController();
+            editProfileController.setStage(currentStage); // Pass the current stage to the CustomerEditProfileController
 
-            // Set the root of the current stage to the Edit Profile view
-            currentStage.getScene().setRoot(editProfileRoot);
+            Scene scene = new Scene(editProfileRoot);
+            currentStage.setScene(scene);
             currentStage.setTitle("Edit Profile");
+            currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 
     // Handle search by location, zip code, or city

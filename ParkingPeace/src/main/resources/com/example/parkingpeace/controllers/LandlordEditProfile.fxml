@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="center" hgap="10" prefHeight="400" prefWidth="300" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.EditProfileController">
+<GridPane alignment="center" hgap="10" prefHeight="400" prefWidth="300" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.parkingpeace.controllers.LandlordEditProfileController">
     <children>
         <Label text="Edit Profile" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
 

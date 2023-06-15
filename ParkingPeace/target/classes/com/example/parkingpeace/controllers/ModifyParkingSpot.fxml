@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -26,46 +24,32 @@
 
     <!-- Parking Spot Modification Form -->
     <center>
-        <GridPane alignment="CENTER" hgap="10" vgap="10">
+        <GridPane hgap="10" vgap="10" alignment="CENTER">
             <children>
                 <Label text="Location:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="locationField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="locationField" GridPane.columnIndex="1" GridPane.rowIndex="0" maxWidth="150"/>
 
                 <Label text="Price:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <TextField fx:id="priceField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="150"/>
 
                 <Label text="Services:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                <TextField fx:id="servicesField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <TextField fx:id="servicesField" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="150"/>
 
                 <Label text="Zip Code:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                <TextField fx:id="zipCodeField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <TextField fx:id="zipCodeField" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="150"/>
 
                 <Label text="City:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                <TextField fx:id="cityField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <TextField fx:id="cityField" GridPane.columnIndex="1" GridPane.rowIndex="4" maxWidth="150"/>
 
                 <Label text="Photo File Path:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                <TextField fx:id="photoFilePathField" maxWidth="150" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                <TextField fx:id="photoFilePathField" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="150"/>
 
                 <Button fx:id="saveButton" onAction="#handleSaveButton" text="Save Changes" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Button fx:id="deleteParkingspotButton" mnemonicParsing="false" onAction="#handleDeleteParkingspotButton" text="Delete Parkingspot" GridPane.rowIndex="6" />
 
             </children>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
-         <columnConstraints>
-            <ColumnConstraints />
-            <ColumnConstraints />
-         </columnConstraints>
-         <rowConstraints>
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-            <RowConstraints />
-         </rowConstraints>
         </GridPane>
     </center>
 

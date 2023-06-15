@@ -114,7 +114,7 @@ public class BookingsController implements Initializable {
     @FXML
     private void navigateToHomePage(ActionEvent event) throws IOException {
         Stage stage = (Stage) homeButton.getScene().getWindow();
-        SceneSwitcher.switchToLandlordDashboard(stage);
+        SceneSwitcher.switchToHomePage(stage);
     }
 
 

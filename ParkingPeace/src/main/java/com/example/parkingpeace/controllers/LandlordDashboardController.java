@@ -71,7 +71,7 @@ public class LandlordDashboardController {
         Stage stage = (Stage) dropdownMenu.getScene().getWindow();
         switch (action) {
             case "Edit Profile":
-                navigateToEditProfile(stage);
+                navigateToLandlordEditProfile(stage);
                 break;
             case "Bookings":
                 navigateToBookings(stage);
@@ -120,25 +120,27 @@ public class LandlordDashboardController {
 
 
 
-    public void navigateToEditProfile(Stage currentStage) {
+    public void navigateToLandlordEditProfile(Stage currentStage) {
         try {
-            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("EditProfile.fxml"));
+            FXMLLoader editProfileLoader = new FXMLLoader(getClass().getResource("LandlordEditProfile.fxml"));
             Parent editProfileRoot = editProfileLoader.load();
-            EditProfileController editProfileController = editProfileLoader.getController();
+            LandlordEditProfileController editProfileController = editProfileLoader.getController();
 
-            // Pass the landlordID to the EditProfileControlle
+            // Pass the stage to the EditProfileController
+            editProfileController.setStage(currentStage);
 
-            // Create a new scene and set its root to the Edit Profile view
+            // Create a new scene and set its root to the Landlord Edit Profile view
             Scene editProfileScene = new Scene(editProfileRoot);
 
-            // Set the scene of the current stage to the Edit Profile scene
+            // Set the scene of the current stage to the Landlord Edit Profile scene
             currentStage.setScene(editProfileScene);
-            currentStage.setTitle("Edit Profile");
+            currentStage.setTitle("Landlord Edit Profile");
             currentStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 
     public void loadParkingSpotsForLandlord(String landlordID) {
         List<ParkingSpot> parkingSpots = getParkingSpotsForLandlord();
