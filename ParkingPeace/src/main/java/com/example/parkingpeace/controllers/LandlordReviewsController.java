@@ -1,6 +1,6 @@
 package com.example.parkingpeace.controllers;
 
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import com.example.parkingpeace.models.Review;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

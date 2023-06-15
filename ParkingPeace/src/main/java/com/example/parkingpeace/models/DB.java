@@ -1,4 +1,4 @@
-package com.example.parkingpeace.db;
+package com.example.parkingpeace.models;
 
 import com.example.parkingpeace.models.Booking;
 import com.example.parkingpeace.models.Review;

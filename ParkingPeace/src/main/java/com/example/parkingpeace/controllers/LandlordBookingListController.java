@@ -1,6 +1,6 @@
 package com.example.parkingpeace.controllers;
 
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import com.example.parkingpeace.models.Booking;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

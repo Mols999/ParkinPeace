@@ -12,6 +12,4 @@ module com.example.parkingpeace {
     opens com.example.parkingpeace.controllers to javafx.fxml;
     exports com.example.parkingpeace.models;
     opens com.example.parkingpeace.models to javafx.fxml;
-    exports com.example.parkingpeace.db;
-    opens com.example.parkingpeace.db to javafx.fxml;
 }

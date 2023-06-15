@@ -1,6 +1,6 @@
 package com.example.parkingpeace.controllers;
 
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import com.example.parkingpeace.models.ParkingSpot;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

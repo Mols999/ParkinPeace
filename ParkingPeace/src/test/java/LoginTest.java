@@ -1,4 +1,4 @@
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import org.junit.Assert;
 import org.junit.Test;
 

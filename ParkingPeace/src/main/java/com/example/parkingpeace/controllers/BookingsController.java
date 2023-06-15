@@ -1,7 +1,7 @@
 package com.example.parkingpeace.controllers;
 
 // Necessary imports
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import com.example.parkingpeace.models.ParkingSpot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

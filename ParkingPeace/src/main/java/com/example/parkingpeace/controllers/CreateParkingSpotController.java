@@ -1,6 +1,6 @@
 package com.example.parkingpeace.controllers;
 
-import com.example.parkingpeace.db.DB;
+import com.example.parkingpeace.models.DB;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;

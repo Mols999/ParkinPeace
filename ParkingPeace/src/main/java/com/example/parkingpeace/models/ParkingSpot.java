@@ -1,6 +1,5 @@
 package com.example.parkingpeace.models;
 
-import com.example.parkingpeace.db.DB;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import java.time.LocalDate;
