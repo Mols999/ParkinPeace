@@ -20,13 +20,13 @@ public class LoginController {
     private Stage stage;
 
     @FXML
-    private TextField usernameField;
+    TextField usernameField;
 
     @FXML
-    private PasswordField passwordField;
+    PasswordField passwordField;
 
     @FXML
-    private Label errorLabel;
+    Label errorLabel;
 
     // Static variables to store the IDs
     private static String customerID = "";
