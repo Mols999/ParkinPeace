@@ -6,5 +6,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="mssql-jdbc-12.3.0.jre8-preview" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-12.3.0.jre8-preview2" level="project" />
   </component>
 </module>

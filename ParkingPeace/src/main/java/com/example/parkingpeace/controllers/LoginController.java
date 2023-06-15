@@ -107,7 +107,7 @@ public class LoginController {
     }
 
 
-    private void navigateToHomePage() throws IOException {
+    public void navigateToHomePage() throws IOException {
         FXMLLoader loader;
         Parent root;
         if (!landlordID.isEmpty()) {
