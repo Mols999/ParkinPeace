@@ -112,8 +112,39 @@ public class ModifyParkingSpotController {
         }
     }
 
-    @FXML
-    public void handleDeleteParkingspotButton (String location){
+    public void handleDeleteParkingspotButton() {
+        if (currentParkingSpot != null) {
+            String parkingSpotID = currentParkingSpot.getParkingSpotID();
 
+            String sql = "DELETE FROM tblParkingSpot WHERE fldParkingSpotID = ?";
+
+            try {
+                DB db = new DB();
+                boolean success = db.updateSQLWithParams(sql, parkingSpotID);
+
+                if (success) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Parking Spot Deleted Successfully.");
+                    alert.showAndWait();
+
+                    Stage stage = (Stage) locationField.getScene().getWindow();
+                    SceneSwitcher.switchToScene("LandlordDashboard.fxml", "Landlord Dashboard", stage);
+
+                    // Reload parking spots in the LandlordDashboardController
+                    LandlordDashboardController landlordDashboardController = (LandlordDashboardController) SceneSwitcher.getCurrentController();
+                    landlordDashboardController.loadParkingSpotsForLandlord(landlordID);
+                } else {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("There was an error deleting the parking spot.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }
     }
 }
