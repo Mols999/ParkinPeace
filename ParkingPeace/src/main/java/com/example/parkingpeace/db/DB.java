@@ -240,8 +240,8 @@ public class DB {
             connect();
             ps = con.prepareStatement(sql);
             ps.setInt(1, parkingSpotID);
-            ps.setTimestamp(2, Timestamp.valueOf(date.plusDays(1).atStartOfDay())); // Start of next day
-            ps.setTimestamp(3, Timestamp.valueOf(date.atStartOfDay())); // Start of this day
+            ps.setTimestamp(2, Timestamp.valueOf(date.plusDays(1).atStartOfDay()));
+            ps.setTimestamp(3, Timestamp.valueOf(date.atStartOfDay()));
             rs = ps.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
@@ -312,7 +312,7 @@ public class DB {
 
             while (rs.next()) {
                 int ratingID = rs.getInt("fldRatingID");
-                int reviewLandlordID = rs.getInt("fldLandlordID"); // Rename the variable to reviewLandlordID
+                int reviewLandlordID = rs.getInt("fldLandlordID");
                 int ratingValue = rs.getInt("fldRatingValue");
                 String ratingComment = rs.getString("fldRatingComment");
 

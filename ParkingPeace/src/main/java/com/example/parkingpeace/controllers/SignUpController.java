@@ -117,9 +117,6 @@ public class SignUpController {
         alert.showAndWait();
     }
 
-
-
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
