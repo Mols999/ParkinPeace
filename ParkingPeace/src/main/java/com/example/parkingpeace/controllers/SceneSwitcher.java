@@ -6,8 +6,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
+
+
 public class SceneSwitcher {
+
     private static Object currentController;
+
 
     public static void switchToScene(String fxmlFile, String title, Stage stage) {
         try {
@@ -29,11 +33,9 @@ public class SceneSwitcher {
         }
     }
 
-
     public static Object getCurrentController() {
         return currentController; // Allow access to the controller
     }
-
 
     public static void switchToHomePage(Stage stage) throws IOException {
         FXMLLoader loader = new FXMLLoader(SceneSwitcher.class.getResource("CustomerDashboard.fxml"));

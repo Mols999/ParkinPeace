@@ -22,13 +22,11 @@ public class DB {
     private boolean pendingData = false;
     private boolean terminated = false;
 
-
-
     public DB() {
         initialize();
     }
 
-
+    // Load the database connection properties from the db.properties file
     private void initialize() {
         Properties props = new Properties();
         String fileName = "db.properties";
@@ -47,7 +45,7 @@ public class DB {
         }
     }
 
-
+    // Connect to the database
     private void connect() {
         try {
             String url = "jdbc:sqlserver://51.195.118.225:" + port + ";databaseName=" + databaseName + ";encrypt=false;trustServerCertificate=true;sslProtocol=TLSv1.2";
@@ -57,8 +55,7 @@ public class DB {
         }
     }
 
-
-
+    // Disconnect from the database
     public void disconnect() {
         try {
             if (rs != null) {
@@ -75,13 +72,12 @@ public class DB {
         }
     }
 
-
-
+    // Insert data into the database
     public boolean insertSQL(String sql, Object... values) {
         return executeUpdate(sql, values);
     }
 
-
+    // Update data in the database with parameters
     public boolean updateSQLWithParams(String sql, Object... params) {
         try {
             connect();
@@ -99,7 +95,7 @@ public class DB {
         return false;
     }
 
-
+    // Execute an update statement
     private boolean executeUpdate(String sql, Object... values) {
         if (terminated) {
             System.exit(0);
@@ -130,8 +126,7 @@ public class DB {
         return false;
     }
 
-
-
+    // Check if a parking spot is booked on a specific date
     public boolean isParkingSpotBooked(String parkingSpotID, LocalDate date) {
         try {
             int spotID = Integer.parseInt(parkingSpotID);
@@ -154,8 +149,7 @@ public class DB {
         return false;
     }
 
-
-
+    // Fetch bookings by customer ID
     public List<Booking> fetchBookingsByCustomer(int customerID) {
         List<Booking> bookings = new ArrayList<>();
 
@@ -186,6 +180,7 @@ public class DB {
         return bookings;
     }
 
+    // Fetch bookings by landlord ID
     public List<Booking> fetchBookingsByLandlord(int landlordID) {
         List<Booking> bookings = new ArrayList<>();
 
@@ -216,7 +211,7 @@ public class DB {
         return bookings;
     }
 
-
+    // Select data from the database with result parameters
     public ResultSet selectSQLWithResultParams(String sql, String... params) {
         try {
             connect();
@@ -232,7 +227,7 @@ public class DB {
         return null;
     }
 
-
+    // Check if a parking spot is booked on a specific date
     public boolean isParkingSpotBooked(int parkingSpotID, LocalDate date) {
         String sql = "SELECT COUNT(*) FROM tblBooking WHERE fldParkingSpotID = ? AND fldStartDateTime < ? AND fldEndDateTime > ?";
 
@@ -255,7 +250,7 @@ public class DB {
         return false;
     }
 
-
+    // Delete a booking from the database
     public boolean deleteBooking(int bookingID) {
         String sql = "DELETE FROM tblBooking WHERE fldBookingID = ?";
 
@@ -275,8 +270,7 @@ public class DB {
         return false;
     }
 
-
-
+    // Get the name of a customer based on the customer ID
     public String getCustomerName(int customerID) {
         String sql = "SELECT fldCustomerName FROM tblCustomer WHERE fldCustomerID = ?";
 
@@ -298,8 +292,7 @@ public class DB {
         return "";
     }
 
-
-
+    // Fetch reviews for a landlord
     public List<Review> fetchLandlordReviews(String landlordID) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM tblRatingLandlord WHERE fldLandlordID = ?";
@@ -327,8 +320,7 @@ public class DB {
         return reviews;
     }
 
-
-
+    // Fetch reviews for a customer
     public List<Review> fetchCustomerReviews(String customerIDParam) {
         List<Review> reviews = new ArrayList<>();
         String sql = "SELECT * FROM tblRatingCustomer WHERE fldCustomerID = ?";
@@ -393,7 +385,7 @@ public class DB {
         return bookedDates;
     }
 
-
+    // Get the landlord ID for a specific parking spot
     public int getLandlordIDFromParkingSpot(int parkingSpotID) {
         String sql = "SELECT fldLandlordID FROM tblParkingSpot WHERE fldParkingSpotID = ?";
 
@@ -415,7 +407,7 @@ public class DB {
         return 0;
     }
 
-
+    // Add a review for a landlord
     public boolean addReview(int landlordID, int ratingValue, String ratingComment) {
         String sql = "INSERT INTO tblRatingLandlord (fldLandlordID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?)";
 
@@ -437,6 +429,7 @@ public class DB {
         return false;
     }
 
+    // Add a review for a customer
     public boolean addCustomerReview(int customerID, int ratingValue, String ratingComment) {
         String sql = "INSERT INTO tblRatingCustomer (fldCustomerID, fldRatingValue, fldRatingComment) VALUES (?, ?, ?)";
 
@@ -458,7 +451,7 @@ public class DB {
         return false;
     }
 
-
+    // Get the customer ID for a specific booking
     public int getCustomerIDFromBooking(int bookingID) {
         String sql = "SELECT fldCustomerID FROM tblBooking WHERE fldBookingID = ?";
         int customerID = -1;

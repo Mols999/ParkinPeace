@@ -26,19 +26,19 @@ public class SignUpController {
     private PasswordField passwordField;
     private String role = "";
     private DB db;
-    private Stage stage; // Add the stage field
-
-
+    private Stage stage;
 
 
     public void initialize() {
         db = new DB();
     }
 
+
     @FXML
     public void handleLandlordButton(ActionEvent event) {
         role = "Landlord";
     }
+
 
     @FXML
     public void handleCustomerButton(ActionEvent event) {
@@ -46,11 +46,10 @@ public class SignUpController {
     }
 
 
-
     @FXML
     public void handleSignUpButton(ActionEvent event) {
         String name = nameField.getText();
-        int age = Integer.parseInt(ageField.getText()); // Make sure to handle NumberFormatException
+        int age = Integer.parseInt(ageField.getText());
         String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
@@ -71,13 +70,13 @@ public class SignUpController {
         if (success) {
             showPopupMessage("User signed up successfully! We have sent you an email with your login information.");
 
-            // Navigate to the login screen
+
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/parkingpeace/Login.fxml"));
                 Parent root = loader.load();
 
                 LoginController loginController = loader.getController();
-                loginController.setStage(stage); // Pass the stage object to the LoginController
+                loginController.setStage(stage);
 
                 stage.setScene(new Scene(root));
                 stage.setTitle("Login");
@@ -99,7 +98,7 @@ public class SignUpController {
             Parent root = loader.load();
 
             LoginController loginController = loader.getController();
-            loginController.setStage(stage); // Pass the stage object to the LoginController
+            loginController.setStage(stage);
 
             stage.setScene(new Scene(root));
             stage.setTitle("Login");
@@ -108,6 +107,9 @@ public class SignUpController {
             e.printStackTrace();
         }
     }
+
+
+
     public static void showPopupMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Popup Message");
@@ -116,6 +118,7 @@ public class SignUpController {
 
         alert.showAndWait();
     }
+
 
     public void setStage(Stage stage) {
         this.stage = stage;
