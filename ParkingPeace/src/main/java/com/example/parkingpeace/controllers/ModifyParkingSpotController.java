@@ -5,6 +5,7 @@ import com.example.parkingpeace.models.ParkingSpot;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -27,6 +28,10 @@ public class ModifyParkingSpotController {
 
     @FXML
     private TextField photoFilePathField;
+
+    @FXML
+    Button deleteParkingspotButton;
+
 
     private String parkingSpotID;
     private String landlordID;
@@ -105,5 +110,10 @@ public class ModifyParkingSpotController {
             alert.setContentText("There was an error modifying the parking spot.");
             alert.showAndWait();
         }
+    }
+
+    @FXML
+    public void handleDeleteParkingspotButton (String location){
+
     }
 }

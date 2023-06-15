@@ -27,9 +27,9 @@
             <children>
                 <Button onAction="#handleSaveChangesButton" text="Save Changes" />
                 <Button fx:id="deleteAccountButton" onAction="#handleDeleteAccountButton" text="Delete Account" />
-                <Button fx:id="homeFromEditLandlord" onAction="#navigateToLandlordDashboard" text="Home" />
             </children>
         </VBox>
+      <Button fx:id="fromEditToHomeButton" mnemonicParsing="false" onAction="#handlefromEditToHomeButton" text="Home" GridPane.columnIndex="1" GridPane.rowIndex="7" />
     </children>
     <columnConstraints>
         <ColumnConstraints />
@@ -43,5 +43,6 @@
         <RowConstraints />
         <RowConstraints maxHeight="31.0" minHeight="31.0" prefHeight="31.0" />
         <RowConstraints />
+      <RowConstraints />
     </rowConstraints>
 </GridPane>
