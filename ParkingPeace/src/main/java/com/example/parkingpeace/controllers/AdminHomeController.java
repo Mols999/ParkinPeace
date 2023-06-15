@@ -19,15 +19,14 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+// Controller for the Admin Home view
 public class AdminHomeController {
-
 
     private Stage stage;
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
 
     private DB db = new DB();
     private ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
@@ -64,13 +63,17 @@ public class AdminHomeController {
 
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> deleteColumn;
+
     @FXML
     private TableColumn<ParkingSpot, String> viewColumn;
+
     @FXML
-    private final   Button deleteButton = new Button("Delete");
-    private final   Button editButton = new Button("Edit");
+    private final Button deleteButton = new Button("Delete");
+
+    private final Button editButton = new Button("Edit");
 
     private String customerID;
     private String landlordID;
@@ -81,6 +84,8 @@ public class AdminHomeController {
         populateTableView();
         configureTableColumns();
     }
+
+    // Method to populate the table view with parking spot data
     private void populateTableView() {
         tableView.getItems().clear();
         parkingSpots.clear();
@@ -112,10 +117,10 @@ public class AdminHomeController {
         tableView.setItems(parkingSpots);
     }
 
+    // Method to configure the table columns with appropriate cell factories and cell value factories
     private void configureTableColumns() {
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
         ratingColumn.setCellValueFactory(cellData -> cellData.getValue().ratingProperty());
-
 
         priceColumn.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -142,9 +147,9 @@ public class AdminHomeController {
             }
         });
 
-
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
+
             {
                 imageView.setFitHeight(100);
                 imageView.setFitWidth(100);
@@ -174,11 +179,11 @@ public class AdminHomeController {
         servicesColumn.setCellValueFactory(cellData -> cellData.getValue().servicesProperty());
         availabilityColumn.setCellValueFactory(cellData -> cellData.getValue().availabilityProperty());
         priceColumn.setCellValueFactory(cellData -> cellData.getValue().priceProperty());
-      //  deleteColumn.setCellValueFactory(cellData -> cellData.getValue().deleteProperty());
-       // viewColumn.setCellValueFactory(cellData -> cellData.getValue().viewProperty());
-
+        // deleteColumn.setCellValueFactory(cellData -> cellData.getValue().deleteProperty());
+        // viewColumn.setCellValueFactory(cellData -> cellData.getValue().viewProperty());
     }
 
+    // Method to get the image from a file path
     private Image getImageFromFilePath(String filePath) {
         try {
             // Check if the file path starts with "ParkingImage/"
@@ -195,27 +200,25 @@ public class AdminHomeController {
         return null;
     }
 
-
-
+    // Method to set the customer, landlord, and admin IDs
     public void setIDs(String customerID, String landlordID, String adminID) {
         this.customerID = customerID;
         this.landlordID = landlordID;
         this.adminID = adminID;
     }
 
-
+    // Method to get the stage
     public Stage getStage() {
         return this.stage;
     }
 
-
+    // Event handler for search text field key event
     public void handleSearch(KeyEvent keyEvent) {
-
-
+        // Perform search based on the entered text
     }
 
+    // Event handler for dropdown menu action
     public void handleDropdownMenuAction(ActionEvent actionEvent) {
-
-
+        // Handle the selected action from the dropdown menu
     }
 }

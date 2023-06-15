@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.Random;
 
@@ -39,10 +38,12 @@ public class CreateParkingSpotController {
     // Declare the landlord ID
     private String landlordID;
 
+
     // Setter for the landlord ID
     public void setLandlordID(String landlordID) {
         this.landlordID = landlordID;
     }
+
 
     // Method to handle the Save button click event
     @FXML
@@ -55,8 +56,9 @@ public class CreateParkingSpotController {
         String city = cityField.getText();
         String photoFilePath = photoFilePathField.getText();
 
+
         // Check if any of the fields are empty
-        if(location.isEmpty() || services.isEmpty() || zipCode.isEmpty() || city.isEmpty() || photoFilePath.isEmpty() || priceText.isEmpty()){
+        if (location.isEmpty() || services.isEmpty() || zipCode.isEmpty() || city.isEmpty() || photoFilePath.isEmpty() || priceText.isEmpty()) {
             displayErrorAlert("Please fill in all fields.");
             return;
         }
@@ -70,8 +72,10 @@ public class CreateParkingSpotController {
             return;
         }
 
+
         // Create a new parking spot and get the result
         boolean success = createParkingSpot(location, services, price, landlordID, zipCode, city, photoFilePath);
+
 
         // Clear the form fields
         locationField.clear();
@@ -81,8 +85,9 @@ public class CreateParkingSpotController {
         cityField.clear();
         photoFilePathField.clear();
 
+
         // Display the result
-        if(success) {
+        if (success) {
             // If successful, display a success alert and navigate to the Landlord Dashboard
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success Dialog");
@@ -97,6 +102,7 @@ public class CreateParkingSpotController {
         }
     }
 
+
     // Method to display an error alert
     private void displayErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -105,6 +111,7 @@ public class CreateParkingSpotController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 
     // Method to create a new parking spot in the database
     public boolean createParkingSpot(String location, String services, double price, String landlordId, String zipCode, String city, String photoFilePath) {
@@ -121,6 +128,7 @@ public class CreateParkingSpotController {
         return db.insertSQL(sql, parkingSpotId, location, availability, price, services, landlordId, zipCode, city, photoFilePath);
     }
 
+
     // Method to generate a new parking spot ID
     private String generateParkingSpotId() {
         // Instantiate a Random object
@@ -129,10 +137,10 @@ public class CreateParkingSpotController {
         return String.format("%04d", rand.nextInt(10000));
     }
 
+
     @FXML
     public void HandleBackButton() throws IOException {
         Stage stage = (Stage) BackButton.getScene().getWindow();
-     SceneSwitcher.switchToLandlordDashboard(stage);
-
+        SceneSwitcher.switchToLandlordDashboard(stage);
     }
 }

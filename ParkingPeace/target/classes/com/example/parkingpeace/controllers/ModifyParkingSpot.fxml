@@ -45,7 +45,7 @@
                 <TextField fx:id="photoFilePathField" GridPane.columnIndex="1" GridPane.rowIndex="5" maxWidth="150"/>
 
                 <Button fx:id="saveButton" onAction="#handleSaveButton" text="Save Changes" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
+                <Button mnemonicParsing="false" onAction="#handleDeleteParkingspotButton" text="Delete parkingspot" GridPane.rowIndex="6" />
             </children>
             <padding>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

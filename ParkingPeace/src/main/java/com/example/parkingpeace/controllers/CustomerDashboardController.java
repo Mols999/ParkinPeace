@@ -15,14 +15,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CustomerDashboardController {
     private Stage stage;
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -30,13 +28,11 @@ public class CustomerDashboardController {
     // Database connection and parking spots list
     private DB db = new DB();
     private ObservableList<ParkingSpot> parkingSpots = FXCollections.observableArrayList();
-
     @FXML
     private ComboBox<String> dropdownMenu;
 
     @FXML
     private TextField searchTextField;
-
     @FXML
     private TableView<ParkingSpot> tableView;
 
@@ -57,13 +53,12 @@ public class CustomerDashboardController {
     private TableColumn<ParkingSpot, String> availabilityColumn;
     @FXML
     private TableColumn<ParkingSpot, String> priceColumn;
-
     // User IDs
     private static String customerID;
-
     public static String getCustomerID() {
         return customerID;
     }
+
 
     @FXML
     private void initialize() {
@@ -71,6 +66,7 @@ public class CustomerDashboardController {
         configureTableColumns();
         customerID = LoginController.getCustomerID();
     }
+
 
     // Handle dropdown menu actions
     @FXML
@@ -95,6 +91,7 @@ public class CustomerDashboardController {
         }
     }
 
+
     // Navigate to ratings and comments view
     private void navigateToRatings(Stage stage) {
         try {
@@ -111,13 +108,13 @@ public class CustomerDashboardController {
         }
     }
 
+
     // Navigate to bookings view
     private void navigateToBookings(Stage stage) {
         try {
             FXMLLoader bookingsLoader = new FXMLLoader(getClass().getResource("CustomerBookingList.fxml"));
             Parent bookingsRoot = bookingsLoader.load();
             CustomerBookingListController bookingListController = bookingsLoader.getController();
-
 
             // Set the root of the stage to the Bookings view
             stage.setScene(new Scene(bookingsRoot));
@@ -146,8 +143,6 @@ public class CustomerDashboardController {
     }
 
 
-
-
     // Handle search by location, zip code, or city
     @FXML
     public void handleSearch(KeyEvent event) {
@@ -158,6 +153,7 @@ public class CustomerDashboardController {
             searchParkingSpots(searchQuery);
         }
     }
+
 
     // Search for parking spots based on the search query
     private void searchParkingSpots(String searchQuery) {
@@ -192,6 +188,7 @@ public class CustomerDashboardController {
         tableView.setItems(parkingSpots);
     }
 
+
     // Populate the table view with parking spots from the database
     private void populateTableView() {
         tableView.getItems().clear();
@@ -224,6 +221,7 @@ public class CustomerDashboardController {
         tableView.setItems(parkingSpots);
     }
 
+
     // Configure table columns with cell factories and cell values
     private void configureTableColumns() {
         photoColumn.setCellValueFactory(cellData -> cellData.getValue().photoFilePathProperty());
@@ -253,6 +251,7 @@ public class CustomerDashboardController {
                 }
             }
         });
+
 
         photoColumn.setCellFactory(column -> new TableCell<>() {
             private final ImageView imageView = new ImageView();
@@ -323,6 +322,7 @@ public class CustomerDashboardController {
         tableView.getColumns().add(rentButtonColumn);
     }
 
+
     // Get image from file path
     private Image getImageFromFilePath(String filePath) {
         try {
@@ -339,6 +339,7 @@ public class CustomerDashboardController {
         }
         return null;
     }
+
 
     // Handle rent button click
     private void handleRentButton(String location, String availability, String price, String services, String zipCode, String city, String photoFilePath, String rating, String parkingSpotID) {
@@ -359,6 +360,7 @@ public class CustomerDashboardController {
             e.printStackTrace();
         }
     }
+
 
     // Get the stage
     public Stage getStage() {

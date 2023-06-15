@@ -20,8 +20,6 @@ import java.util.*;
 // Implement Initializable for initialization logic
 public class BookingsController implements Initializable {
 
-
-
     // Declare required fields
     private CustomerDashboardController customerDashboardController;
     private ParkingSpot parkingSpot;
@@ -117,9 +115,6 @@ public class BookingsController implements Initializable {
         SceneSwitcher.switchToHomePage(stage);
     }
 
-
-
-
     // Generate a random booking ID
     private String generateBookingID() {
         // Generate a random number between 1000 and 9999
@@ -196,7 +191,7 @@ public class BookingsController implements Initializable {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Booking Successful");
             alert.setHeaderText(null);
-            alert.setContentText("Your booking has been successfully made. We have send you an email to your account regarding the booking");
+            alert.setContentText("Your booking has been successfully made. We have sent you an email to your account regarding the booking");
             alert.showAndWait();
 
             // Get the current stage

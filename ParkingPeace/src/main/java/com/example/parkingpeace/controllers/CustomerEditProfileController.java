@@ -22,8 +22,6 @@ public class CustomerEditProfileController {
     @FXML
     private PasswordField passwordField;
     private Stage stage;
-
-
     public void setStage(Stage stage) {
         this.stage = stage;
     }
@@ -37,7 +35,6 @@ public class CustomerEditProfileController {
         int age = Integer.parseInt(ageField.getText());
         String email = emailField.getText();
         String password = passwordField.getText();
-
 
         // Update the customer's profile in the database
         DB db = new DB();

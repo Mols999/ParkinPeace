@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -20,13 +19,11 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class CustomerBookingListController implements Initializable {
-
     @FXML
     private ListView<VBox> bookingListView;
-
     private DB db;
-
     private String customerID;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -35,6 +32,8 @@ public class CustomerBookingListController implements Initializable {
         loadBookingList();
     }
 
+
+    // Load the list of bookings for the customer
     private void loadBookingList() {
         List<Booking> bookings = db.fetchBookingsByCustomer(Integer.parseInt(customerID));
 
@@ -74,6 +73,8 @@ public class CustomerBookingListController implements Initializable {
         }
     }
 
+
+    // Open the review window for a specific parking spot
     private void openReviewWindow(String parkingSpotID) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("MakeCustomerReview.fxml"));
@@ -89,11 +90,14 @@ public class CustomerBookingListController implements Initializable {
         }
     }
 
+
+    // Delete a booking
     private void deleteBooking(String bookingID) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirm Deletion");
         alert.setHeaderText(null);
         alert.setContentText("Are you sure you want to delete this booking?");
+
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
@@ -108,6 +112,8 @@ public class CustomerBookingListController implements Initializable {
         }
     }
 
+
+    // Show an alert dialog
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
@@ -116,6 +122,8 @@ public class CustomerBookingListController implements Initializable {
         alert.showAndWait();
     }
 
+
+    // Navigate to the home page
     @FXML
     private void navigateToHomePage() throws IOException {
         Stage stage = (Stage) bookingListView.getScene().getWindow();

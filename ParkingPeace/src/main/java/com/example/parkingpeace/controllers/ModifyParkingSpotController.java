@@ -8,31 +8,36 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+// Controller for the ModifyParkingSpot view
 public class ModifyParkingSpotController {
+
     @FXML
     private TextField locationField;
+
     @FXML
     private TextField priceField;
+
     @FXML
     private TextField servicesField;
+
     @FXML
     private TextField zipCodeField;
+
     @FXML
     private TextField cityField;
+
     @FXML
     private TextField photoFilePathField;
+
     private String parkingSpotID;
     private String landlordID;
+
     private ParkingSpot currentParkingSpot;
-
-
 
     public void setCurrentParkingSpot(ParkingSpot parkingSpot) {
         this.currentParkingSpot = parkingSpot;
         fillTextFieldsWithCurrentInfo();
     }
-
-
 
     @FXML
     private void initialize() {
@@ -44,8 +49,7 @@ public class ModifyParkingSpotController {
         landlordID = LoginController.getLandlordID();
     }
 
-
-
+    // Fill the text fields with the current parking spot information
     private void fillTextFieldsWithCurrentInfo() {
         locationField.setText(currentParkingSpot.getLocation());
         priceField.setText(currentParkingSpot.getPrice());
@@ -55,8 +59,7 @@ public class ModifyParkingSpotController {
         photoFilePathField.setText(currentParkingSpot.getPhotoFilePath());
     }
 
-
-
+    // Update the parking spot information in the database
     public boolean updateParkingSpot(String location, double price, String services, String zipCode, String city, String photoFilePath) {
         String sql = "UPDATE tblParkingSpot SET fldLocation = ?, fldPrice = ?, fldServices = ?, fldZipCode = ?, fldCity = ?, fldPhotoFilePath = ? WHERE fldParkingSpotID = ?";
 
@@ -69,8 +72,7 @@ public class ModifyParkingSpotController {
         return false;
     }
 
-
-
+    // Event handler for the Save button
     @FXML
     public void handleSaveButton(ActionEvent event) {
         String location = locationField.getText();
@@ -88,6 +90,7 @@ public class ModifyParkingSpotController {
         boolean success = updateParkingSpot(location, price, services, zipCode, city, photoFilePath);
 
         if (success) {
+            // Display success message and navigate back to the Landlord Dashboard
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Success Dialog");
             alert.setHeaderText(null);
@@ -101,11 +104,52 @@ public class ModifyParkingSpotController {
             LandlordDashboardController landlordDashboardController = (LandlordDashboardController) SceneSwitcher.getCurrentController();
             landlordDashboardController.loadParkingSpotsForLandlord(landlordID);
         } else {
+            // Display error message if modification fails
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error Dialog");
             alert.setHeaderText(null);
             alert.setContentText("There was an error modifying the parking spot.");
             alert.showAndWait();
+        }
+    }
+
+    // Event handler for the Delete Parking Spot button
+    @FXML
+    public void handleDeleteParkingspotButton() {
+        if (currentParkingSpot != null) {
+            String parkingSpotID = currentParkingSpot.getParkingSpotID();
+
+            String sql = "DELETE FROM tblParkingSpot WHERE fldParkingSpotID = ?";
+
+            try {
+                DB db = new DB();
+                boolean success = db.updateSQLWithParams(sql, parkingSpotID);
+
+                if (success) {
+                    // Display success message and navigate back to the Landlord Dashboard
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Parking Spot Deleted Successfully.");
+                    alert.showAndWait();
+
+                    Stage stage = (Stage) locationField.getScene().getWindow();
+                    SceneSwitcher.switchToScene("LandlordDashboard.fxml", "Landlord Dashboard", stage);
+
+                    // Reload parking spots in the LandlordDashboardController
+                    LandlordDashboardController landlordDashboardController = (LandlordDashboardController) SceneSwitcher.getCurrentController();
+                    landlordDashboardController.loadParkingSpotsForLandlord(landlordID);
+                } else {
+                    // Display error message if deletion fails
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("There was an error deleting the parking spot.");
+                    alert.showAndWait();
+                }
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
         }
     }
 }
