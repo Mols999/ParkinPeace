@@ -115,6 +115,9 @@ public class BookingsController implements Initializable {
         SceneSwitcher.switchToHomePage(stage);
     }
 
+
+
+
     // Generate a random booking ID
     private String generateBookingID() {
         // Generate a random number between 1000 and 9999
